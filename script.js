@@ -1831,15 +1831,45 @@ window.shareTo = (platform) => {
 // AI Stylist Logic
 let stylistCache = new Map();
 
-window.handleUserImage = (event) => {
+let faceapiLoaded = false;
+async function loadFaceAPI() {
+  if (faceapiLoaded) return true;
+  if (!window.faceapi) {
+    try {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    } catch (e) {
+      console.error("Failed to load FaceAPI script", e);
+      return false;
+    }
+  }
+  const modelPath = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
+  try {
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(modelPath),
+      faceapi.nets.ageGenderNet.loadFromUri(modelPath)
+    ]);
+    faceapiLoaded = true;
+    return true;
+  } catch (err) {
+    console.error("FaceAPI Model Load Error:", err);
+    return false;
+  }
+}
+
+window.handleUserImage = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
   // 1. Check Filename for Boys/Men keywords
   const fileNameLower = file.name.toLowerCase();
-  const maleKeywords = ['boy', 'man', 'men', 'male', 'guy', 'gentleman', 'uncle', 'father', 'husband', 'son', 'groom', 'him', 'his', 'mr'];
+  const maleKeywords = ['boy', 'man', 'men', 'male', 'guy', 'gentleman', 'uncle', 'father', 'husband', 'son', 'groom', 'him', 'his', 'mr', 'actor', 'hero', 'boys', 'guys'];
   const hasMaleKeyword = maleKeywords.some(keyword => {
-    // Exact word boundary checks to avoid false positives (e.g., "mantra", "clementine")
     const regex = new RegExp(`\\b${keyword}\\b|_${keyword}_|-${keyword}-|\\b${keyword}s\\b`, 'i');
     return regex.test(fileNameLower);
   });
@@ -1851,7 +1881,7 @@ window.handleUserImage = (event) => {
   }
 
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     const imageData = e.target.result;
     const previewImg = document.getElementById('userPhotoPreview');
     const previewCont = document.getElementById('userPreviewCont');
@@ -1875,140 +1905,136 @@ window.handleUserImage = (event) => {
     }
     if (results) results.style.display = 'none';
 
-    // 2. Load image into Canvas to perform REAL sharpness & clarity checks
+    const statusEl = document.getElementById('aiStatus');
+    const barEl = document.getElementById('aiProgressBar');
+    const updateProgress = (pct, text) => {
+      if (barEl) barEl.style.width = pct + "%";
+      if (statusEl) statusEl.innerText = text;
+    };
+
+    updateProgress(20, "Loading Advanced AI Models...");
+
     const img = new Image();
     img.src = imageData;
-    img.onload = () => {
+    img.onload = async () => {
+      // Blur check using canvas
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      // Downscale for faster analysis
-      canvas.width = 150;
-      canvas.height = 150;
-      ctx.drawImage(img, 0, 0, 150, 150);
-
-      const imgData = ctx.getImageData(0, 0, 150, 150);
-      const data = imgData.data;
-
-      // Calculate Brightness & Sharpness (pixel intensity variance)
+      // Scale proportionally to max 300px for blur analysis to maintain texture
+      const scale = Math.min(300 / img.width, 300 / img.height);
+      const targetW = Math.max(100, Math.floor(img.width * scale));
+      const targetH = Math.max(100, Math.floor(img.height * scale));
+      canvas.width = targetW;
+      canvas.height = targetH;
+      ctx.drawImage(img, 0, 0, targetW, targetH);
+      
+      const imgData = ctx.getImageData(0, 0, targetW, targetH).data;
+      let grayData = new Uint8ClampedArray(targetW * targetH);
       let totalBrightness = 0;
       let skinPixels = 0;
-      let grayData = new Uint8ClampedArray(150 * 150);
-
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i+1];
-        const b = data[i+2];
+      
+      for (let i = 0; i < imgData.length; i += 4) {
+        const r = imgData[i], g = imgData[i+1], b = imgData[i+2];
         const brightness = (r + g + b) / 3;
         totalBrightness += brightness;
         grayData[i/4] = brightness;
-
-        // Smart Skin Tone Range Check (R > 60, G > 40, B > 20, R > G, R > B)
-        if (r > 60 && g > 40 && b > 20 && r > g && r > b && (r - g) > 15) {
-          skinPixels++;
-        }
+        if (r > 60 && g > 40 && b > 20 && r > g && r > b && (r - g) > 15) skinPixels++;
       }
-
-      const avgBrightness = totalBrightness / (150 * 150);
-      const skinRatio = skinPixels / (150 * 150);
-
-      // Compute simple Laplacian-like variance for sharpness check
+      
+      const skinRatio = skinPixels / (targetW * targetH);
+      
+      // Calculate variance for blur detection on correctly scaled image
       let varianceSum = 0;
-      for (let y = 1; y < 149; y++) {
-        for (let x = 1; x < 149; x++) {
-          const idx = y * 150 + x;
-          // Simple edge filter
+      for (let y = 1; y < targetH - 1; y++) {
+        for (let x = 1; x < targetW - 1; x++) {
+          const idx = y * targetW + x;
           const laplacian = (
             grayData[idx] * 4 -
             grayData[idx - 1] -
             grayData[idx + 1] -
-            grayData[idx - 150] -
-            grayData[idx + 150]
+            grayData[idx - targetW] -
+            grayData[idx + targetW]
           );
           varianceSum += laplacian * laplacian;
         }
       }
-      const sharpnessScore = varianceSum / (150 * 150);
+      const sharpnessScore = varianceSum / (targetW * targetH);
 
-      // Let's run a premium multi-stage visual scan
-      const statusEl = document.getElementById('aiStatus');
-      const barEl = document.getElementById('aiProgressBar');
+      updateProgress(40, "Scanning image quality...");
+      
+      if (sharpnessScore < 4) {
+        showToast("Low Image Quality", "info", "Please upload a clear, high-resolution photo. Blurry or out-of-focus images cannot be processed.");
+        resetStylist();
+        return;
+      }
+      
+      if (skinRatio < 0.02) {
+        showToast("No Face Detected", "info", "Could not locate facial features. Please upload a clear photo showing your face.");
+        resetStylist();
+        return;
+      }
 
-      const updateProgress = (pct, text) => {
-        if (barEl) barEl.style.width = pct + "%";
-        if (statusEl) statusEl.innerText = text;
-      };
+      updateProgress(60, "Running Face Mesh & Gender Analysis...");
+      
+      const apiLoaded = await loadFaceAPI();
+      
+      if (apiLoaded && window.faceapi) {
+        try {
+           const detections = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withAgeAndGender();
+           if (detections) {
+             if (detections.gender === 'male' && detections.genderProbability > 0.6) {
+                showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
+                resetStylist();
+                return;
+             }
+           }
+        } catch(e) {
+           console.error("Face API Error:", e);
+        }
+      } else {
+        // Fallback to heuristic if API fails
+        let bottomFaceVariance = 0;
+        let bottomFacePixels = 0;
+        let startY = Math.floor(targetH * 0.6);
+        let endY = Math.floor(targetH * 0.9);
+        let startX = Math.floor(targetW * 0.3);
+        let endX = Math.floor(targetW * 0.7);
+        for (let y = startY; y < endY; y++) {
+          for (let x = startX; x < endX; x++) {
+            const idx = y * targetW + x;
+            bottomFaceVariance += Math.abs(grayData[idx] - (grayData[idx - 1] || 0));
+            bottomFacePixels++;
+          }
+        }
+        const jawlineTextureRoughness = bottomFaceVariance / (bottomFacePixels || 1);
+        if (jawlineTextureRoughness > 20) {
+           showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
+           resetStylist();
+           return;
+        }
+      }
 
+      updateProgress(80, "Female Profile Verified. Curating Perfect Match...");
       setTimeout(() => {
-        updateProgress(25, "Scanning image quality & clarity parameters...");
-
+        updateProgress(100, "Curation Completed!");
         setTimeout(() => {
-          // Reject if image is blurry (extremely low contrast/sharpness)
-          if (sharpnessScore < 6) {
-            showToast("Low Image Quality", "info", "Please upload a clear, high-resolution photo. Blurry or out-of-focus images cannot be processed.");
-            resetStylist();
-            return;
+          if (loader) loader.style.display = 'none';
+          if (results) results.style.display = 'block';
+          let curatedLook;
+          if (stylistCache.has(imageData)) {
+            curatedLook = stylistCache.get(imageData);
+          } else {
+            curatedLook = curateLuxuryLook();
+            stylistCache.set(imageData, curatedLook);
           }
-
-          // Reject if image is solid color or lacks human-like skin tones
-          if (skinRatio < 0.05) {
-            showToast("No Face Detected", "info", "Could not locate facial features. Please upload a clear photo showing your face.");
-            resetStylist();
-            return;
-          }
-
-          updateProgress(50, "Running Face Mesh & Landmark Mapping...");
-
-          setTimeout(() => {
-            // Strictly check for female gender using advanced skin & texture heuristics
-            // To ensure 100% compliance with strict women-only rules, we evaluate texture softness & contrast ratio
-            // Men typically have higher localized variance in lower face areas (jawline/chin) due to stubble/beard texture.
-            let bottomFaceVariance = 0;
-            let bottomFacePixels = 0;
-            for (let y = 90; y < 140; y++) {
-              for (let x = 30; x < 120; x++) {
-                const idx = y * 150 + x;
-                bottomFaceVariance += Math.abs(grayData[idx] - grayData[idx - 1] || 0);
-                bottomFacePixels++;
-              }
-            }
-            const jawlineTextureRoughness = bottomFaceVariance / bottomFacePixels;
-
-            // If jawline area is excessively rough, or a random minor chance occurs (to show strict model accuracy)
-            const isProbablyMale = jawlineTextureRoughness > 18;
-
-            if (isProbablyMale) {
-              showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
-              resetStylist();
-              return;
-            }
-
-            updateProgress(75, "Female Profile Verified. Curating Perfect Match...");
-
-            setTimeout(() => {
-              updateProgress(100, "Curation Completed!");
-
-              setTimeout(() => {
-                if (loader) loader.style.display = 'none';
-                if (results) results.style.display = 'block';
-
-                let curatedLook;
-                if (stylistCache.has(imageData)) {
-                  curatedLook = stylistCache.get(imageData);
-                } else {
-                  curatedLook = curateLuxuryLook();
-                  stylistCache.set(imageData, curatedLook);
-                }
-
-                renderRecommendations(curatedLook);
-              }, 600);
-            }, 1200);
-          }, 1200);
-        }, 1200);
-      }, 800);
+          renderRecommendations(curatedLook);
+        }, 600);
+      }, 1000);
     };
   };
   reader.readAsDataURL(file);
 }
+
 
 function curateLuxuryLook() {
   const look = [];
