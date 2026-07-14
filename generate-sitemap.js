@@ -46,7 +46,7 @@ async function generateAndDownloadSitemap() {
       const identifier = data.slug || doc.id;
       
       xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}${data.slug ? '/product-details.html?slug=' + data.slug : '/product-details.html?id=' + doc.id}</loc>\n`;
+      xml += `    <loc>${baseUrl}${data.slug ? '/product/' + data.slug : '/product-details.html?id=' + doc.id}</loc>\n`;
       xml += `    <lastmod>${currentDate}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.9</priority>\n`;
