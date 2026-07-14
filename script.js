@@ -42,12 +42,29 @@ products = products.map(p => ({
 function cleanProductDescription(desc) { return desc || ""; }
 function extractPriceFromDesc(desc) { return 0; }
 
+// --- SEO Helpers ---
+function generateSlug(text) {
+  if (!text) return "";
+  return text.toLowerCase().trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 // Sort products by ID descending so newest are at the top
 products.sort((a, b) => (b.id || 0) - (a.id || 0));
 
 localStorage.setItem('saforio_products', JSON.stringify(products));
 
+
+// Global Image Error Handler - Bulletproof way to stop question marks
+window.addEventListener('error', function (e) {
+  if (e.target && e.target.tagName && e.target.tagName.toLowerCase() === 'img') {
+    e.target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    e.target.style.background = 'linear-gradient(135deg, #f0e6d3, #faf6ef)';
+    e.target.style.display = 'block'; // Ensure it doesn't break layout
+  }
+}, true);
 
 let cart = JSON.parse(localStorage.getItem('saforio_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('saforio_wishlist')) || [];
@@ -58,10 +75,31 @@ let currentUser = JSON.parse(localStorage.getItem('saforio_currentUser')) || nul
 let modalHistory = [];
 let adminCurrentProductFilter = 'all';
 
+// --- Environment Detection ---
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+function getProductLink(p) {
+  if (isLocalhost) {
+    return p.slug ? `product-details.html?slug=${p.slug}` : `product-details.html?id=${p.id}`;
+  } else {
+    return p.slug ? `/product/${p.slug}` : `product-details.html?id=${p.id}`;
+  }
+}
+
+function getAbsoluteProductLink(p) {
+  const path = getProductLink(p);
+  return window.location.origin + (path.startsWith('/') ? path : '/' + path);
+}
+
 // Initialize URL Parameters globally on script load to prevent ReferenceError
 const urlParams = new URLSearchParams(window.location.search);
-const urlCat = urlParams.get('category');
-const urlId = urlParams.get('id');
+const urlCat = urlParams.get('category') || localStorage.getItem('rokea_selected_category');
+let urlId = urlParams.get('slug') || urlParams.get('id');
+
+// Read slug from pathname if using /product/PRODUCT_SLUG
+if (!urlId && window.location.pathname.startsWith('/product/')) {
+  urlId = window.location.pathname.split('/product/')[1].replace(/\/$/, '');
+}
 
 function saveProducts() {
   localStorage.setItem('saforio_products', JSON.stringify(products));
@@ -148,14 +186,14 @@ window.toggleMobileMenu = () => {
 // PREMIUM CUSTOM ALERT (DYNAMIC INJECTION)
 function showToast(message, type = 'success', subText = '') {
   let overlay = document.getElementById('customAlertOverlay');
-  
+
   if (!overlay) {
     overlay = document.createElement('div');
     overlay.id = 'customAlertOverlay';
     overlay.className = 'custom-alert-overlay';
     overlay.onclick = () => closeCustomAlert();
     overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; z-index:10001; animation: fadeIn 0.3s ease;";
-    
+
     overlay.innerHTML = `
       <div class="custom-alert-box" onclick="event.stopPropagation()" style="background:#fff; width:90%; max-width:380px; border-radius:24px; overflow:hidden; box-shadow:0 30px 60px rgba(0,0,0,0.4); transform:scale(0.8); opacity:0; transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border:1px solid rgba(201,168,76,0.2);">
         <div style="background:linear-gradient(135deg, #b0937a, #8e6d4f); padding:30px 20px; text-align:center; color:#fff;">
@@ -177,11 +215,11 @@ function showToast(message, type = 'success', subText = '') {
 
   const msgEl = overlay.querySelector('#alertMessage');
   const titleEl = overlay.querySelector('#alertTitle');
-  
+
   if (msgEl) {
     msgEl.innerHTML = `<strong>${message}</strong>${subText ? `<br><span style="font-size:12px; color:#888; font-weight:400; margin-top:8px; display:block;">${subText}</span>` : ''}`;
     if (titleEl) {
-       titleEl.innerText = type === 'success' ? 'Success!' : (type === 'info' ? 'Rokea Update' : 'Notice');
+      titleEl.innerText = type === 'success' ? 'Success!' : (type === 'info' ? 'Rokea Update' : 'Notice');
     }
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -202,17 +240,17 @@ window.closeCustomAlert = () => {
 
 // --- SIDE NOTIFICATION ---
 function showSideNotification(product) {
-    let container = document.getElementById('sideNotificationContainer');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'sideNotificationContainer';
-        container.className = 'side-notification-container';
-        document.body.appendChild(container);
-    }
+  let container = document.getElementById('sideNotificationContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'sideNotificationContainer';
+    container.className = 'side-notification-container';
+    document.body.appendChild(container);
+  }
 
-    const notification = document.createElement('div');
-    notification.className = 'side-notification';
-    notification.innerHTML = `
+  const notification = document.createElement('div');
+  notification.className = 'side-notification';
+  notification.innerHTML = `
         <img src="${product.image || product.img}" class="side-notification-img">
         <div class="side-notification-content">
             <div class="side-notification-title">Added to Cart</div>
@@ -222,24 +260,24 @@ function showSideNotification(product) {
         <span class="side-notification-close">&times;</span>
     `;
 
-    container.appendChild(notification);
+  container.appendChild(notification);
 
-    // Close button
-    notification.querySelector('.side-notification-close').onclick = () => {
-        notification.classList.remove('active');
-        setTimeout(() => notification.remove(), 500);
-    };
+  // Close button
+  notification.querySelector('.side-notification-close').onclick = () => {
+    notification.classList.remove('active');
+    setTimeout(() => notification.remove(), 500);
+  };
 
-    // Auto animate in
-    setTimeout(() => notification.classList.add('active'), 10);
+  // Auto animate in
+  setTimeout(() => notification.classList.add('active'), 10);
 
-    // Auto remove
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.classList.remove('active');
-            setTimeout(() => notification.remove(), 500);
-        }
-    }, 5000);
+  // Auto remove
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.classList.remove('active');
+      setTimeout(() => notification.remove(), 500);
+    }
+  }, 5000);
 }
 
 
@@ -253,17 +291,17 @@ function addToCart(productId) {
   cart.push(p);
   localStorage.setItem('saforio_cart', JSON.stringify(cart));
   updateCartIcon();
-  
+
   // Amazon-style button change if event exists
   if (window.event && window.event.currentTarget && window.event.currentTarget.tagName === 'BUTTON') {
-      const btn = window.event.currentTarget;
-      const originalText = btn.innerHTML;
-      btn.classList.add('added');
-      btn.innerHTML = 'Added';
-      setTimeout(() => {
-          btn.classList.remove('added');
-          btn.innerHTML = originalText;
-      }, 3000);
+    const btn = window.event.currentTarget;
+    const originalText = btn.innerHTML;
+    btn.classList.add('added');
+    btn.innerHTML = 'Added';
+    setTimeout(() => {
+      btn.classList.remove('added');
+      btn.innerHTML = originalText;
+    }, 3000);
   }
 
   showSideNotification(p);
@@ -526,6 +564,38 @@ window.closeAuth = () => {
 window.toggleAuth = (showLogin) => {
   if (loginView) loginView.style.display = showLogin ? 'block' : 'none';
   if (regView) regView.style.display = showLogin ? 'none' : 'block';
+}
+
+// REEL MODAL LOGIC
+const reelVideos = {
+  'REEL_ID_1': 'https://www.w3schools.com/html/mov_bbb.mp4',
+  'REEL_ID_2': 'https://www.w3schools.com/html/mov_bbb.mp4',
+  'REEL_ID_3': 'https://www.w3schools.com/html/mov_bbb.mp4',
+  'REEL_ID_4': 'https://www.w3schools.com/html/mov_bbb.mp4',
+  'REEL_ID_5': 'https://www.w3schools.com/html/mov_bbb.mp4',
+  'REEL_ID_6': 'https://www.w3schools.com/html/mov_bbb.mp4'
+};
+
+window.openReelModal = (reelId) => {
+  const modal = document.getElementById('reelModal');
+  const video = document.getElementById('reelVideo');
+  if (modal && video) {
+    // Set the source to a direct mp4 video URL instead of Instagram embed
+    video.src = reelVideos[reelId] || 'https://www.w3schools.com/html/mov_bbb.mp4';
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+    video.play();
+  }
+}
+window.closeReelModal = () => {
+  const modal = document.getElementById('reelModal');
+  const video = document.getElementById('reelVideo');
+  if (modal && video) {
+    video.pause();
+    video.src = ''; // stops the video
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+  }
 }
 
 window.handleRegister = () => {
@@ -875,7 +945,7 @@ function renderAdminOrders() {
           list.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted);">No orders found.</td></tr>';
           return;
         }
-        
+
         // Save globally for lookup
         window.loadedOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
@@ -1097,8 +1167,8 @@ function renderGrid() {
       ${isOOS ? `<div class="oos-ribbon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:9px;height:9px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sold Out</div>` : ''}
 
       <div class="product-img ${isOOS ? 'out-of-stock' : ''}">
-        <img src="${p.image || p.img}" alt="${p.name}" class="img-main">
-        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" alt="${p.name}">
+        <img src="${p.image || p.img}" alt="${p.name} - ${p.category || 'Luxury Saree'} | ROKEA by RK" class="img-main" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
+        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" alt="${p.name} - Hover View | ROKEA by RK" loading="lazy" decoding="async" onerror="this.style.display='none'">
         <div class="product-wish ${inWishlist ? 'active' : ''}" onclick="event.stopPropagation(); addToWishlist('${p.id}')">
           <svg class="wish-icon-svg" viewBox="0 0 24 24" fill="${inWishlist ? '#e91e63' : 'none'}" stroke="${inWishlist ? '#e91e63' : '#666'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; transition: all 0.2s ease;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
         </div>
@@ -1138,7 +1208,8 @@ window.switchCategory = (cat) => {
 
 window.selectCategory = (cat) => {
   // Navigate to collections page
-  window.location.href = `collections.html?category=${cat}`;
+  localStorage.setItem('rokea_selected_category', cat);
+  window.location.href = `collections.html`;
 }
 
 window.backToCategories = () => {
@@ -1266,8 +1337,12 @@ function renderAll() {
   renderGrid();
   renderAdminList();
   renderMarquee();
-  if (typeof urlId !== 'undefined' && urlId) {
-    initProductPage(urlId);
+  // Load product page: prefer URL ?id=, fallback to sessionStorage (after refresh)
+  const activeId = (typeof urlId !== 'undefined' && urlId)
+    ? urlId
+    : (window._pendingProductId || sessionStorage.getItem('rokea_current_product_id'));
+  if (activeId && document.getElementById('detailMainImg')) {
+    initProductPage(activeId);
   }
 }
 
@@ -1287,14 +1362,16 @@ if (productForm) {
       extraImages: document.getElementById('prodExtraImgs') ? document.getElementById('prodExtraImgs').value.split(',').map(s => s.trim()).filter(Boolean) : [],
       stock: document.getElementById('prodStock').value,
       description: document.getElementById('prodDesc').value,
-      productCare: document.getElementById('prodCare').value
+      productCare: document.getElementById('prodCare').value,
+      slug: generateSlug(document.getElementById('prodName').value)
     };
-    
+
     if (editProductId) {
       const existingIdx = products.findIndex(p => p.id.toString() === editProductId.toString());
       if (existingIdx > -1) {
         newProd.id = products[existingIdx].id;
         newProd.position = products[existingIdx].position; // Keep existing position
+        newProd.slug = products[existingIdx].slug || newProd.slug;
         products[existingIdx] = newProd;
       } else {
         newProd.id = parseFloat(editProductId);
@@ -1377,7 +1454,7 @@ window.deleteAllProducts = () => {
       const allIds = products.map(p => p.id);
       products = [];
       saveProducts();
-      
+
       if (db) {
         allIds.forEach(id => {
           db.collection("products").doc(id.toString()).delete()
@@ -1413,7 +1490,12 @@ let touchendX = 0;
 
 window.openProductDetail = (productId) => {
   // Navigate to dedicated product page
-  window.location.href = `product-details.html?id=${productId}`;
+  const p = products.find(prod => prod.id == productId || prod.slug === productId);
+  if (p) {
+    window.location.href = getProductLink(p);
+  } else {
+    window.location.href = `product-details.html?id=${productId}`;
+  }
 }
 
 function renderRelatedProducts(category, currentId) {
@@ -1425,7 +1507,7 @@ function renderRelatedProducts(category, currentId) {
   slider.innerHTML = related.map((p, idx) => `
     <div class="slider-item product-card" onclick="openProductDetail(${p.id})" style="flex: 0 0 calc(20% - 12px); min-width: 190px; overflow: visible;">
       <div style="position: relative; width: 100%; aspect-ratio: 4/5; background: #fafafa;">
-         <img src="${p.imageHover || p.imgHover || p.image || p.img}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;">
+         <img src="${p.imageHover || p.imgHover || p.image || p.img}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
          <div style="position: absolute; top: 12px; left: 12px; border: 1px solid rgba(0,0,0,0.3); color: #222; padding: 4px 14px; font-size: 10px; border-radius: 20px; background: rgba(255,255,255,0.85); display: ${idx % 3 === 0 ? 'none' : 'block'}">Best Seller</div>
          <div class="product-share" style="top: 12px; right: 12px; width: 32px; height: 32px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12);" onclick="event.stopPropagation(); shareProduct(${p.id})">
            <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -1775,7 +1857,7 @@ window.shareProduct = (productId) => {
     navigator.share({
       title: p.name,
       text: `Check out this beautiful ${p.name} at ROKEA!`,
-      url: window.location.origin + '/product-details.html?id=' + p.id
+      url: getAbsoluteProductLink(p)
     }).then(() => console.log('Successful share'))
       .catch((error) => console.log('Error sharing', error));
   } else {
@@ -1800,7 +1882,7 @@ window.closeShareModal = () => {
 window.shareTo = (platform) => {
   if (!currentShareProduct) return;
 
-  const url = window.location.origin + '/product-details.html?id=' + currentShareProduct.id;
+  const url = getAbsoluteProductLink(currentShareProduct);
   const text = `Check out this beautiful ${currentShareProduct.name} at ROKEA!`;
 
   let shareUrl = '';
@@ -1892,7 +1974,7 @@ window.handleUserImage = async (event) => {
     if (previewImg) previewImg.src = imageData;
     if (zone) zone.style.display = 'none';
     if (previewCont) previewCont.style.display = 'block';
-    
+
     if (loader) {
       loader.innerHTML = `
         <div class="ai-loader"></div>
@@ -1927,22 +2009,22 @@ window.handleUserImage = async (event) => {
       canvas.width = targetW;
       canvas.height = targetH;
       ctx.drawImage(img, 0, 0, targetW, targetH);
-      
+
       const imgData = ctx.getImageData(0, 0, targetW, targetH).data;
       let grayData = new Uint8ClampedArray(targetW * targetH);
       let totalBrightness = 0;
       let skinPixels = 0;
-      
+
       for (let i = 0; i < imgData.length; i += 4) {
-        const r = imgData[i], g = imgData[i+1], b = imgData[i+2];
+        const r = imgData[i], g = imgData[i + 1], b = imgData[i + 2];
         const brightness = (r + g + b) / 3;
         totalBrightness += brightness;
-        grayData[i/4] = brightness;
+        grayData[i / 4] = brightness;
         if (r > 60 && g > 40 && b > 20 && r > g && r > b && (r - g) > 15) skinPixels++;
       }
-      
+
       const skinRatio = skinPixels / (targetW * targetH);
-      
+
       // Calculate variance for blur detection on correctly scaled image
       let varianceSum = 0;
       for (let y = 1; y < targetH - 1; y++) {
@@ -1961,13 +2043,13 @@ window.handleUserImage = async (event) => {
       const sharpnessScore = varianceSum / (targetW * targetH);
 
       updateProgress(40, "Scanning image quality...");
-      
+
       if (sharpnessScore < 4) {
         showToast("Low Image Quality", "info", "Please upload a clear, high-resolution photo. Blurry or out-of-focus images cannot be processed.");
         resetStylist();
         return;
       }
-      
+
       if (skinRatio < 0.02) {
         showToast("No Face Detected", "info", "Could not locate facial features. Please upload a clear photo showing your face.");
         resetStylist();
@@ -1975,21 +2057,21 @@ window.handleUserImage = async (event) => {
       }
 
       updateProgress(60, "Running Face Mesh & Gender Analysis...");
-      
+
       const apiLoaded = await loadFaceAPI();
-      
+
       if (apiLoaded && window.faceapi) {
         try {
-           const detections = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withAgeAndGender();
-           if (detections) {
-             if (detections.gender === 'male' && detections.genderProbability > 0.6) {
-                showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
-                resetStylist();
-                return;
-             }
-           }
-        } catch(e) {
-           console.error("Face API Error:", e);
+          const detections = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withAgeAndGender();
+          if (detections) {
+            if (detections.gender === 'male' && detections.genderProbability > 0.6) {
+              showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
+              resetStylist();
+              return;
+            }
+          }
+        } catch (e) {
+          console.error("Face API Error:", e);
         }
       } else {
         // Fallback to heuristic if API fails
@@ -2008,9 +2090,9 @@ window.handleUserImage = async (event) => {
         }
         const jawlineTextureRoughness = bottomFaceVariance / (bottomFacePixels || 1);
         if (jawlineTextureRoughness > 20) {
-           showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
-           resetStylist();
-           return;
+          showToast("AI Gender Check Failed", "info", "Our Virtual Stylist is strictly designed for girls & women's products. Please upload a clear girl or women image.");
+          resetStylist();
+          return;
         }
       }
 
@@ -2042,29 +2124,29 @@ function curateLuxuryLook() {
 
   // 1. Get Saree (category == 'sarees')
   const sareesList = allProds.filter(p => p.category === 'sarees');
-  const selectedSaree = sareesList.length > 0 
-    ? sareesList[Math.floor(Math.random() * sareesList.length)] 
+  const selectedSaree = sareesList.length > 0
+    ? sareesList[Math.floor(Math.random() * sareesList.length)]
     : null;
   if (selectedSaree) look.push({ ...selectedSaree, stylistRole: "Exquisite Handwoven Saree" });
 
   // 2. Get Jewelry (category == 'imitation' without earring/bangle keywords)
   const jewelryKeywords = ['earring', 'jhumka', 'stud', 'bangle', 'valayal', 'kangan', 'kada'];
-  const jewelList = allProds.filter(p => 
-    p.category === 'imitation' && 
+  const jewelList = allProds.filter(p =>
+    p.category === 'imitation' &&
     !jewelryKeywords.some(kw => p.name.toLowerCase().includes(kw))
   );
-  const selectedJewel = jewelList.length > 0 
-    ? jewelList[Math.floor(Math.random() * jewelList.length)] 
+  const selectedJewel = jewelList.length > 0
+    ? jewelList[Math.floor(Math.random() * jewelList.length)]
     : null;
   if (selectedJewel) look.push({ ...selectedJewel, stylistRole: "Heritage Jewellery Set" });
 
   // 3. Get Earring or Bangle (category == 'imitation' with earring/bangle keywords)
-  const earringBangleList = allProds.filter(p => 
-    p.category === 'imitation' && 
+  const earringBangleList = allProds.filter(p =>
+    p.category === 'imitation' &&
     jewelryKeywords.some(kw => p.name.toLowerCase().includes(kw))
   );
-  const selectedEarringBangle = earringBangleList.length > 0 
-    ? earringBangleList[Math.floor(Math.random() * earringBangleList.length)] 
+  const selectedEarringBangle = earringBangleList.length > 0
+    ? earringBangleList[Math.floor(Math.random() * earringBangleList.length)]
     : null;
   if (selectedEarringBangle) look.push({ ...selectedEarringBangle, stylistRole: "Matching Earring / Bangle" });
 
@@ -2107,8 +2189,8 @@ function renderRecommendations(selected) {
         ${p.stylistRole || 'Heritage Piece'}
       </div>
       <div class="product-img">
-        <img src="${p.image || p.img}" class="img-main" style="width:100%; height:100%; object-fit:cover;">
-        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" style="width:100%; height:100%; object-fit:cover;">
+        <img src="${p.image || p.img}" class="img-main" alt="${p.name} | ROKEA by RK" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" alt="${p.name} - Hover | ROKEA by RK" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
       </div>
       <div style="padding: 15px; text-align: center;">
         <div style="color:var(--gold-dark); font-weight:700; font-size: 14px; margin-bottom: 5px;">₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}</div>
@@ -2141,17 +2223,151 @@ if (urlCat) {
 }
 
 // Handle Product ID from URL
-if (urlId && products.length > 0) {
-  // We need to wait for products to be loaded if they are from cloud
-  // But products array is usually populated by renderAll() or localStorage
-  setTimeout(() => {
-    initProductPage(urlId);
-  }, 100);
+// Wait for Firestore to load before initialising the product page
+if (urlId) {
+  // Save product ID to sessionStorage so refresh still works
+  sessionStorage.setItem('rokea_current_product_id', urlId);
+
+  // Show a skeleton loader so the user doesn't see a broken image
+  const mainImg = document.getElementById('detailMainImg');
+  if (mainImg) {
+    mainImg.style.background = 'linear-gradient(90deg, #f0e6d3 25%, #faf6ef 50%, #f0e6d3 75%)';
+    mainImg.style.backgroundSize = '200% 100%';
+    mainImg.style.animation = 'shimmer 1.5s infinite';
+    // Inject shimmer keyframe once
+    if (!document.getElementById('shimmerStyle')) {
+      const s = document.createElement('style');
+      s.id = 'shimmerStyle';
+      s.textContent = '@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }';
+      document.head.appendChild(s);
+    }
+  }
+
+  if (products.length > 0) {
+    // Products already in memory from localStorage — init immediately
+    setTimeout(() => { initProductPage(urlId); }, 100);
+  }
+  // initProductPage is also called by renderAll() once Firestore snapshot arrives,
+  // so first-time visitors (empty localStorage) are handled automatically.
+
+} else {
+  // No ?id= in URL — check sessionStorage (happens after refresh when URL is clean)
+  const savedId = sessionStorage.getItem('rokea_current_product_id');
+  if (savedId && document.getElementById('detailMainImg')) {
+    if (products.length > 0) {
+      setTimeout(() => { initProductPage(savedId); }, 100);
+    } else {
+      // Wait for Firestore — renderAll() will call initProductPage(savedId)
+      window._pendingProductId = savedId;
+    }
+  }
 }
 
 function initProductPage(productId) {
-  const p = products.find(prod => prod.id == productId);
-  if (!p) return;
+  let p = products.find(prod => prod.id == productId || prod.slug === productId);
+
+  // If not found locally, try fetching directly from Firestore
+  if (!p) {
+    if (db) {
+      // First try to find by ID
+      db.collection('products').doc(productId.toString()).get()
+        .then(doc => {
+          if (doc.exists) {
+            let fetched = doc.data();
+            fetched.id = fetched.id || doc.id;
+            // Merge into local products array so subsequent calls work
+            if (!products.find(x => x.id == fetched.id)) products.push(fetched);
+            _populateProductPage(fetched);
+          } else {
+            // Try fetching by slug
+            return db.collection('products').where('slug', '==', productId).get().then(snap => {
+              if (!snap.empty) {
+                let fetched = snap.docs[0].data();
+                fetched.id = fetched.id || snap.docs[0].id;
+                if (!products.find(x => x.id == fetched.id)) products.push(fetched);
+                _populateProductPage(fetched);
+              } else {
+                console.warn('Product not found in Firestore:', productId);
+              }
+            });
+          }
+        })
+        .catch(err => console.error('Firestore product fetch error:', err));
+    }
+    return;
+  }
+
+  _populateProductPage(p);
+}
+
+function _populateProductPage(p) {
+
+  // Update URL to show slug instead of stripping it
+  if (window.history && window.history.replaceState) {
+    let newUrl = isLocalhost 
+      ? (p.slug ? `${window.location.pathname}?slug=${p.slug}` : `${window.location.pathname}?id=${p.id}`)
+      : (p.slug ? `/product/${p.slug}` : `/product-details.html?id=${p.id}`);
+    history.replaceState(null, document.title, newUrl);
+  }
+
+  // ── SEO: Update page title, meta tags, OG tags, schema ──────────────────
+  const productPrice = extractPriceFromDesc(p.description) || p.price || 0;
+  const productImg = p.image || p.img || '';
+  const productDesc = (p.description || '').split('\n')[0].replace(/^[✦•\-\*]\s*/, '').trim()
+    || 'Luxury handwoven saree from ROKEA by RK, Coimbatore.';
+
+  // Page title
+  document.title = `${p.name} | ${p.category || 'Luxury Saree'} — ROKEA by RK`;
+
+  // Meta description
+  let metaDesc = document.querySelector('meta[name="description"]');
+  if (!metaDesc) { metaDesc = document.createElement('meta'); metaDesc.name = 'description'; document.head.appendChild(metaDesc); }
+  metaDesc.content = `${productDesc.slice(0, 140)} | Buy ${p.name} at ROKEA by RK, Coimbatore.`;
+
+  // OG tags
+  const setMeta = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+  setMeta('ogTitle', 'content', `${p.name} | ROKEA by RK`);
+  setMeta('ogDesc', 'content', productDesc.slice(0, 200));
+  setMeta('ogImage', 'content', productImg);
+  // Canonical URL
+  let canonicalUrl = document.getElementById('canonicalUrl');
+  if (canonicalUrl) {
+    const productUrl = p.slug 
+      ? `https://rokeabyrk.com/product/${p.slug}`
+      : `https://rokeabyrk.com/product-details.html?id=${p.id}`;
+    canonicalUrl.href = productUrl;
+    setMeta('ogUrl', 'content', productUrl);
+  } else {
+    setMeta('ogUrl', 'content', window.location.href);
+  }
+  
+  setMeta('twTitle', 'content', `${p.name} | ROKEA by RK`);
+  setMeta('twDesc', 'content', productDesc.slice(0, 200));
+  setMeta('twImage', 'content', productImg);
+
+  // Product Schema JSON-LD
+  const schema = document.getElementById('productSchema');
+  if (schema) {
+    schema.textContent = JSON.stringify({
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": p.name,
+      "image": productImg ? [productImg] : [],
+      "description": productDesc,
+      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+      "category": p.category || "",
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "INR",
+        "price": productPrice,
+        "availability": p.stock === 'Out of Stock'
+          ? "https://schema.org/OutOfStock"
+          : "https://schema.org/InStock",
+        "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+      }
+    });
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   // Populate Elements (similar to old openProductDetail logic but for static page)
   const mainImg = document.getElementById('detailMainImg');
@@ -2176,12 +2392,39 @@ function initProductPage(productId) {
   if (qtyMinus) qtyMinus.onclick = () => { if (currentQty > 1) { currentQty--; qtyVal.innerText = currentQty; } };
   if (qtyPlus) qtyPlus.onclick = () => { currentQty++; qtyVal.innerText = currentQty; };
 
-  if (mainImg) mainImg.src = p.image || p.img;
+  // Set the real image and hide skeleton when loaded
+  if (mainImg) {
+    const skeleton = document.getElementById('imgSkeleton');
+    const imgSrc = p.image || p.img || '';
+
+    // SEO: descriptive alt text with product name, category, brand
+    const altText = p.name
+      ? `${p.name} - ${p.category || 'Luxury Saree'} | ROKEA by RK`
+      : 'Luxury Handwoven Saree | ROKEA by RK';
+    mainImg.alt = altText;
+    mainImg.setAttribute('fetchpriority', 'high'); // LCP image — load first
+    mainImg.setAttribute('decoding', 'async');
+
+    if (imgSrc) {
+      mainImg.onload = () => {
+        mainImg.classList.add('img-loaded');   // fade in
+        if (skeleton) skeleton.classList.add('hide');  // hide shimmer
+      };
+      mainImg.src = imgSrc;
+    } else {
+      // No image URL — show branded gradient placeholder
+      if (skeleton) skeleton.classList.add('hide');
+      mainImg.classList.add('img-loaded');
+      mainImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // transparent
+      mainImg.style.background = 'linear-gradient(135deg, #f0e6d3, #faf6ef)';
+    }
+  }
   if (name) name.innerText = p.name;
   if (breadName) breadName.innerText = p.name;
   if (breadCat) {
     breadCat.innerText = p.category;
-    breadCat.href = `collections.html?category=${p.category}`;
+    breadCat.href = `collections.html`;
+    breadCat.onclick = () => { localStorage.setItem('rokea_selected_category', p.category); };
   }
   if (price) price.innerText = `₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}`;
 
@@ -2256,17 +2499,17 @@ function initProductPage(productId) {
         for (let i = 0; i < currentQty; i++) cart.push(p);
         localStorage.setItem('saforio_cart', JSON.stringify(cart));
         updateCartIcon();
-        
+
         // Amazon-style button change
         const originalText = btn.innerHTML;
         btn.classList.add('added');
         btn.innerHTML = 'Added to Cart';
-        
+
         showSideNotification(p);
-        
+
         setTimeout(() => {
-            btn.classList.remove('added');
-            btn.innerHTML = originalText;
+          btn.classList.remove('added');
+          btn.innerHTML = originalText;
         }, 3000);
       };
     }
@@ -2283,16 +2526,22 @@ function initProductPage(productId) {
     }
   }
 
-  // Thumbs
-  const images = [p.image || p.img, p.imageHover || p.imgHover || p.image || p.img];
-  if (p.extraImages) images.push(...p.extraImages);
-  currentDetailImages = [...new Set(images)];
+  // Thumbs — filter out empty/undefined values
+  const rawImages = [
+    p.image || p.img,
+    p.imageHover || p.imgHover || p.image || p.img,
+    ...(p.extraImages || [])
+  ];
+  currentDetailImages = [...new Set(rawImages.filter(u => u && u.trim && u.trim() !== ''))];
   currentDetailIndex = 0;
 
   if (thumbs) {
-    thumbs.innerHTML = currentDetailImages.map((img, i) => `
-      <img src="${img}" class="thumb-item ${i === 0 ? 'active' : ''}" onclick="switchDetailImage(${i})">
-    `).join('');
+    thumbs.innerHTML = currentDetailImages.map((img, i) => {
+      const thumbAlt = i === 0
+        ? `${p.name} - Front View | ROKEA by RK`
+        : `${p.name} - View ${i + 1} | ROKEA by RK`;
+      return `<img src="${img}" class="thumb-item ${i === 0 ? 'active' : ''}" alt="${thumbAlt}" loading="lazy" decoding="async" onclick="switchDetailImage(${i})" onerror="this.style.display='none'">`;
+    }).join('');
   }
 
   // Swipe Logic
@@ -2335,6 +2584,9 @@ function initProductPage(productId) {
   }
 
   renderRelatedProducts(p.category, p.id);
+
+  // Update page title
+  if (p.name) document.title = p.name + ' — ROKEA by RK';
 }
 
 window.switchDetailImage = (index) => {
@@ -2502,13 +2754,126 @@ if (document.readyState === 'loading') {
 }
 
 // Disable right-click & drag on all images to prevent opening them in a new tab (which triggers free-hosting ads)
-document.addEventListener('contextmenu', function(e) {
+document.addEventListener('contextmenu', function (e) {
   if (e.target.tagName === 'IMG') {
     e.preventDefault();
   }
 });
-document.addEventListener('dragstart', function(e) {
+document.addEventListener('dragstart', function (e) {
   if (e.target.tagName === 'IMG') {
     e.preventDefault();
   }
 });
+
+// =============================================
+// TESTIMONIAL CAROUSEL LOGIC
+// =============================================
+let currentTestimonialIndex = 0;
+let testimonialInterval;
+
+function initTestimonialCarousel() {
+  const slides = document.querySelectorAll('.nt-featured-card.slide');
+  const dots = document.querySelectorAll('.nt-dot');
+  if (slides.length === 0) return;
+
+  function showTestimonial(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+
+    slides[index].classList.add('active');
+    if (dots[index]) dots[index].classList.add('active');
+    currentTestimonialIndex = index;
+  }
+
+  window.nextTestimonial = () => {
+    let nextIndex = (currentTestimonialIndex + 1) % slides.length;
+    showTestimonial(nextIndex);
+    resetTestimonialInterval();
+  };
+
+  window.prevTestimonial = () => {
+    let prevIndex = (currentTestimonialIndex - 1 + slides.length) % slides.length;
+    showTestimonial(prevIndex);
+    resetTestimonialInterval();
+  };
+
+  window.goToTestimonial = (index) => {
+    showTestimonial(index);
+    resetTestimonialInterval();
+  };
+
+  function resetTestimonialInterval() {
+    clearInterval(testimonialInterval);
+    testimonialInterval = setInterval(window.nextTestimonial, 5000);
+  }
+
+  // Start auto-play
+  resetTestimonialInterval();
+}
+
+document.addEventListener('DOMContentLoaded', initTestimonialCarousel);
+// Custom Blouse Booking Logic
+window.openBlouseBooking = () => {
+  window.location.href = 'custom-blouse-order.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const customForm = document.getElementById('customBlouseForm');
+  if (customForm) {
+    customForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Thank you! Your custom blouse order details have been received. We will contact you shortly on WhatsApp to confirm the order.');
+      // Here you would typically send the data to your backend or Firebase
+      window.location.href = 'index.html';
+    });
+  }
+});
+
+// =============================================
+// TEMPORARY SLUG MIGRATION FROM ADMIN DASHBOARD
+// =============================================
+window.executeSlugMigration = async () => {
+  if (!db) {
+    console.error("Firestore DB not found.");
+    alert("Firestore DB not found.");
+    return;
+  }
+
+  const btn = document.getElementById('generateSlugsBtn');
+  if (btn) btn.innerText = "Generating...";
+
+  console.log("Starting slug migration from Admin Dashboard...");
+  
+  try {
+    const snapshot = await db.collection("products").get();
+    let updatedCount = 0;
+    let skippedCount = 0;
+
+    for (let doc of snapshot.docs) {
+      const data = doc.data();
+      if (!data.slug) {
+        const newSlug = generateSlug(data.name);
+        if (newSlug) {
+          console.log(`Updating product: ${data.name} -> ${newSlug}`);
+          await db.collection("products").doc(doc.id).update({ slug: newSlug });
+          updatedCount++;
+        } else {
+          console.warn(`Could not generate slug for product: ${doc.id}`);
+          skippedCount++;
+        }
+      } else {
+        skippedCount++;
+      }
+    }
+
+    console.log(`Migration Complete! 🎉`);
+    console.log(`Updated: ${updatedCount} products.`);
+    console.log(`Skipped (already had slug or invalid name): ${skippedCount} products.`);
+    alert(`Migration successful! Updated ${updatedCount} products. Check console for details.`);
+  } catch (error) {
+    console.error("Error during migration:", error);
+    alert("Migration failed. Check console for details.");
+  } finally {
+    if (btn) btn.innerText = "Generate Slugs";
+  }
+};

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PKSNJ635');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROKEA by RK | Premium Luxury Sarees & Handpicked Jewellery</title>
+  <meta name="description"
+    content="ROKEA by RK - Premium luxury sarees, silk sarees, dubion sarees & handpicked jewellery. Shop heritage collections online. shipping available.">
+  <link rel="canonical" href="https://rokeabyrk.com/" />
+  <!-- OPEN GRAPH -->
+  <meta property="og:title" content="ROKEA by RK | Luxury Sarees & Jewellery">
+  <meta property="og:description"
+    content="Premium luxury sarees, silk & dubion sarees, handcrafted jewellery. Shop now!">
+  <meta property="og:image" content="https://rokeabyrk.com/assets/og-image.jpg">
+  <meta property="og:url" content="https://rokeabyrk.com">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png"
+    href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="custom-blouse.css">
+  <style>
+    .ai-fab {
+      display: none !important;
+    }
+  </style>
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
+  <!-- SortableJS -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKSNJ635" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen" class="splash-screen">
+    <script>
+      if (sessionStorage.getItem('splashPlayed') === 'true') {
+        document.getElementById('splashScreen').style.display = 'none';
+      }
+    </script>
+    <div class="splash-content">
+      <img id="splashLogo"
+        src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_1500,h_320,al_c,q_100,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
+        alt="ROKEA by RK" class="splash-logo-img">
+    </div>
+    <div class="splash-scroll-indicator">
+      <span class="splash-scroll-text">Scroll to Discover</span>
+      <div class="splash-scroll-mouse">
+        <div class="splash-scroll-wheel"></div>
+      </div>
+    </div>
+  </div>
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img id="navLogoImg"
+        src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
+        alt="ROKEA by RK" class="logo-img">
+    </a>
+    <div class="menu-toggle" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li id="userLinkCont"><a href="javascript:void(0)" onclick="openAuth()" id="navLogin">Login / Register</a></li>
+    </ul>
+    <div class="nav-actions" style="display: flex; gap: 20px; align-items: center;">
+      <div class="wishlist-trigger" onclick="toggleWishlist()"
+        style="position: relative; cursor: pointer; margin-right: 20px;">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" style="width: 24px; height: 24px;">
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+
+
+
+        </svg>
+
+        <span id="wish-count" class="cart-count"
+          style="position: absolute; top: -5px; right: -10px; background: #e91e63; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 50%;">0</span>
+      </div>
+      <div class="cart-trigger" onclick="toggleCart()" style="position: relative; cursor: pointer;">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" style="width: 24px; height: 24px;">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+          <path d="M3 6h18" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+        <span id="cart-count" class="cart-count"
+          style="position: absolute; top: -5px; right: -10px; background: var(--gold); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 50%;">0</span>
+      </div>
+      <button class="nav-cta" onclick="openAuth()">Book Appointment</button>
+    </div>
+  </nav>
+  <section class="custom-blouse-page">
+    <div class="cb-container">
+      <div class="cb-header">
+        <div class="cb-title-container">
+          <img
+            src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
+            alt="Blouse" class="cb-blouse-icon" style="height: 40px;">
+          <div>
+            <span class="cb-subtitle">Your Style, Your Blouse</span>
+            <h1 class="cb-title">CUSTOM BLOUSE ORDER</h1>
+            <p class="cb-desc">Fill in the details below to place your custom blouse order</p>
+          </div>
+        </div>
+        <div class="cb-help-card">
+          <svg viewBox="0 0 24 24" fill="#25D366" width="24" height="24">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+          </svg>
+          <div class="cb-help-text">
+            <span>Need Help?</span>
+            <strong>WhatsApp us</strong>
+            <span>+91 70103 94051</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cb-divider"><span class="cb-divider-icon">♦</span></div>
+
+      <form id="customBlouseForm" class="cb-form">
+        <!-- TOP SECTIONS: Customer & Delivery -->
+        <div class="cb-row">
+          <div class="cb-card cb-col-6">
+            <h3 class="cb-card-title"><span class="cb-icon">👤</span>CUSTOMER DETAILS</h3>
+            <div class="cb-field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="cb_name" placeholder="Enter your full name" required>
+            </div>
+            <div class="cb-field">
+              <label>Mobile Number <span class="req">*</span></label>
+              <input type="tel" id="cb_mobile" placeholder="Enter your mobile number" required>
+            </div>
+            <div class="cb-field">
+              <label>Email Address (Optional)</label>
+              <input type="email" id="cb_email" placeholder="Enter your email address">
+            </div>
+          </div>
+
+          <div class="cb-card cb-col-6">
+            <h3 class="cb-card-title"><span class="cb-icon">📍</span>DELIVERY DETAILS</h3>
+            <div class="cb-field">
+              <label>Address <span class="req">*</span></label>
+              <textarea id="cb_address" placeholder="House / Flat / Building, Street, Area" rows="3"
+                required></textarea>
+            </div>
+            <div class="cb-row" style="margin-top: 15px;">
+              <div class="cb-field cb-col-6" style="margin-bottom:0">
+                <label>City <span class="req">*</span></label>
+                <input type="text" id="cb_city" placeholder="Enter your city" required>
+              </div>
+              <div class="cb-field cb-col-6" style="margin-bottom:0">
+                <label>Pincode <span class="req">*</span></label>
+                <input type="text" id="cb_pincode" placeholder="Enter pincode" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOUSE DETAILS -->
+        <div class="cb-card cb-full-width">
+          <h3 class="cb-card-title"><span class="cb-icon">👚</span>BLOUSE DETAILS</h3>
+          <div class="cb-row cb-wrap">
+            <div class="cb-field cb-col-3">
+              <label>Blouse Type <span class="req">*</span></label>
+              <select id="cb_blouse_type" required>
+                <option value="" disabled selected>Select type</option>
+                <option value="Regular">Regular</option>
+                <option value="Princess Cut">Princess Cut</option>
+                <option value="Katori">Katori</option>
+              </select>
+            </div>
+            <div class="cb-field cb-col-3">
+              <label>Sleeve Type <span class="req">*</span></label>
+              <input type="file" id="cb_sleeve_type_upload" accept="image/*" required style="font-size: 11px; width: 100%; padding: 5px;">
+            </div>
+            <div class="cb-field cb-col-3">
+              <label>Front Neck Design <span class="req">*</span></label>
+              <input type="file" id="cb_front_neck_upload" accept="image/*" required style="font-size: 11px; width: 100%; padding: 5px;">
+            </div>
+            <div class="cb-field cb-col-3">
+              <label>Back Neck Design <span class="req">*</span></label>
+              <input type="file" id="cb_back_neck_upload" accept="image/*" required style="font-size: 11px; width: 100%; padding: 5px;">
+            </div>
+            <div class="cb-field cb-col-3">
+              <label>Opening Type <span class="req">*</span></label>
+              <select id="cb_opening_type" required>
+                <option value="" disabled selected>Select opening type</option>
+                <option value="Front Open">Front Open</option>
+                <option value="Back Open">Back Open</option>
+              </select>
+            </div>
+            <div class="cb-field cb-col-3 cb-radio-group">
+              <label>Padding / Cup <span class="req">*</span></label>
+              <div class="cb-radios">
+                <label><input type="radio" name="cb_padding" value="Yes" required> Yes</label>
+                <label><input type="radio" name="cb_padding" value="No"> No</label>
+              </div>
+            </div>
+            <div class="cb-field cb-col-3 cb-radio-group">
+              <label>Lining <span class="req">*</span></label>
+              <div class="cb-radios">
+                <label><input type="radio" name="cb_lining" value="Yes" required> Yes</label>
+                <label><input type="radio" name="cb_lining" value="No"> No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEASUREMENTS -->
+        <div class="cb-card cb-full-width">
+          <div class="cb-card-header-flex">
+            <h3 class="cb-card-title"><span class="cb-icon">📏</span>MEASUREMENTS (In Inches)</h3>
+
+          </div>
+          <div class="cb-row">
+            <div class="cb-measure-grid">
+              <div class="cb-field"><label>Blouse Length <span class="req">*</span></label><input type="number"
+                  step="0.5" id="cb_m_blouse_len" placeholder="inches" required></div>
+              <div class="cb-field"><label>Chest / Bust <span class="req">*</span></label><input type="number"
+                  step="0.5" id="cb_m_bust" placeholder="inches" required></div>
+              <div class="cb-field"><label>Waist <span class="req">*</span></label><input type="number" step="0.5"
+                  id="cb_m_waist" placeholder="inches" required></div>
+              <div class="cb-field"><label>Shoulder <span class="req">*</span></label><input type="number" step="0.5"
+                  id="cb_m_shoulder" placeholder="inches" required></div>
+              <div class="cb-field"><label>Sleeve Length <span class="req">*</span></label><input type="number"
+                  step="0.5" id="cb_m_sleeve_len" placeholder="inches" required></div>
+              <div class="cb-field"><label>Sleeve Width <span class="req">*</span></label><input type="number"
+                  step="0.5" id="cb_m_sleeve_width" placeholder="inches" required></div>
+              <div class="cb-field"><label>Front Neck <span class="req">*</span></label><input type="number" step="0.5"
+                  id="cb_m_fnd" placeholder="inches" required></div>
+              <div class="cb-field"><label>Back Neck <span class="req">*</span></label><input type="number" step="0.5"
+                  id="cb_m_bnd" placeholder="inches" required></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DESIGN & REFERENCE -->
+        <div class="cb-card cb-full-width">
+          <h3 class="cb-card-title"><span class="cb-icon">🖼️</span>DESIGN & REFERENCE</h3>
+          <div class="cb-row cb-wrap">
+            <div class="cb-col-4">
+              <label class="cb-upload-label">Saree Photo (Optional)<br><small>Upload a photo of your
+                  saree</small></label>
+              <div class="cb-upload-area">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                </svg>
+                <p><strong>Click to upload</strong> or drag and drop<br><small>PNG, JPG, JPEG (Max. 5MB)</small></p>
+                <input type="file" accept="image/*" id="cb_saree_img">
+              </div>
+            </div>
+            <div class="cb-col-4">
+              <label class="cb-upload-label">Blouse Design Photo (Optional)<br><small>Upload a design you
+                  like</small></label>
+              <div class="cb-upload-area">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--primary)" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                </svg>
+                <p><strong>Click to upload</strong> or drag and drop<br><small>PNG, JPG, JPEG (Max. 5MB)</small></p>
+                <input type="file" accept="image/*" id="cb_design_img">
+              </div>
+            </div>
+            <div class="cb-col-4">
+              <div class="cb-field">
+                <label>Additional Notes / Special Instructions</label>
+                <textarea id="cb_notes"
+                  placeholder="Mention your custom requirements, color preferences, embroidery, lace, etc."
+                  style="height: 110px;"></textarea>
+                <small class="cb-sub-label">(Optional)</small>
+              </div>
+            </div>
+          </div>
+          <div class="cb-help-banner"
+            style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #5b21b6; font-weight: 500; font-size: 13px; background: #f3e8ff; padding: 12px; border-radius: 8px; text-align: center;">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path
+                d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+            </svg>
+            Confused with the options? Need help? Give us a call at <strong>+91 70103 94051</strong>
+          </div>
+        </div>
+
+        <!-- ORDER & PAYMENT -->
+        <div class="cb-row">
+          <div class="cb-card cb-col-6">
+            <h3 class="cb-card-title"><span class="cb-icon">📅</span>ORDER DETAILS</h3>
+            <div class="cb-row">
+              <div class="cb-field cb-col-6">
+                <label>Quantity <span class="req">*</span></label>
+                <select id="cb_qty" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+              <div class="cb-field cb-col-6">
+                <label>Required Delivery Date <span class="req">*</span></label>
+                <input type="date" id="cb_delivery_date" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="cb-card cb-col-6">
+            <h3 class="cb-card-title"><span class="cb-icon">💳</span>PAYMENT DETAILS</h3>
+            <div class="cb-row">
+              <div class="cb-field cb-col-6">
+                <label>Payment Method <span class="req">*</span></label>
+                <select id="cb_payment" required
+                  onchange="const isOnline = this.value.includes('Online') || this.value.includes('Transfer') || this.value.includes('GPay') || this.value.includes('UPI'); document.getElementById('cb_payment_screenshot_wrapper').style.display = isOnline ? 'block' : 'none'; document.getElementById('cb_payment_screenshot').required = isOnline;">
+                  <option value="" disabled selected>Select payment method</option>
+                  <option value="Online Payment (GPay/UPI)">Online Payment (GPay/UPI)</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <div class="cb-field cb-col-6">
+                <label>Advance Amount (₹) <span class="req">*</span></label>
+                <input type="number" id="cb_advance" placeholder="Enter advance amount" required>
+              </div>
+            </div>
+            <div class="cb-field cb-full-width" id="cb_payment_screenshot_wrapper"
+              style="display: none; margin-top: 10px;">
+              <label>Payment Screenshot <span class="req">*</span></label>
+              <input type="file" id="cb_payment_screenshot" accept="image/*" style="padding: 5px;">
+              <small class="cb-sub-label">Please upload a screenshot of your successful transaction.</small>
+            </div>
+            <div class="cb-notice">
+              <strong>Note:</strong> Remaining amount can be paid before dispatch / on delivery as per the selected
+              payment method.
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="cb-submit-area">
+          <label class="cb-checkbox-label">
+            <input type="checkbox" id="cb_agree" required>
+            I agree to the <a href="#">Terms & Conditions</a> and confirm that all measurements provided are correct.
+          </label>
+          <button type="submit" class="cb-submit-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <path d="M3 6h18M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            SUBMIT ORDER
+          </button>
+          <p class="cb-secure"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg> Your details are safe and secure with us.</p>
+        </div>
+
+      </form>
+    </div>
+  </section>
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">
+          <img
+            src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
+            alt="ROKEA by RK" class="logo-img">
+        </a>
+        <p class="footer-tagline">Sarees — Handpicked weaves. Timeless stories. From loom to you.
+          Jewellery — Heritage craftsmanship. Everyday elegance.
+          Rokea — Where culture meets curated beauty, one thread and gem at a time.</p>
+        <div class="footer-social">
+          <div class="social-btn" title="Facebook"
+            onclick="window.open('https://www.facebook.com/profile.php?id=61587639092396', '_blank')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+          </div>
+          <div class="social-btn" title="Instagram"
+            onclick="window.open('https://www.instagram.com/rokeabyrk/', '_blank')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+            </svg>
+          </div>
+          <div class="social-btn" title="YouTube" onclick="window.open('https://www.youtube.com/@rokeabyrk', '_blank')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+              <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="about.html">Our Heritage</a></li>
+          <li><a href="ai-stylist.html">AI Virtual Stylist</a></li>
+          <li><a href="#instagram-hub">Social Hub</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Visit Us</div>
+        <address
+          style="font-style: normal; color: var(--muted); font-size: 14px; line-height: 1.8; margin-bottom: 15px;">
+          ROKEA by RK<br>
+          Sanganoor road, Rathinapuri post,<br>
+          Coimbatore, Tamil Nadu - 641027<br>
+          India<br>
+          Phone: <a href="tel:+917010394051" style="color: var(--muted); text-decoration: none;">+91 70103 94051</a>
+        </address>
+        <button class="btn-primary" style="padding: 8px 15px; font-size: 12px;" onclick="openAuth()">Book
+          Appointment</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 ROKEA by RK Luxury Sarees & Jewellery. All rights reserved.</span>
+
+    </div>
+  </footer>
+
+  <!-- CUSTOM BLOUSE BOOKING MODAL -->
+  <div class="modal" id="blouseModal"
+    style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+    <div class="modal-content"
+      style="background: #fff; padding: 40px; border-radius: 16px; width: 90%; max-width: 500px; position: relative;">
+      <span class="modal-close"
+        style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--dark);"
+        onclick="closeBlouseBooking()">&times;</span>
+      <span class="section-label">Tailored For You</span>
+      <h3 style="margin-bottom: 15px; font-family: 'Playfair Display', serif; font-size: 28px; color: var(--dark);">
+        Design Your Blouse</h3>
+      <p style="color: var(--muted); margin-bottom: 25px; font-size: 14px;">Please fill out your details and we will
+        contact you to discuss your bespoke blouse design and measurements.</p>
+      <div style="margin-bottom: 15px; text-align: left;"><label
+          style="display: block; font-size: 12px; margin-bottom: 5px; color: var(--text);">Full Name</label><input
+          type="text" id="blouseName" placeholder="Your Name"
+          style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); border-radius: 8px;"></div>
+      <div style="margin-bottom: 15px; text-align: left;"><label
+          style="display: block; font-size: 12px; margin-bottom: 5px; color: var(--text);">Phone Number</label><input
+          type="tel" id="blousePhone" placeholder="Your Contact Number"
+          style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); border-radius: 8px;"></div>
+      <div style="margin-bottom: 15px; text-align: left;"><label
+          style="display: block; font-size: 12px; margin-bottom: 5px; color: var(--text);">Design Preferences /
+          Notes</label><textarea id="blouseNotes" placeholder="Any specific pattern, material, or design in mind?"
+          style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; font-family: 'Poppins', sans-serif; resize: vertical; min-height: 80px;"></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%; margin-top: 15px;" onclick="submitBlouseBooking()">Book
+        Consultation</button>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL (LOGIN/REGISTER) -->
+  <div class="modal" id="authModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <span class="modal-close" onclick="closeAuth()">&times;</span>
+
+      <!-- Login Form -->
+      <div id="loginView">
+        <span class="section-label">Welcome Back</span>
+        <h3 style="margin-bottom: 20px; font-family: 'Playfair Display', serif; font-size: 28px;">Sign In</h3>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="******"></div>
+        <button class="btn-primary" style="width:100%" onclick="handleAuth()">Login</button>
+        <p style="margin-top:20px; font-size:12px; color:var(--muted)">Don't have an account? <a
+            href="javascript:void(0)" onclick="toggleAuth(false)" style="color:var(--gold)">Register</a></p>
+        <p style="margin-top:10px; font-size:10px; color:var(--muted); text-align:center;">Admin? Use your secret
+          password above.</p>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerView" style="display:none">
+        <span class="section-label">Join ROKEA by RK</span>
+        <h3 style="margin-bottom: 20px; font-family: 'Playfair Display', serif; font-size: 28px;">New Account</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="John Doe"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="regPhone" placeholder="9876543210"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="******"></div>
+        <button class="btn-primary" style="width:100%" onclick="handleRegister()">Sign Up</button>
+        <p style="margin-top:20px; font-size:12px; color:var(--muted)">Already have an account? <a
+            href="javascript:void(0)" onclick="toggleAuth(true)" style="color:var(--gold)">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WISHLIST MODAL -->
+  <div id="wishlistModal" class="modal">
+    <div class="modal-content side-drawer" style="background: var(--ivory);">
+      <span class="modal-close" onclick="toggleWishlist()">&times;</span>
+      <h2 class="section-title">Your <em>Wishlist</em></h2>
+      <div id="wishlist-items" class="cart-items-list" style="margin-top: 30px;">
+        <!-- Dynamically filled -->
+      </div>
+      <div class="cart-footer" style="margin-top: 30px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px;">
+        <button class="btn-primary w-full" style="width: 100%;" onclick="moveAllToCart()">Move All to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHOPPING CART MODAL -->
+  <div id="cartModal" class="modal">
+    <div class="modal-content side-drawer">
+      <span class="modal-close" onclick="toggleCart()">&times;</span>
+      <h2 class="section-title">Your <em>Cart</em></h2>
+      <div id="cart-items" class="cart-items-list" style="margin-top: 30px;">
+        <!-- Dynamically filled -->
+      </div>
+      <div class="cart-footer" style="margin-top: 30px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <span style="font-weight: 600;">Total Amount:</span>
+          <span id="cart-total" style="color: var(--gold); font-weight: 700; font-size: 1.2rem;">₹0</span>
+        </div>
+        <button class="btn-primary w-full" style="width: 100%;" onclick="openCheckout()">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkoutModal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeCheckout()">&times;</span>
+      <h2 class="section-title">Delivery <em>Details</em></h2>
+      <form id="checkoutForm" onsubmit="handleOrder(event)" style="margin-top: 30px;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="orderName" required placeholder="Ex: Ananya Sharma">
+        </div>
+        <div class="form-group">
+          <label>PhoneNumber</label>
+          <input type="tel" id="orderPhone" required placeholder="Ex: 9876543210">
+        </div>
+        <div class="form-group">
+          <label>Full Address</label>
+          <textarea id="orderAddress" required
+            style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); height: 100px; font-family: inherit; outline: none;"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%;">Confirm & Pay with Razorpay</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- REEL POPUP MODAL -->
+  <div id="reelModal" class="modal" onclick="if(event.target === this) closeReelModal()"
+    style="align-items: center; justify-content: center; overflow: hidden;">
+    <div class="modal-content"
+      style="width: 90%; max-width: 400px; max-height: 90vh; padding: 0; background: transparent; box-shadow: none; position: relative; display: flex; flex-direction: column;">
+      <span class="modal-close" onclick="closeReelModal()"
+        style="color: #fff; background: rgba(0,0,0,0.6); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; position: absolute; right: 10px; top: 10px; z-index: 10; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">&times;</span>
+      <div id="reelIframeContainer"
+        style="flex: 1; width: 100%; aspect-ratio: 9/16; max-height: calc(90vh - 80px); border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <iframe id="reelIframe" src="" scrolling="no" style="width: 100%; height: 100%; border: none; overflow: hidden;"
+          allowfullscreen></iframe>
+      </div>
+      <button onclick="window.open('https://www.instagram.com/rokeabyrk/', '_blank')"
+        style="margin-top: 20px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 1.1rem; padding: 16px; font-weight: 600; color: #fff; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border: none; border-radius: 16px; cursor: pointer; box-shadow: 0 8px 25px rgba(220, 39, 67, 0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; letter-spacing: 0.5px; font-family: 'Poppins', sans-serif;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" style="width: 24px; height: 24px;">
+          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+        </svg>
+        Follow on Instagram
+      </button>
+    </div>
+  </div>
+
+  <!-- FULL SCREEN ADMIN DASHBOARD -->
+  <div class="modal" id="adminModal" style="background:var(--cream)">
+    <div class="admin-dashboard-layout">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <div class="admin-sidebar-top">
+          <div class="nav-logo">
+            <img
+              src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/fill/w_44,h_44,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/RK-LOGO-final.png"
+              alt="Logo" style="height: 35px; width: auto;">
+            <span class="admin-label"
+              style="font-family: 'Playfair Display', serif; font-size: 18px; color: #fff;">ROKEA ADMIN</span>
+          </div>
+          <!-- Hamburger Toggle for Admin -->
+          <div class="admin-menu-toggle" onclick="toggleAdminMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="admin-nav-links">
+          <div class="admin-nav-item active" id="tabProducts" onclick="switchAdminTab('products')">Products</div>
+          <div class="admin-nav-item" id="tabCustomers" onclick="switchAdminTab('customers')">Customers</div>
+          <div class="admin-nav-item" id="tabLeads" onclick="switchAdminTab('leads')">Consultation Leads</div>
+          <div class="admin-nav-item" id="tabOrders" onclick="switchAdminTab('orders')">Orders & Payments</div>
+          <div class="admin-nav-item logout-btn" onclick="logoutUser()" style="color: #ff4d4d;">Logout</div>
+          <div class="admin-nav-item"
+            onclick="document.getElementById('adminModal').style.display='none'; document.body.classList.remove('modal-open')"
+            style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);">
+            Exit Dashboard</div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="admin-main">
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 40px;">
+          <h2 id="adminTabTitle"
+            style="font-family: 'Playfair Display', serif; font-weight: 300; font-size: 32px; margin: 0;">
+            Product Management</h2>
+          <div style="display:flex; gap: 10px;">
+            <button class="btn-primary" id="addBtnTop"
+              onclick="document.getElementById('productForm').scrollIntoView()">Add New Product</button>
+            <button class="btn-outline"
+              style="border-color: #ff4d4d; color: #ff4d4d; padding: 12px 24px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; border: 1px solid #ff4d4d; background: transparent;"
+              id="deleteAllBtnTop" onclick="deleteAllProducts()">Delete All</button>
+          </div>
+        </div>
+
+        <!-- Products View -->
+        <div id="viewProducts">
+          <form id="productForm"
+            style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 20px; background:var(--ivory); padding: 30px; border-radius: 8px;">
+            <input type="hidden" id="editProductId" value="">
+            <div class="form-group"><label>Product Name</label><input type="text" id="prodName" required></div>
+            <div class="form-group"><label>Category</label>
+              <select id="prodCategory" required>
+                <option value="sarees">Sarees</option>
+                <option value="imitation">Imitation Jewellery</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Price (₹)</label><input type="number" id="prodPrice" required></div>
+            <div class="form-group"><label>Main Image URL</label><input type="text" id="prodImg" required></div>
+            <div class="form-group"><label>Hover Image URL</label><input type="text" id="prodImgHover" required></div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label>Additional Image URLs (Comma Separated)</label>
+              <input type="text" id="prodExtraImgs" placeholder="https://link1.png, https://link2.png">
+            </div>
+            <div class="form-group"><label>Stock</label>
+              <select id="prodStock" required>
+                <option value="In Stock">In Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+            </div>
+            <div class="form-group" style="grid-column: span 2;"><label>Description</label>
+              <textarea id="prodDesc"
+                style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); height: 100px; font-family: inherit; outline: none;"
+                placeholder="Enter product story and details..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column: span 2;"><label>Product Care Instructions</label>
+              <textarea id="prodCare"
+                style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); height: 100px; font-family: inherit; outline: none;"
+                placeholder="How to care for this product? (e.g. Dry clean only, avoid water...)"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" id="submitBtn" style="grid-column: span 2;">Save Product</button>
+          </form>
+          <div class="admin-filter-bar" style="display: flex; gap: 10px; margin-top: 30px; margin-bottom: 20px;">
+            <button class="admin-tab-btn active" onclick="switchAdminProductFilter('all')" id="adminFilterAll">All
+              Products</button>
+            <button class="admin-tab-btn" onclick="switchAdminProductFilter('sarees')"
+              id="adminFilterSarees">Sarees</button>
+            <button class="admin-tab-btn" onclick="switchAdminProductFilter('imitation')"
+              id="adminFilterJewels">Jewellery</button>
+            <div style="margin-left: auto; font-size: 11px; color: var(--muted); align-self: center;">
+              <span>✦ Tip: Drag products to reorder them</span>
+            </div>
+          </div>
+          <div class="admin-list" id="adminProductList"></div>
+        </div>
+
+        <!-- Customers View -->
+        <div id="viewCustomers" style="display:none">
+          <div class="customer-table-container">
+            <table id="customerTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Joined Date</th>
+                </tr>
+              </thead>
+              <tbody id="adminCustomerList"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Leads View -->
+        <div id="viewLeads" style="display:none">
+          <div class="customer-table-container">
+            <table id="leadTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Interest</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminLeadList"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Orders View -->
+        <div id="viewOrders" style="display:none">
+          <div class="customer-table-container">
+            <table id="orderTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Contact</th>
+                  <th>Total Amount</th>
+                  <th>Payment ID</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                </tr>
+              </thead>
+              <tbody id="adminOrderList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- AUTOMATIC LEAD CAPTURE POPUP -->
+  <div class="modal" id="leadModal">
+    <div class="modal-content lead-popup-content">
+      <span class="modal-close" onclick="closeLeadModal()">&times;</span>
+      <div class="lead-split">
+        <div class="lead-image" style="background-image:url('temple_jewellery_set.png')"></div>
+        <div class="lead-form-container">
+          <span class="section-label">Exclusive Access</span>
+          <h2 class="section-title" style="font-size: 32px; margin-bottom: 10px;">Book a <em>Style</em> Session</h2>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 25px; line-height: 1.6;">
+            Receive a complimentary styling consultation with our master designers.
+            Limited slots available this week.
+          </p>
+          <form id="leadForm" onsubmit="handleLead(event)">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="leadName" required placeholder="Ex: Ananya Sharma">
+            </div>
+            <div class="form-group">
+              <label>Phone / WhatsApp</label>
+              <input type="tel" id="leadPhone" required placeholder="Ex: +91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label>Interested In</label>
+              <select id="leadInterest">
+                <option value="Bridal Saree">Bridal Saree Consultation</option>
+                <option value="Temple Jewellery">Heritage Jewellery</option>
+                <option value="Custom Design">Custom Designer Blouse</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Request
+              Consultation</button>
+          </form>
+          <p style="font-size: 10px; color: #aaa; margin-top: 15px; text-align: center;">
+            ✦ We respect your privacy. No spam, ever.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="mobile-menu">
+    <div class="mobile-menu-header">
+      <a href="#" class="nav-logo">
+        <img
+          src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
+          alt="ROKEA by RK" class="logo-img">
+      </a>
+      <span class="menu-close" onclick="toggleMobileMenu()">&times;</span>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="index.html" onclick="toggleMobileMenu()">Home</a></li>
+      <li><a href="about.html" onclick="toggleMobileMenu()">About</a></li>
+      <li><a href="#products" onclick="toggleMobileMenu()">Products</a></li>
+      <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
+      <li id="mobileLoginCont"><a href="javascript:void(0)" onclick="toggleMobileMenu(); openAuth()">Login /
+          Register</a></li>
+    </ul>
+    <div class="mobile-menu-footer">
+      <button class="btn-primary" style="width: 100%;" onclick="toggleMobileMenu(); openAuth()">Book
+        Appointment</button>
+    </div>
+  </div>
+
+  <!-- SHARE MODAL -->
+  <div id="shareModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <span class="modal-close" onclick="closeShareModal()">&times;</span>
+      <span class="section-label">Spread the Beauty</span>
+      <h3 style="margin-bottom: 10px; font-family: 'Playfair Display', serif; font-size: 24px;">Share this
+        <em>Product</em>
+      </h3>
+      <p id="shareProductName" style="font-size: 13px; color: var(--muted); margin-bottom: 20px;"></p>
+
+      <div class="share-options">
+        <div class="share-opt" onclick="shareTo('whatsapp')">
+          <div class="share-icon-circle" style="background: #25D366;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 24px; height: 24px;">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            </svg>
+          </div>
+          <span class="share-text">WhatsApp</span>
+        </div>
+        <div class="share-opt" onclick="shareTo('facebook')">
+          <div class="share-icon-circle" style="background: #1877F2;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 24px; height: 24px;">
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            </svg>
+          </div>
+          <span class="share-text">Facebook</span>
+        </div>
+        <div class="share-opt" onclick="shareTo('twitter')">
+          <div class="share-icon-circle" style="background: #000;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.25 2.25h6.634l4.717 6.237L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+            </svg>
+          </div>
+          <span class="share-text">Twitter</span>
+        </div>
+        <div class="share-opt" onclick="shareTo('copy')">
+          <div class="share-icon-circle" style="background: var(--muted);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 24px; height: 24px;">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </div>
+          <span class="share-text">Copy Link</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+
+
+  <!-- WHATSAPP FLOATING BUTTON -->
+  <a href="https://wa.me/917010394051" class="whatsapp-fab" target="_blank" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+    <div class="whatsapp-tooltip">Chat with us</div>
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "name": "ROKEA by RK",
+    "url": "https://rokeabyrk.com",
+    "telephone": "+917010394051",
+    "description": "Premium luxury sarees and handcrafted jewellery",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Coimbatore",
+      "addressRegion": "Tamil Nadu",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://facebook.com/profile.php?id=61587639092396"
+    ]
+  }
+  </script>
+
+    <!-- MEASUREMENT VIDEO MODAL -->
+    <div class="modal" id="measureVideoModal"
+      style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+      <div class="modal-content"
+        style="background: transparent; padding: 0; border-radius: 0; width: 90%; max-width: 800px; position: relative;">
+        <span class="modal-close"
+          style="position: absolute; top: -40px; right: 0; font-size: 30px; cursor: pointer; color: #fff;"
+          onclick="closeMeasureVideo()">&times;</span>
+        <div
+          style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+          <!-- Replace src with your actual measurement video link -->
+          <iframe id="measureVideoIframe" src="https://www.youtube.com/embed/d3-M4xWfA2M"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- REEL MODAL -->
+    <div class="modal" id="reelModal"
+      style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+      <div class="modal-content"
+        style="background: transparent; padding: 0; border-radius: 0; width: 90%; max-width: 400px; height: 80vh; position: relative;">
+        <span class="modal-close"
+          style="position: absolute; top: -40px; right: 0; font-size: 30px; cursor: pointer; color: #fff;"
+          onclick="closeReelModal()">&times;</span>
+        <video id="reelVideo"
+          style="width: 100%; height: 100%; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); object-fit: cover;"
+          controls autoplay playsinline></video>
+      </div>
+    </div>
+
+    <script>
+      function openMeasureVideo() {
+        document.getElementById('measureVideoModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMeasureVideo() {
+        document.getElementById('measureVideoModal').style.display = 'none';
+        document.body.style.overflow = '';
+        // Reset video to stop playing
+        const iframe = document.getElementById('measureVideoIframe');
+        if (iframe) {
+          const src = iframe.src;
+          iframe.src = src;
+        }
+      }
+    </script>
+
+</body>
+
+</html>

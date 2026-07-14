@@ -1,4 +1,4 @@
-(function() {
+(function () {
   // Base64 Encoded Keys
   const _data = {
     "k1": "QUl6YVN5QlFjZERQUkNOZ0Y3eWZBSnBxZEgyRUZyaUdLVGR2TUtB", // Firebase Key

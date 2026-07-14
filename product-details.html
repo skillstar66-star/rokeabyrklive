@@ -5,6 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details — ROKEA by RK</title>
+    <meta name="description" content="Shop luxury handwoven sarees and heritage jewellery at ROKEA by RK, Coimbatore. Explore our exclusive collections crafted with Indian artistry.">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="luxury sarees, handwoven sarees, Coimbatore sarees, heritage jewellery, ROKEA by RK, silk sarees, Indian sarees">
+    <link id="canonicalUrl" rel="canonical" href="https://rokeabyrk.com/product-details.html">
+
+    <!-- Open Graph (Facebook / WhatsApp share preview) -->
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="ROKEA by RK">
+    <meta property="og:title" id="ogTitle" content="Luxury Sarees & Jewellery — ROKEA by RK">
+    <meta property="og:description" id="ogDesc" content="Explore our exclusive handwoven sarees and heritage jewellery collection.">
+    <meta property="og:image" id="ogImage" content="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
+    <meta property="og:url" id="ogUrl" content="https://rokeabyrk.com/product-details.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twTitle" content="Luxury Sarees — ROKEA by RK">
+    <meta name="twitter:description" id="twDesc" content="Handwoven sarees and heritage jewellery from Coimbatore.">
+    <meta name="twitter:image" id="twImage" content="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
+
+    <!-- Structured Data: Product Schema (dynamically updated by JS) -->
+    <script type="application/ld+json" id="productSchema">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Luxury Saree",
+      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+      }
+    }
+    </script>
     <link rel="icon" type="image/png"
         href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
     <link
@@ -99,10 +133,8 @@
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
-            /* Essential for the zoom effect */
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
             background: #fff;
-            /* Fix Safari/Mobile border-radius overflow clip bug during zoom scale */
             -webkit-mask-image: -webkit-radial-gradient(white, black);
             isolation: isolate;
         }
@@ -111,21 +143,84 @@
             width: 100%;
             max-width: 100%;
             aspect-ratio: 4 / 5.2;
-            /* Elegant vertical ratio perfect for sarees */
             object-fit: cover;
-            /* Crops unwanted sides to focus on the saree */
             object-position: center 10%;
-            /* Focus slightly higher to ensure the saree fall and top are visible */
             display: block;
             transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.3s ease;
+            /* Hide until src is properly set to avoid broken image icon */
+            opacity: 0;
+        }
+
+        #detailMainImg.img-loaded {
+            opacity: 1;
         }
 
         .product-main-visual:hover #detailMainImg {
             transform: scale(1.15);
-            /* Premium zoom for focus on texture and detail */
         }
 
-        /* Optional: Add a 'Focus' indicator or overlay on hover */
+        /* Skeleton loader shown while image is fetching */
+        .img-skeleton {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #f0e6d3 25%, #faf6ef 50%, #f0e6d3 75%);
+            background-size: 200% 100%;
+            animation: imgShimmer 1.6s ease-in-out infinite;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            transition: opacity 0.4s ease;
+        }
+
+        .img-skeleton.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .img-skeleton-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            animation: skeletonFade 1.6s ease-in-out infinite;
+        }
+
+        .img-skeleton-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .img-skeleton-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: dotBounce 1.2s ease-in-out infinite;
+        }
+
+        .img-skeleton-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .img-skeleton-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes imgShimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes skeletonFade {
+            0%, 100% { opacity: 0.4; }
+            50%       { opacity: 1; }
+        }
+
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40%            { transform: scale(1);   opacity: 1; }
+        }
+
+        /* Zoom overlay hint */
         .product-main-visual::after {
             content: '✦ Zoom View';
             position: absolute;
@@ -424,7 +519,18 @@
                     </div>
 
                     <div class="product-main-visual" id="mainVisualCont">
-                        <img id="detailMainImg" src="" alt="Main Image">
+                        <!-- Skeleton loader shown while image loads -->
+                        <div class="img-skeleton" id="imgSkeleton">
+                            <div class="img-skeleton-logo">ROKEA by RK</div>
+                            <div class="img-skeleton-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+
+                        <!-- src is intentionally not set here; JS sets it after product loads -->
+                        <img id="detailMainImg" alt="Product Image"
+                            onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)'; document.getElementById('imgSkeleton').classList.add('hide');">
+
                         <div class="product-share-floating"
                             onclick="shareProduct(new URLSearchParams(window.location.search).get('id'))">
                             <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"
@@ -540,6 +646,14 @@
                             <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                         </svg>
                     </div>
+                    <div class="social-btn" title="YouTube"
+                        onclick="window.open('https://www.youtube.com/@rokeabyrk', '_blank')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+                            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+                        </svg>
+                    </div>
                 </div>
             </div>
 
@@ -567,12 +681,7 @@
         </div>
         <div class="footer-bottom">
             <span class="footer-copy">© 2025 ROKEA by RK Luxury Sarees & Jewellery. All rights reserved.</span>
-            <div class="footer-pay">
-                <span class="pay-badge">UPI</span>
-                <span class="pay-badge">Visa</span>
-                <span class="pay-badge">Mastercard</span>
-                <span class="pay-badge">EMI</span>
-            </div>
+
         </div>
     </footer>
 

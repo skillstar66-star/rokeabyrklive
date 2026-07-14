@@ -672,6 +672,78 @@
         text-transform: uppercase;
     }
 
+    /* ── CUSTOMER STORIES (NEW) ── */
+    .new-testimonials-section {
+        padding: 50px 15px !important;
+    }
+
+    .nt-main-featured {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    .nt-featured-card {
+        flex-direction: column !important;
+        max-height: none !important;
+    }
+
+    .nt-featured-content {
+        padding: 40px 20px !important;
+    }
+
+    .quote-icon-top {
+        font-size: 40px !important;
+        top: 15px !important;
+        left: 15px !important;
+    }
+
+    .nt-featured-text {
+        font-size: 16px !important;
+    }
+
+    .nt-rating-float {
+        top: auto !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        transform: scale(0.8) !important;
+        transform-origin: bottom right !important;
+    }
+
+    .nt-four-grid {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 15px !important;
+        padding-bottom: 15px !important;
+        scrollbar-width: none !important;
+    }
+
+    .nt-four-grid::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .nt-four-card {
+        flex: 0 0 85% !important;
+        scroll-snap-align: start !important;
+        padding: 35px 20px 20px !important;
+        margin-top: 15px !important; /* space for quote */
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr 1fr !important; /* 2 columns for video looks better on mobile */
+        gap: 10px !important;
+    }
+
+    .video-carousel-wrapper {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    .v-nav-btn, .nt-nav-btn {
+        display: none !important; /* Hide side arrows on small screens */
+    }
+
     /* ── NEWSLETTER ── */
     .newsletter {
         padding: 60px 20px !important;
@@ -763,6 +835,16 @@
         }
     }
 
+    /* ── NEW TESTIMONIALS ── */
+    .testimonials-section {
+        padding: 60px 20px !important;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
     /* ── FOOTER ── */
     footer {
         padding: 50px 20px 30px !important;
@@ -845,9 +927,7 @@
         padding-top: 30px !important;
     }
 
-    .footer-pay {
-        justify-content: center !important;
-    }
+
 
     .product-share {
         opacity: 1 !important;
@@ -1126,5 +1206,193 @@
 
     .whatsapp-tooltip {
         display: none !important;
+    }
+}
+
+/* -- CUSTOM BLOUSE SECTION MOBILE OVERRIDES -- */
+@media (max-width: 768px) {
+    .custom-blouse-section {
+        padding: 50px 20px !important;
+        overflow: visible !important; /* Required for position: sticky to work */
+    }
+    
+    .cb-header-gold {
+        margin-bottom: 30px !important;
+    }
+    
+    .cb-title-gold {
+        font-size: 32px !important;
+    }
+    
+    .cb-title-gold em {
+        font-size: 40px !important;
+    }
+    
+    .cb-container-3d {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+    }
+    
+    .cb-easel {
+        transform: rotate(0deg) !important;
+        margin: 0 auto !important;
+        max-width: 400px !important;
+    }
+    
+    .easel-title {
+        font-size: 36px !important;
+    }
+    
+    .easel-canvas {
+        padding: 20px 15px !important;
+    }
+    
+    .cb-center-actions {
+        width: 100% !important;
+    }
+    
+    .gold-3d-btn {
+        padding: 15px 20px !important;
+        font-size: 14px !important;
+        width: 100% !important;
+        max-width: 300px !important;
+    }
+    
+    .cb-podium {
+        transform: none !important;
+        margin: 20px 0 !important;
+    }
+    
+    .podium-frame {
+        width: 100% !important;
+        max-width: 270px !important;
+    }
+    
+    .explorer-title {
+        font-size: 28px !important;
+    }
+    
+    /* Measurement Section */
+    .measure-parallax {
+        margin-top: 40px !important;
+    }
+    
+    .measure-parallax-overlay {
+        padding: 40px 15px !important;
+    }
+    
+    .measure-header {
+        margin-bottom: 25px !important;
+    }
+    
+    .measure-layout {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .measure-image-col {
+        grid-column: 1 / -1 !important;
+        order: -1 !important;
+        margin-bottom: 15px !important;
+        position: sticky !important;
+        top: 60px !important;
+        z-index: 100 !important;
+        background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(30, 30, 30, 0.95)) !important;
+        padding: 10px 0 !important;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+    
+    .measure-image-col img {
+        max-width: 80% !important;
+        margin: 0 auto !important;
+        padding: 5px !important;
+        border-radius: 10px !important;
+    }
+    
+    .m-item {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 10px 5px !important;
+        gap: 5px !important;
+        border-radius: 10px !important;
+    }
+    
+    .m-dot {
+        width: 10px !important;
+        height: 10px !important;
+        margin-top: 0 !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .m-item.active-m .m-dot {
+        transform: scale(1.2) !important;
+    }
+    
+    .m-text h4 {
+        font-size: 13px !important;
+        margin-bottom: 2px !important;
+    }
+    
+    .m-text p {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Video Modal */
+    .blouse-video-content {
+        width: 95% !important;
+        padding: 5px !important;
+    }
+    
+    .close-video-modal {
+        top: -35px !important;
+        right: 0 !important;
+    }
+}
+
+/* -- PREMIUM FEATURES (WHY CHOOSE US) MOBILE OVERRIDES -- */
+@media (max-width: 768px) {
+    .premium-features-section {
+        padding: 40px 10px !important;
+    }
+    
+    .features-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 5px !important;
+    }
+    
+    .feature-card {
+        padding: 12px 6px !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    
+    .feature-number {
+        font-size: 18px !important;
+        margin-bottom: 8px !important;
+        opacity: 0.5 !important;
+    }
+    
+    .feature-title {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 6px !important;
+        min-height: 26px !important;
+    }
+    
+    .feature-desc {
+        font-size: 8px !important;
+        line-height: 1.3 !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 }
