@@ -1214,7 +1214,7 @@ window.selectCategory = (cat) => {
 
 window.backToCategories = () => {
   // Navigate back to home page category section
-  window.location.href = '/#products';
+  window.location.href = '/products';
 }
 
 window.applySort = (sortType) => {
@@ -2877,3 +2877,14 @@ window.executeSlugMigration = async () => {
     if (btn) btn.innerText = "Generate Slugs";
   }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.pathname === '/products') {
+    const el = document.getElementById('products');
+    if (el) setTimeout(() => el.scrollIntoView(), 100);
+  }
+  if (window.location.pathname === '/contact') {
+    const el = document.getElementById('contact');
+    if (el) setTimeout(() => el.scrollIntoView(), 100);
+  }
+});

@@ -4,6 +4,14 @@
     {
       "source": "/product/(.*)",
       "destination": "/product-details?slug=$1"
+    },
+    {
+      "source": "/products",
+      "destination": "/"
+    },
+    {
+      "source": "/contact",
+      "destination": "/"
     }
   ]
 }
