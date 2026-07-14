@@ -41,10 +41,10 @@
       <div>
         <div class="footer-col-title">Quick Links</div>
         <ul class="footer-links">
-          <li><a href="#home">Home</a></li>
-          <li><a href="about.html">Our Heritage</a></li>
-          <li><a href="ai-stylist.html">AI Virtual Stylist</a></li>
-          <li><a href="#instagram-hub">Social Hub</a></li>
+          <li><a href="/index.html#home">Home</a></li>
+          <li><a href="/about.html">Our Heritage</a></li>
+          <li><a href="/ai-stylist.html">AI Virtual Stylist</a></li>
+          <li><a href="/index.html#instagram-hub">Social Hub</a></li>
         </ul>
       </div>
       <div>
