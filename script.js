@@ -79,11 +79,7 @@ let adminCurrentProductFilter = 'all';
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 function getProductLink(p) {
-  if (isLocalhost) {
-    return p.slug ? `product-details.html?slug=${p.slug}` : `product-details.html?id=${p.id}`;
-  } else {
-    return p.slug ? `/product/${p.slug}` : `product-details.html?id=${p.id}`;
-  }
+  return p.slug ? `product-details.html?slug=${p.slug}` : `product-details.html?id=${p.id}`;
 }
 
 function getAbsoluteProductLink(p) {
@@ -96,10 +92,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlCat = urlParams.get('category') || localStorage.getItem('rokea_selected_category');
 let urlId = urlParams.get('slug') || urlParams.get('id');
 
-// Read slug from pathname if using /product/PRODUCT_SLUG
-if (!urlId && window.location.pathname.startsWith('/product/')) {
-  urlId = window.location.pathname.split('/product/')[1].replace(/\/$/, '');
-}
+// (URL param parsing moved or adjusted, removed /product/ logic)
 
 function saveProducts() {
   localStorage.setItem('saforio_products', JSON.stringify(products));
@@ -2304,9 +2297,7 @@ function _populateProductPage(p) {
 
   // Update URL to show slug instead of stripping it
   if (window.history && window.history.replaceState) {
-    let newUrl = isLocalhost 
-      ? (p.slug ? `${window.location.pathname}?slug=${p.slug}` : `${window.location.pathname}?id=${p.id}`)
-      : (p.slug ? `/product/${p.slug}` : `/product-details.html?id=${p.id}`);
+    let newUrl = p.slug ? `${window.location.pathname}?slug=${p.slug}` : `${window.location.pathname}?id=${p.id}`;
     history.replaceState(null, document.title, newUrl);
   }
 
@@ -2333,7 +2324,7 @@ function _populateProductPage(p) {
   let canonicalUrl = document.getElementById('canonicalUrl');
   if (canonicalUrl) {
     const productUrl = p.slug 
-      ? `https://rokeabyrk.com/product/${p.slug}`
+      ? `https://rokeabyrk.com/product-details.html?slug=${p.slug}`
       : `https://rokeabyrk.com/product-details.html?id=${p.id}`;
     canonicalUrl.href = productUrl;
     setMeta('ogUrl', 'content', productUrl);
