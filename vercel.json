@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/product/(.*)",
-      "destination": "/product-details.html?slug=$1"
+      "destination": "/product-details?slug=$1"
     }
   ]
 }
