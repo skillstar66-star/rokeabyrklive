@@ -251,7 +251,7 @@ function showSideNotification(product) {
   const notification = document.createElement('div');
   notification.className = 'side-notification';
   notification.innerHTML = `
-        <img src="${product.image || product.img}" class="side-notification-img">
+        <img src="${product.image || product.img}" class="side-notification-img" alt="ROKEA by RK - Premium Collection">
         <div class="side-notification-content">
             <div class="side-notification-title">Added to Cart</div>
             <div class="side-notification-msg">${product.name} has been added to your bag.</div>
@@ -427,7 +427,7 @@ function renderWishlist() {
     list.innerHTML += `
       <div class="cart-item" style="animation: fadeInUp 0.4s ease forwards; animation-delay: ${index * 0.1}s; opacity: 0;">
 
-        <img src="${item.image || item.img}" style="width:50px">
+        <img src="${item.image || item.img}" style="width:50px" alt="ROKEA by RK - Premium Collection">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">₹${item.price}</div>
@@ -470,7 +470,7 @@ function renderCart() {
     total += parseInt(item.price);
     list.innerHTML += `
       <div class="cart-item">
-        <img src="${item.image || item.img}" style="width:50px">
+        <img src="${item.image || item.img}" style="width:50px" alt="ROKEA by RK - Premium Collection">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">₹${item.price}</div>
