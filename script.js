@@ -2359,9 +2359,14 @@ function _populateProductPage(p) {
   setMeta('twImage', 'content', productImg);
 
   // Product Schema & Breadcrumbs JSON-LD
-  const schema = document.getElementById('productSchema');
-  if (schema) {
-    const productUrl = p.slug ? `https://rokeabyrk.com/product/${p.slug}` : `https://rokeabyrk.com/product-details?id=${p.id}`;
+  const oldSchema = document.getElementById('productSchema');
+  if (oldSchema) oldSchema.remove();
+
+  const newSchema = document.createElement('script');
+  newSchema.type = 'application/ld+json';
+  newSchema.id = 'productSchema';
+
+  const productUrl = p.slug ? `https://rokeabyrk.com/product/${p.slug}` : `https://rokeabyrk.com/product-details?id=${p.id}`;
     let productName = p.name;
     if (!productName && p.slug) {
       productName = p.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -2387,8 +2392,9 @@ function _populateProductPage(p) {
         "seller": { "@type": "Organization", "name": "ROKEA by RK" }
       }
     };
-    schema.textContent = JSON.stringify(productSchemaData);
-  }
+    
+  newSchema.textContent = JSON.stringify(productSchemaData);
+  document.head.appendChild(newSchema);
   // ─────────────────────────────────────────────────────────────────────────
 
   // Populate Elements (similar to old openProductDetail logic but for static page)
