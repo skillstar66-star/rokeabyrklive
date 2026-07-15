@@ -80,9 +80,9 @@ const isLocalhost = window.location.hostname === 'localhost' || window.location.
 
 function getProductLink(p) {
   if (isLocalhost) {
-    return p.slug ? `/product-details?slug=${p.slug}` : `/product-details?id=${p.id}`;
+    return p.slug ? `/product-details.html?slug=${p.slug}` : `/product-details.html?id=${p.id}`;
   } else {
-    return p.slug ? `/product/${p.slug}` : `/product-details?id=${p.id}`;
+    return p.slug ? `/product/${p.slug}` : `/product-details.html?id=${p.id}`;
   }
 }
 
@@ -251,7 +251,7 @@ function showSideNotification(product) {
   const notification = document.createElement('div');
   notification.className = 'side-notification';
   notification.innerHTML = `
-        <img src="${product.image || product.img}" class="side-notification-img" alt="ROKEA by RK - Premium Collection">
+        <img src="${product.image || product.img}" class="side-notification-img">
         <div class="side-notification-content">
             <div class="side-notification-title">Added to Cart</div>
             <div class="side-notification-msg">${product.name} has been added to your bag.</div>
@@ -427,7 +427,7 @@ function renderWishlist() {
     list.innerHTML += `
       <div class="cart-item" style="animation: fadeInUp 0.4s ease forwards; animation-delay: ${index * 0.1}s; opacity: 0;">
 
-        <img src="${item.image || item.img}" style="width:50px" alt="ROKEA by RK - Premium Collection">
+        <img src="${item.image || item.img}" style="width:50px">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">₹${item.price}</div>
@@ -470,7 +470,7 @@ function renderCart() {
     total += parseInt(item.price);
     list.innerHTML += `
       <div class="cart-item">
-        <img src="${item.image || item.img}" style="width:50px" alt="ROKEA by RK - Premium Collection">
+        <img src="${item.image || item.img}" style="width:50px">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">₹${item.price}</div>
@@ -638,7 +638,7 @@ window.handleAuth = () => {
       renderAll();
     } else {
       sessionStorage.setItem('openAdmin', 'true');
-      window.location.href = '/';
+      window.location.href = '/index.html';
     }
     return;
   }
@@ -1209,12 +1209,12 @@ window.switchCategory = (cat) => {
 window.selectCategory = (cat) => {
   // Navigate to collections page
   localStorage.setItem('rokea_selected_category', cat);
-  window.location.href = `/collections`;
+  window.location.href = `/collections.html`;
 }
 
 window.backToCategories = () => {
   // Navigate back to home page category section
-  window.location.href = '/products';
+  window.location.href = '/index.html#products';
 }
 
 window.applySort = (sortType) => {
@@ -1494,7 +1494,7 @@ window.openProductDetail = (productId) => {
   if (p) {
     window.location.href = getProductLink(p);
   } else {
-    window.location.href = `/product-details?id=${productId}`;
+    window.location.href = `/product-details.html?id=${productId}`;
   }
 }
 
@@ -2306,7 +2306,7 @@ function _populateProductPage(p) {
   if (window.history && window.history.replaceState) {
     let newUrl = isLocalhost 
       ? (p.slug ? `${window.location.pathname}?slug=${p.slug}` : `${window.location.pathname}?id=${p.id}`)
-      : (p.slug ? `/product/${p.slug}` : `/product-details?id=${p.id}`);
+      : (p.slug ? `/product/${p.slug}` : `/product-details.html?id=${p.id}`);
     history.replaceState(null, document.title, newUrl);
   }
 
@@ -2334,7 +2334,7 @@ function _populateProductPage(p) {
   if (canonicalUrl) {
     const productUrl = p.slug 
       ? `https://rokeabyrk.com/product/${p.slug}`
-      : `https://rokeabyrk.com/product-details?id=${p.id}`;
+      : `https://rokeabyrk.com/product-details.html?id=${p.id}`;
     canonicalUrl.href = productUrl;
     setMeta('ogUrl', 'content', productUrl);
   } else {
@@ -2423,7 +2423,7 @@ function _populateProductPage(p) {
   if (breadName) breadName.innerText = p.name;
   if (breadCat) {
     breadCat.innerText = p.category;
-    breadCat.href = `/collections`;
+    breadCat.href = `/collections.html`;
     breadCat.onclick = () => { localStorage.setItem('rokea_selected_category', p.category); };
   }
   if (price) price.innerText = `₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}`;
@@ -2738,7 +2738,7 @@ function injectFABs() {
   }
   if (!document.querySelector('.ai-fab')) {
     const aiFAB = document.createElement('a');
-    aiFAB.href = "/ai-stylist";
+    aiFAB.href = "/ai-stylist.html";
     aiFAB.className = "ai-fab";
     aiFAB.innerHTML = `
       <div class="ai-fab-icon">✦<span class="ai-fab-badge">New</span></div>
@@ -2814,7 +2814,7 @@ function initTestimonialCarousel() {
 document.addEventListener('DOMContentLoaded', initTestimonialCarousel);
 // Custom Blouse Booking Logic
 window.openBlouseBooking = () => {
-  window.location.href = '/custom-blouse-order';
+  window.location.href = '/custom-blouse-order.html';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2824,7 +2824,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       alert('Thank you! Your custom blouse order details have been received. We will contact you shortly on WhatsApp to confirm the order.');
       // Here you would typically send the data to your backend or Firebase
-      window.location.href = '/';
+      window.location.href = '/index.html';
     });
   }
 });
@@ -2877,80 +2877,3 @@ window.executeSlugMigration = async () => {
     if (btn) btn.innerText = "Generate Slugs";
   }
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.location.pathname === '/products') {
-    const el = document.getElementById('products');
-    if (el) setTimeout(() => el.scrollIntoView(), 100);
-  }
-  if (window.location.pathname === '/contact') {
-    const el = document.getElementById('contact');
-    if (el) setTimeout(() => el.scrollIntoView(), 100);
-  }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const splashScreen = document.getElementById('splashScreen');
-    const splashLogo = document.getElementById('splashLogo');
-    const navLogoImg = document.getElementById('navLogoImg');
-    
-    if (splashScreen && splashLogo && navLogoImg) {
-            // Lock body scroll while splash is active and ensure we are at the top
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
-            window.scrollTo(0, 0);
-            
-            let hasAnimated = false;
-            
-            const triggerSplashAnimation = () => {
-                if (hasAnimated) return;
-                hasAnimated = true;
-                
-                // Keep the page at the very top during animation
-                window.scrollTo(0, 0);
-                
-                // Get bounding rects
-                const splashRect = splashLogo.getBoundingClientRect();
-                const navRect = navLogoImg.getBoundingClientRect();
-                
-                // Calculate center differences
-                const splashCenterX = splashRect.left + splashRect.width / 2;
-                const splashCenterY = splashRect.top + splashRect.height / 2;
-                const navCenterX = navRect.left + navRect.width / 2;
-                const navCenterY = navRect.top + navRect.height / 2;
-                
-                const deltaX = navCenterX - splashCenterX;
-                const deltaY = navCenterY - splashCenterY;
-                
-                const scale = navRect.width / splashRect.width;
-                
-                // Apply transform for smooth movement to navbar
-                splashLogo.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
-                
-                // Wait for the logo to finish moving (1s) before revealing the home page
-                setTimeout(() => {
-                    splashScreen.classList.add('scrolled');
-                    sessionStorage.setItem('splashPlayed', 'true');
-                    
-                    // Re-enable scrolling
-                    document.documentElement.style.overflow = ''; 
-                    document.body.style.overflow = '';
-                    
-                    // Remove splash screen from DOM after fade out completes
-                    setTimeout(() => {
-                        splashScreen.style.display = 'none';
-                    }, 800);
-                }, 1000); 
-            };
-            
-            const handleInteraction = (e) => {
-                triggerSplashAnimation();
-            };
-            
-            window.addEventListener('wheel', handleInteraction, { passive: true });
-            window.addEventListener('touchmove', handleInteraction, { passive: true });
-            
-            // Trigger animation on click as well
-            splashScreen.addEventListener('click', handleInteraction);
-    }
-});
