@@ -4,76 +4,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- SEO Meta Tags -->
-  <title>About Us | ROKEA by RK</title>
-  <meta name="description" content="Learn about ROKEA by RK, our heritage in premium luxury sarees, silk sarees, and handcrafted jewellery. Discover our story.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://rokeabyrk.com/about" />
-  
-  <!-- PWA / Mobile / Favicons -->
-  <meta name="theme-color" content="#ffffff">
+  <title>About Us — ROKEA by RK</title>
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
-  <link rel="apple-touch-icon" href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
-  
-  <!-- OPEN GRAPH -->
-  <meta property="og:title" content="About Us | ROKEA by RK">
-  <meta property="og:description" content="Learn about ROKEA by RK, our heritage in premium luxury sarees, silk sarees, and handcrafted jewellery. Discover our story.">
-  <meta property="og:image" content="https://rokeabyrk.com/assets/og-image.jpg">
-  <meta property="og:url" content="https://rokeabyrk.com/about">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="ROKEA by RK">
-  <meta property="og:locale" content="en_IN">
-  
-  <!-- TWITTER CARDS -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="About Us | ROKEA by RK">
-  <meta name="twitter:description" content="Learn about ROKEA by RK, our heritage in premium luxury sarees, silk sarees, and handcrafted jewellery. Discover our story.">
-  <meta name="twitter:image" content="https://rokeabyrk.com/assets/og-image.jpg">
-
-  <!-- Resource Hints (Preconnect / DNS-Prefetch) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://www.gstatic.com">
-  <link rel="preconnect" href="https://res.cloudinary.com">
-  
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
-  
-  <!-- CSS -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="mobile.css">
-  <link rel="stylesheet" href="custom-blouse.css">
-  
-  <!-- Scripts -->
-  <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
-  <!-- Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About Us | ROKEA by RK",
-    "url": "https://rokeabyrk.com/about",
-    "description": "Learn about ROKEA by RK, our heritage in premium luxury sarees, silk sarees, and handcrafted jewellery. Discover our story."
-  }
-  </script>
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
+  <!-- SortableJS -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 
 <body class="about-page">
-  <h1 class="sr-only">About ROKEA by RK - Our Heritage</h1>
 
   <!-- NAV -->
   <nav>
-    <a href="/" class="nav-logo">
+    <a href="index.html" class="nav-logo">
       <img id="navLogoImg"
         src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-        alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
+        alt="ROKEA by RK" class="logo-img">
     </a>
     <div class="menu-toggle" onclick="toggleMobileMenu()">
       <span></span>
@@ -81,10 +37,10 @@
       <span></span>
     </div>
     <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/products">Products</a></li>
-      <li><a href="/contact">Contact</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="index.html#products">Products</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
       <li id="userLinkCont"><a href="javascript:void(0)" onclick="openAuth()" id="navLogin">Login / Register</a></li>
     </ul>
     <div class="nav-actions" style="display: flex; gap: 20px; align-items: center;">
@@ -378,7 +334,7 @@
     <div style="max-width:1100px;margin:0 auto;padding:0 24px;">
 
       <!-- Back link -->
-      <a href="/" style="display:inline-flex;align-items:center;gap:8px;color:var(--gold-dark);font-size:0.82rem;letter-spacing:0.06em;text-decoration:none;font-family:'Poppins',sans-serif;text-transform:uppercase;margin-bottom:48px;">
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;color:var(--gold-dark);font-size:0.82rem;letter-spacing:0.06em;text-decoration:none;font-family:'Poppins',sans-serif;text-transform:uppercase;margin-bottom:48px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Back to Home
       </a>
@@ -391,7 +347,7 @@
           <div style="border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.13);aspect-ratio:3/4;max-height:560px;">
             <img src="https://res.cloudinary.com/drkgkgiat/image/upload/v1777700737/IMG_1523.JPG_h5jbjg.jpg"
               alt="Keerthana — Founder of ROKEA"
-              style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;" loading="lazy" decoding="async">
+              style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
           </div>
           <!-- Floating gold badge -->
           <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;padding:11px 30px;border-radius:50px;font-family:'Poppins',sans-serif;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;box-shadow:0 6px 22px rgba(201,168,76,0.42);">
@@ -453,7 +409,7 @@
       </style>
       <div class="offer-header-wrapper">
         <div class="offer-round-badge">
-          <img src="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png" alt="Rokea Logo" style="width:100%;height:100%;object-fit:cover;" loading="lazy" decoding="async">
+          <img src="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png" alt="Rokea Logo" style="width:100%;height:100%;object-fit:cover;">
         </div>
         <div style="text-align:center;max-width:560px;position:relative;z-index:1;">
           <span class="section-label" style="display:block;margin-bottom:12px;">What We Offer</span>
@@ -560,7 +516,7 @@
         No more uncertainty. No more second-guessing. Just effortless, confident style — rooted in tradition, guided by technology.
       </p>
 
-      <a href="/ai-stylist" class="btn-primary" style="display:inline-block;text-decoration:none;padding:15px 44px;font-size:0.9rem;letter-spacing:0.08em;">Try the AI Stylist →</a>
+      <a href="ai-stylist.html" class="btn-primary" style="display:inline-block;text-decoration:none;padding:15px 44px;font-size:0.9rem;letter-spacing:0.08em;">Try the AI Stylist →</a>
     </div>
   </section>
 
@@ -574,7 +530,7 @@
         Whether you're a <strong style="font-weight:500;color:var(--gold);">bride</strong> searching for your dream bridal set, a <strong style="font-weight:500;color:var(--gold);">working woman</strong> curating her festive wardrobe, or someone discovering the joy of Indian adornment for the first time — Rokea is designed to serve you. From our handpicked collection to our AI-powered styling experience, every touchpoint is crafted with care, so you always feel <em style="color:var(--gold);">seen, celebrated, and beautifully dressed.</em>
       </p>
       <div style="margin-top:44px;">
-        <a href="/products" class="btn-primary" style="display:inline-block;text-decoration:none;padding:15px 44px;font-size:0.9rem;letter-spacing:0.08em;">Explore the Collection →</a>
+        <a href="index.html#products" class="btn-primary" style="display:inline-block;text-decoration:none;padding:15px 44px;font-size:0.9rem;letter-spacing:0.08em;">Explore the Collection →</a>
       </div>
     </div>
       </div>
@@ -602,10 +558,10 @@
   <footer id="contact">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="/" class="nav-logo">
+        <a href="index.html" class="nav-logo">
           <img
             src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-            alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
+            alt="ROKEA by RK" class="logo-img">
         </a>
         <p class="footer-tagline">Coimbatore's finest destination for luxury handwoven sarees and heritage jewellery,
           celebrating the art of Indian craftsmanship since 2010.</p>
@@ -640,10 +596,10 @@
       <div>
         <div class="footer-col-title">Quick Links</div>
         <ul class="footer-links">
-          <li><a href="/#home">Home</a></li>
-          <li><a href="/about">Our Heritage</a></li>
-          <li><a href="/ai-stylist">AI Virtual Stylist</a></li>
-          <li><a href="/#instagram-hub">Social Hub</a></li>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="about.html">Our Heritage</a></li>
+          <li><a href="ai-stylist.html">AI Virtual Stylist</a></li>
+          <li><a href="index.html#instagram-hub">Social Hub</a></li>
         </ul>
       </div>
       <div>
@@ -741,18 +697,18 @@
   <!-- MOBILE MENU -->
   <div id="mobileMenu" class="mobile-menu">
     <div class="mobile-menu-header">
-      <a href="/" class="nav-logo">
+      <a href="index.html" class="nav-logo">
         <img
           src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-          alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
+          alt="ROKEA by RK" class="logo-img">
       </a>
       <span class="menu-close" onclick="toggleMobileMenu()">&times;</span>
     </div>
     <ul class="mobile-nav-links">
-      <li><a href="/" onclick="toggleMobileMenu()">Home</a></li>
-      <li><a href="/about" onclick="toggleMobileMenu()">About</a></li>
-      <li><a href="/products" onclick="toggleMobileMenu()">Products</a></li>
-      <li><a href="/contact" onclick="toggleMobileMenu()">Contact</a></li>
+      <li><a href="index.html" onclick="toggleMobileMenu()">Home</a></li>
+      <li><a href="about.html" onclick="toggleMobileMenu()">About</a></li>
+      <li><a href="index.html#products" onclick="toggleMobileMenu()">Products</a></li>
+      <li><a href="index.html#contact" onclick="toggleMobileMenu()">Contact</a></li>
     </ul>
   </div>
 
@@ -760,7 +716,7 @@
   <script src="script.js"></script>
 
   <!-- AI VIRTUAL STYLIST FLOATING BUTTON -->
-  <a href="/ai-stylist" class="ai-fab">
+  <a href="ai-stylist.html" class="ai-fab">
     <div class="ai-fab-icon">
       ✦
       <span class="ai-fab-badge">New</span>
