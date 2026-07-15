@@ -43,6 +43,19 @@ function cleanProductDescription(desc) { return desc || ""; }
 function extractPriceFromDesc(desc) { return 0; }
 
 // --- SEO Helpers ---
+
+function getSEOAttributes(product) {
+  let name = product.name;
+  if (!name && product.slug) {
+    name = product.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+  if (!name) name = "Rokea Premium Product";
+  
+  name = name.replace(/"/g, '&quot;');
+  
+  return `alt="${name}" title="${name}" aria-label="${name}" loading="lazy" decoding="async" width="800" height="1000"`;
+}
+
 function generateSlug(text) {
   if (!text) return "";
   return text.toLowerCase().trim()
@@ -251,7 +264,7 @@ function showSideNotification(product) {
   const notification = document.createElement('div');
   notification.className = 'side-notification';
   notification.innerHTML = `
-        <img src="${product.image || product.img}" class="side-notification-img">
+        <img src="${product.image || product.img}" class="side-notification-img" ${getSEOAttributes(product)}>
         <div class="side-notification-content">
             <div class="side-notification-title">Added to Cart</div>
             <div class="side-notification-msg">${product.name} has been added to your bag.</div>
@@ -427,7 +440,7 @@ function renderWishlist() {
     list.innerHTML += `
       <div class="cart-item" style="animation: fadeInUp 0.4s ease forwards; animation-delay: ${index * 0.1}s; opacity: 0;">
 
-        <img src="${item.image || item.img}" style="width:50px">
+        <img src="${item.image || item.img}" style="width:50px" ${getSEOAttributes(item)}>
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">₹${item.price}</div>
@@ -470,7 +483,7 @@ function renderCart() {
     total += parseInt(item.price);
     list.innerHTML += `
       <div class="cart-item">
-        <img src="${item.image || item.img}" style="width:50px">
+        <img src="${item.image || item.img}" style="width:50px" ${getSEOAttributes(item)}>
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">₹${item.price}</div>
@@ -1167,8 +1180,8 @@ function renderGrid() {
       ${isOOS ? `<div class="oos-ribbon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:9px;height:9px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Sold Out</div>` : ''}
 
       <div class="product-img ${isOOS ? 'out-of-stock' : ''}">
-        <img src="${p.image || p.img}" alt="${p.name} - ${p.category || 'Luxury Saree'} | ROKEA by RK" class="img-main" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
-        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" alt="${p.name} - Hover View | ROKEA by RK" loading="lazy" decoding="async" onerror="this.style.display='none'">
+        <img src="${p.image || p.img}" class="img-main" ${getSEOAttributes(p)} onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
+        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" ${getSEOAttributes(p)} onerror="this.style.display='none'">
         <div class="product-wish ${inWishlist ? 'active' : ''}" onclick="event.stopPropagation(); addToWishlist('${p.id}')">
           <svg class="wish-icon-svg" viewBox="0 0 24 24" fill="${inWishlist ? '#e91e63' : 'none'}" stroke="${inWishlist ? '#e91e63' : '#666'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; transition: all 0.2s ease;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
         </div>
@@ -1507,7 +1520,7 @@ function renderRelatedProducts(category, currentId) {
   slider.innerHTML = related.map((p, idx) => `
     <div class="slider-item product-card" onclick="openProductDetail(${p.id})" style="flex: 0 0 calc(20% - 12px); min-width: 190px; overflow: visible;">
       <div style="position: relative; width: 100%; aspect-ratio: 4/5; background: #fafafa;">
-         <img src="${p.imageHover || p.imgHover || p.image || p.img}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
+         <img src="${p.imageHover || p.imgHover || p.image || p.img}" style="width: 100%; height: 100%; object-fit: cover;" ${getSEOAttributes(p)} onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
          <div style="position: absolute; top: 12px; left: 12px; border: 1px solid rgba(0,0,0,0.3); color: #222; padding: 4px 14px; font-size: 10px; border-radius: 20px; background: rgba(255,255,255,0.85); display: ${idx % 3 === 0 ? 'none' : 'block'}">Best Seller</div>
          <div class="product-share" style="top: 12px; right: 12px; width: 32px; height: 32px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12);" onclick="event.stopPropagation(); shareProduct(${p.id})">
            <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -2189,8 +2202,8 @@ function renderRecommendations(selected) {
         ${p.stylistRole || 'Heritage Piece'}
       </div>
       <div class="product-img">
-        <img src="${p.image || p.img}" class="img-main" alt="${p.name} | ROKEA by RK" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
-        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" alt="${p.name} - Hover | ROKEA by RK" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">
+        <img src="${p.image || p.img}" class="img-main" ${getSEOAttributes(p)} style="width:100%; height:100%; object-fit:cover;">
+        <img src="${p.imageHover || p.imgHover || p.image || p.img}" class="img-hover" ${getSEOAttributes(p)} style="width:100%; height:100%; object-fit:cover;">
       </div>
       <div style="padding: 15px; text-align: center;">
         <div style="color:var(--gold-dark); font-weight:700; font-size: 14px; margin-bottom: 5px;">₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}</div>
@@ -2349,35 +2362,30 @@ function _populateProductPage(p) {
   const schema = document.getElementById('productSchema');
   if (schema) {
     const productUrl = p.slug ? `https://rokeabyrk.com/product/${p.slug}` : `https://rokeabyrk.com/product-details?id=${p.id}`;
+    let productName = p.name;
+    if (!productName && p.slug) {
+      productName = p.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+    if (!productName) productName = "ROKEA Premium Product";
     const productSchemaData = {
       "@context": "https://schema.org/",
-      "@graph": [
-        {
-          "@type": "Product",
-          "@id": `${productUrl}#product`,
-          "name": p.name,
-          "image": productImg ? [productImg] : [],
-          "description": productDesc,
-          "brand": { "@type": "Brand", "name": "ROKEA by RK" },
-          "category": p.category || "",
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "INR",
-            "price": productPrice,
-            "url": productUrl,
-            "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-            "seller": { "@type": "Organization", "name": "ROKEA by RK" }
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://rokeabyrk.com/" },
-            { "@type": "ListItem", "position": 2, "name": "Collections", "item": "https://rokeabyrk.com/collections" },
-            { "@type": "ListItem", "position": 3, "name": p.name, "item": productUrl }
-          ]
-        }
-      ]
+      "@type": "Product",
+      "name": productName,
+      "description": productDesc || productName,
+      "image": productImg ? [productImg] : [],
+      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+      "category": p.category || "",
+      "sku": p.id || p.slug || "ROKEA-PROD",
+      "url": window.location.href,
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "INR",
+        "price": productPrice,
+        "url": window.location.href,
+        "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+      }
     };
     schema.textContent = JSON.stringify(productSchemaData);
   }
@@ -2554,7 +2562,7 @@ function _populateProductPage(p) {
       const thumbAlt = i === 0
         ? `${p.name} - Front View | ROKEA by RK`
         : `${p.name} - View ${i + 1} | ROKEA by RK`;
-      return `<img src="${img}" class="thumb-item ${i === 0 ? 'active' : ''}" alt="${thumbAlt}" loading="lazy" decoding="async" onclick="switchDetailImage(${i})" onerror="this.style.display='none'">`;
+      return `<img src="${img}" class="thumb-item ${i === 0 ? 'active' : ''}" ${getSEOAttributes({name: thumbAlt})} onclick="switchDetailImage(${i})" onerror="this.style.display='none'">`;
     }).join('');
   }
 
