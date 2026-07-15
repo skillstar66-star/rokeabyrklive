@@ -2366,7 +2366,7 @@ function _populateProductPage(p) {
     if (tag.id !== 'productSchema') {
       try {
         const content = JSON.parse(tag.textContent);
-        if (content['@type'] === 'Product') {
+        if (content['@type'] === 'Product' || (Array.isArray(content) && content.some(item => item['@type'] === 'Product'))) {
           tag.remove();
         }
       } catch (e) {
@@ -2384,6 +2384,9 @@ function _populateProductPage(p) {
   }
   if (!productName) productName = p.id; // fallback to ID, NEVER placeholder string
   
+  // Clean price to ensure it is a valid number for Schema
+  const cleanPrice = parseFloat(productPrice.toString().replace(/[^0-9.]/g, '')) || 0;
+
   const productSchemaData = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -2397,7 +2400,7 @@ function _populateProductPage(p) {
     "offers": {
       "@type": "Offer",
       "priceCurrency": "INR",
-      "price": productPrice,
+      "price": cleanPrice,
       "url": window.location.href,
       "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       "itemCondition": "https://schema.org/NewCondition",
@@ -2423,7 +2426,7 @@ function _populateProductPage(p) {
     console.log("Firebase Product Loaded", p);
     console.log("Generated Product Schema", parsedSchema);
     console.log("Schema Inserted Successfully");
-    console.log("Current Schema:", schemaScript.textContent);
+    console.log("Current Schema", schemaScript.textContent);
   } catch (error) {
     console.error("Any Errors: Invalid JSON-LD Schema", error);
   }
@@ -2433,7 +2436,10 @@ function _populateProductPage(p) {
   let productSchemaExists = false;
   allSchemas.forEach(s => {
     try {
-      if(JSON.parse(s.textContent)['@type'] === 'Product') productSchemaExists = true;
+      const parsed = JSON.parse(s.textContent);
+      if (parsed['@type'] === 'Product' || (Array.isArray(parsed) && parsed.some(i => i['@type'] === 'Product'))) {
+        productSchemaExists = true;
+      }
     } catch(e){}
   });
   if (!productSchemaExists) {
