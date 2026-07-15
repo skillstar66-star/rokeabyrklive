@@ -2895,11 +2895,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLogoImg = document.getElementById('navLogoImg');
     
     if (splashScreen && splashLogo && navLogoImg) {
-        if (sessionStorage.getItem('splashPlayed') === 'true') {
-            splashScreen.style.display = 'none';
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
-        } else {
             // Lock body scroll while splash is active and ensure we are at the top
             document.documentElement.style.overflow = 'hidden';
             document.body.style.overflow = 'hidden';
@@ -2957,6 +2952,5 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Trigger animation on click as well
             splashScreen.addEventListener('click', handleInteraction);
-        }
     }
 });
