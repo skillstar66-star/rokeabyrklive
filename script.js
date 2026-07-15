@@ -80,9 +80,9 @@ const isLocalhost = window.location.hostname === 'localhost' || window.location.
 
 function getProductLink(p) {
   if (isLocalhost) {
-    return p.slug ? `/product-details.html?slug=${p.slug}` : `/product-details.html?id=${p.id}`;
+    return p.slug ? `/product-details?slug=${p.slug}` : `/product-details?id=${p.id}`;
   } else {
-    return p.slug ? `/product/${p.slug}` : `/product-details.html?id=${p.id}`;
+    return p.slug ? `/product/${p.slug}` : `/product-details?id=${p.id}`;
   }
 }
 
@@ -638,7 +638,7 @@ window.handleAuth = () => {
       renderAll();
     } else {
       sessionStorage.setItem('openAdmin', 'true');
-      window.location.href = '/index.html';
+      window.location.href = '/';
     }
     return;
   }
@@ -1209,12 +1209,12 @@ window.switchCategory = (cat) => {
 window.selectCategory = (cat) => {
   // Navigate to collections page
   localStorage.setItem('rokea_selected_category', cat);
-  window.location.href = `/collections.html`;
+  window.location.href = `/collections`;
 }
 
 window.backToCategories = () => {
   // Navigate back to home page category section
-  window.location.href = '/index.html#products';
+  window.location.href = '/#products';
 }
 
 window.applySort = (sortType) => {
@@ -1494,7 +1494,7 @@ window.openProductDetail = (productId) => {
   if (p) {
     window.location.href = getProductLink(p);
   } else {
-    window.location.href = `/product-details.html?id=${productId}`;
+    window.location.href = `/product-details?id=${productId}`;
   }
 }
 
@@ -2306,7 +2306,7 @@ function _populateProductPage(p) {
   if (window.history && window.history.replaceState) {
     let newUrl = isLocalhost 
       ? (p.slug ? `${window.location.pathname}?slug=${p.slug}` : `${window.location.pathname}?id=${p.id}`)
-      : (p.slug ? `/product/${p.slug}` : `/product-details.html?id=${p.id}`);
+      : (p.slug ? `/product/${p.slug}` : `/product-details?id=${p.id}`);
     history.replaceState(null, document.title, newUrl);
   }
 
@@ -2334,7 +2334,7 @@ function _populateProductPage(p) {
   if (canonicalUrl) {
     const productUrl = p.slug 
       ? `https://rokeabyrk.com/product/${p.slug}`
-      : `https://rokeabyrk.com/product-details.html?id=${p.id}`;
+      : `https://rokeabyrk.com/product-details?id=${p.id}`;
     canonicalUrl.href = productUrl;
     setMeta('ogUrl', 'content', productUrl);
   } else {
@@ -2423,7 +2423,7 @@ function _populateProductPage(p) {
   if (breadName) breadName.innerText = p.name;
   if (breadCat) {
     breadCat.innerText = p.category;
-    breadCat.href = `/collections.html`;
+    breadCat.href = `/collections`;
     breadCat.onclick = () => { localStorage.setItem('rokea_selected_category', p.category); };
   }
   if (price) price.innerText = `₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}`;
@@ -2738,7 +2738,7 @@ function injectFABs() {
   }
   if (!document.querySelector('.ai-fab')) {
     const aiFAB = document.createElement('a');
-    aiFAB.href = "/ai-stylist.html";
+    aiFAB.href = "/ai-stylist";
     aiFAB.className = "ai-fab";
     aiFAB.innerHTML = `
       <div class="ai-fab-icon">✦<span class="ai-fab-badge">New</span></div>
@@ -2814,7 +2814,7 @@ function initTestimonialCarousel() {
 document.addEventListener('DOMContentLoaded', initTestimonialCarousel);
 // Custom Blouse Booking Logic
 window.openBlouseBooking = () => {
-  window.location.href = '/custom-blouse-order.html';
+  window.location.href = '/custom-blouse-order';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2824,7 +2824,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       alert('Thank you! Your custom blouse order details have been received. We will contact you shortly on WhatsApp to confirm the order.');
       // Here you would typically send the data to your backend or Firebase
-      window.location.href = '/index.html';
+      window.location.href = '/';
     });
   }
 });

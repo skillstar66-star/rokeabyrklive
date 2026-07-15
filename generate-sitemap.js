@@ -1,7 +1,7 @@
 // Run this script in the browser console when logged in as an Admin to download sitemap.xml
 async function generateAndDownloadSitemap() {
   if (!window.db) {
-    console.error("Firestore DB not found. Run this on a page where db is initialized (e.g. index.html).");
+    console.error("Firestore DB not found. Run this on a page where db is initialized (e.g. /).");
     return;
   }
 
@@ -11,11 +11,11 @@ async function generateAndDownloadSitemap() {
   // Static pages
   const staticPages = [
     "/",
-    "/index.html",
-    "/collections.html",
-    "/about.html",
-    "/ai-stylist.html",
-    "/blouse-designs.html"
+    "/",
+    "/collections",
+    "/about",
+    "/ai-stylist",
+    "/blouse-designs"
   ];
   
   const currentDate = new Date().toISOString().split('T')[0];
@@ -29,7 +29,7 @@ async function generateAndDownloadSitemap() {
     xml += `    <loc>${baseUrl}${page}</loc>\n`;
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
     xml += `    <changefreq>weekly</changefreq>\n`;
-    if (page === "/" || page === "/index.html") {
+    if (page === "/" || page === "/") {
       xml += `    <priority>1.0</priority>\n`;
     } else {
       xml += `    <priority>0.8</priority>\n`;
@@ -46,7 +46,7 @@ async function generateAndDownloadSitemap() {
       const identifier = data.slug || doc.id;
       
       xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}${data.slug ? '/product/' + data.slug : '/product-details.html?id=' + doc.id}</loc>\n`;
+      xml += `    <loc>${baseUrl}${data.slug ? '/product/' + data.slug : '/product-details?id=' + doc.id}</loc>\n`;
       xml += `    <lastmod>${currentDate}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.9</priority>\n`;

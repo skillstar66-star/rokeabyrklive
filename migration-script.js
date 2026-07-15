@@ -1,7 +1,7 @@
 // Run this script in the browser console when logged in as an Admin
 async function migrateMissingSlugs() {
   if (!window.db) {
-    console.error("Firestore DB not found. Run this on a page where db is initialized (e.g. index.html).");
+    console.error("Firestore DB not found. Run this on a page where db is initialized (e.g. /).");
     return;
   }
 
