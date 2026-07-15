@@ -2392,7 +2392,6 @@ function _populateProductPage(p) {
     "@type": "Product",
     "name": productName,
     "description": productDesc || productName,
-    "image": productImg ? [productImg] : [],
     "brand": { "@type": "Brand", "name": "ROKEA by RK" },
     "category": p.category || "",
     "sku": p.id || p.slug,
@@ -2407,26 +2406,39 @@ function _populateProductPage(p) {
       "seller": { "@type": "Organization", "name": "ROKEA by RK" }
     }
   };
-    
-  if (schemaScript) {
-    // If it exists, replace its content (NEVER leave it empty)
-    schemaScript.textContent = JSON.stringify(productSchemaData);
-  } else {
-    // Otherwise Create it dynamically. Append into document.head
-    schemaScript = document.createElement('script');
-    schemaScript.type = 'application/ld+json';
-    schemaScript.id = 'productSchema';
-    schemaScript.textContent = JSON.stringify(productSchemaData);
-    document.head.appendChild(schemaScript);
+  
+  if (productImg) {
+    productSchemaData.image = [productImg];
   }
+
+  // Remove ALL existing schema tags including the placeholder to force Googlebot to recognize the new insertion
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(tag => {
+    try {
+      const content = tag.textContent ? JSON.parse(tag.textContent) : {};
+      if (tag.id === 'productSchema' || content['@type'] === 'Product' || (Array.isArray(content) && content.some(item => item['@type'] === 'Product'))) {
+        tag.remove();
+      }
+    } catch (e) {
+      if (tag.id === 'productSchema' || tag.textContent.trim() === '') {
+        tag.remove(); // Remove empty or malformed productSchema tags
+      }
+    }
+  });
+
+  // Always create it dynamically and append into document.head to ensure Googlebot picks it up
+  const newSchemaScript = document.createElement('script');
+  newSchemaScript.type = 'application/ld+json';
+  newSchemaScript.id = 'productSchema';
+  newSchemaScript.textContent = JSON.stringify(productSchemaData);
+  document.head.appendChild(newSchemaScript);
 
   // Validation & Logs
   try {
-    const parsedSchema = JSON.parse(schemaScript.textContent);
+    const parsedSchema = JSON.parse(newSchemaScript.textContent);
     console.log("Firebase Product Loaded", p);
     console.log("Generated Product Schema", parsedSchema);
     console.log("Schema Inserted Successfully");
-    console.log("Current Schema", schemaScript.textContent);
+    console.log("Current Schema", newSchemaScript.textContent);
   } catch (error) {
     console.error("Any Errors: Invalid JSON-LD Schema", error);
   }
