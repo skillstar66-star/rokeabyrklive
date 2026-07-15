@@ -41,10 +41,10 @@
       <div>
         <div class="footer-col-title">Quick Links</div>
         <ul class="footer-links">
-          <li><a href="/#home">Home</a></li>
-          <li><a href="/about">Our Heritage</a></li>
-          <li><a href="/ai-stylist">AI Virtual Stylist</a></li>
-          <li><a href="/#instagram-hub">Social Hub</a></li>
+          <li><a href="/index.html#home">Home</a></li>
+          <li><a href="/about.html">Our Heritage</a></li>
+          <li><a href="/ai-stylist.html">AI Virtual Stylist</a></li>
+          <li><a href="/index.html#instagram-hub">Social Hub</a></li>
         </ul>
       </div>
       <div>
@@ -423,10 +423,10 @@
       <span class="menu-close" onclick="toggleMobileMenu()">&times;</span>
     </div>
     <ul class="mobile-nav-links">
-      <li><a href="/" onclick="toggleMobileMenu()">Home</a></li>
-      <li><a href="/about" onclick="toggleMobileMenu()">About</a></li>
-      <li><a href="/products" onclick="toggleMobileMenu()">Products</a></li>
-      <li><a href="/contact" onclick="toggleMobileMenu()">Contact</a></li>
+      <li><a href="index.html" onclick="toggleMobileMenu()">Home</a></li>
+      <li><a href="about.html" onclick="toggleMobileMenu()">About</a></li>
+      <li><a href="#products" onclick="toggleMobileMenu()">Products</a></li>
+      <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
       <li id="mobileLoginCont"><a href="javascript:void(0)" onclick="toggleMobileMenu(); openAuth()">Login /
           Register</a></li>
     </ul>
@@ -492,7 +492,7 @@
   <script src="script.js"></script>
 
   <!-- AI VIRTUAL STYLIST FLOATING BUTTON -->
-  <a href="/ai-stylist" class="ai-fab">
+  <a href="ai-stylist.html" class="ai-fab">
     <div class="ai-fab-icon">
       ✦
       <span class="ai-fab-badge">New</span>
