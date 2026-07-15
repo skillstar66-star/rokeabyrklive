@@ -2359,42 +2359,86 @@ function _populateProductPage(p) {
   setMeta('twImage', 'content', productImg);
 
   // Product Schema & Breadcrumbs JSON-LD
-  const oldSchema = document.getElementById('productSchema');
-  if (oldSchema) oldSchema.remove();
-
-  const newSchema = document.createElement('script');
-  newSchema.type = 'application/ld+json';
-  newSchema.id = 'productSchema';
+  let schemaScript = document.getElementById('productSchema');
+  
+  // Remove ALL existing schema tags with Product to prevent duplicates
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(tag => {
+    if (tag.id !== 'productSchema') {
+      try {
+        const content = JSON.parse(tag.textContent);
+        if (content['@type'] === 'Product') {
+          tag.remove();
+        }
+      } catch (e) {
+        // ignore parse errors for other tags
+      }
+    }
+  });
 
   const productUrl = p.slug ? `https://rokeabyrk.com/product/${p.slug}` : `https://rokeabyrk.com/product-details?id=${p.id}`;
-    let productName = p.name;
-    if (!productName && p.slug) {
-      productName = p.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
-    if (!productName) productName = "ROKEA Premium Product";
-    const productSchemaData = {
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": productName,
-      "description": productDesc || productName,
-      "image": productImg ? [productImg] : [],
-      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
-      "category": p.category || "",
-      "sku": p.id || p.slug || "ROKEA-PROD",
+  
+  // Strict Real values only. No Placeholders.
+  let productName = p.name;
+  if (!productName && p.slug) {
+    productName = p.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+  if (!productName) productName = p.id; // fallback to ID, NEVER placeholder string
+  
+  const productSchemaData = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": productName,
+    "description": productDesc || productName,
+    "image": productImg ? [productImg] : [],
+    "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+    "category": p.category || "",
+    "sku": p.id || p.slug,
+    "url": window.location.href,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": productPrice,
       "url": window.location.href,
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "INR",
-        "price": productPrice,
-        "url": window.location.href,
-        "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-        "itemCondition": "https://schema.org/NewCondition",
-        "seller": { "@type": "Organization", "name": "ROKEA by RK" }
-      }
-    };
+      "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+    }
+  };
     
-  newSchema.textContent = JSON.stringify(productSchemaData);
-  document.head.appendChild(newSchema);
+  if (schemaScript) {
+    // If it exists, replace its content (NEVER leave it empty)
+    schemaScript.textContent = JSON.stringify(productSchemaData);
+  } else {
+    // Otherwise Create it dynamically. Append into document.head
+    schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.id = 'productSchema';
+    schemaScript.textContent = JSON.stringify(productSchemaData);
+    document.head.appendChild(schemaScript);
+  }
+
+  // Validation & Logs
+  try {
+    const parsedSchema = JSON.parse(schemaScript.textContent);
+    console.log("Firebase Product Loaded", p);
+    console.log("Generated Product Schema", parsedSchema);
+    console.log("Schema Inserted Successfully");
+    console.log("Current Schema:", schemaScript.textContent);
+  } catch (error) {
+    console.error("Any Errors: Invalid JSON-LD Schema", error);
+  }
+  
+  // Verification
+  const allSchemas = document.querySelectorAll('script[type="application/ld+json"]');
+  let productSchemaExists = false;
+  allSchemas.forEach(s => {
+    try {
+      if(JSON.parse(s.textContent)['@type'] === 'Product') productSchemaExists = true;
+    } catch(e){}
+  });
+  if (!productSchemaExists) {
+    console.error("Any Errors: Product Schema missing after injection!");
+  }
   // ─────────────────────────────────────────────────────────────────────────
 
   // Populate Elements (similar to old openProductDetail logic but for static page)
