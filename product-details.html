@@ -2,77 +2,461 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- SEO Meta Tags -->
-  <title>Product Details | ROKEA by RK</title>
-  <meta name="description" content="Discover the fine details of our premium luxury sarees and handcrafted jewellery at ROKEA by RK. Order online now.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://rokeabyrk.com/product-details" />
-  
-  <!-- PWA / Mobile / Favicons -->
-  <meta name="theme-color" content="#ffffff">
-  <link rel="icon" type="image/png" href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
-  <link rel="apple-touch-icon" href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
-  
-  <!-- OPEN GRAPH -->
-  <meta property="og:title" content="Product Details | ROKEA by RK">
-  <meta property="og:description" content="Discover the fine details of our premium luxury sarees and handcrafted jewellery at ROKEA by RK. Order online now.">
-  <meta property="og:image" content="https://rokeabyrk.com/assets/og-image.jpg">
-  <meta property="og:url" content="https://rokeabyrk.com/product-details">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="ROKEA by RK">
-  <meta property="og:locale" content="en_IN">
-  
-  <!-- TWITTER CARDS -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Product Details | ROKEA by RK">
-  <meta name="twitter:description" content="Discover the fine details of our premium luxury sarees and handcrafted jewellery at ROKEA by RK. Order online now.">
-  <meta name="twitter:image" content="https://rokeabyrk.com/assets/og-image.jpg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details — ROKEA by RK</title>
+    <meta name="description" content="Shop luxury handwoven sarees and heritage jewellery at ROKEA by RK, Coimbatore. Explore our exclusive collections crafted with Indian artistry.">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="luxury sarees, handwoven sarees, Coimbatore sarees, heritage jewellery, ROKEA by RK, silk sarees, Indian sarees">
+    <link id="canonicalUrl" rel="canonical" href="https://rokeabyrk.com/product-details.html">
 
-  <!-- Resource Hints (Preconnect / DNS-Prefetch) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://www.gstatic.com">
-  <link rel="preconnect" href="https://res.cloudinary.com">
-  
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
-  
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="mobile.css">
-  <link rel="stylesheet" href="custom-blouse.css">
-  
-  <!-- Scripts -->
-  <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <!-- Open Graph (Facebook / WhatsApp share preview) -->
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="ROKEA by RK">
+    <meta property="og:title" id="ogTitle" content="Luxury Sarees & Jewellery — ROKEA by RK">
+    <meta property="og:description" id="ogDesc" content="Explore our exclusive handwoven sarees and heritage jewellery collection.">
+    <meta property="og:image" id="ogImage" content="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
+    <meta property="og:url" id="ogUrl" content="https://rokeabyrk.com/product-details.html">
 
-  <!-- Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "Product Details | ROKEA by RK",
-    "url": "https://rokeabyrk.com/product-details",
-    "description": "Discover the fine details of our premium luxury sarees and handcrafted jewellery at ROKEA by RK. Order online now."
-  }
-  </script>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twTitle" content="Luxury Sarees — ROKEA by RK">
+    <meta name="twitter:description" id="twDesc" content="Handwoven sarees and heritage jewellery from Coimbatore.">
+    <meta name="twitter:image" id="twImage" content="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
+
+    <!-- Structured Data: Product Schema (dynamically updated by JS) -->
+    <script type="application/ld+json" id="productSchema">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Luxury Saree",
+      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+      }
+    }
+    </script>
+    <link rel="icon" type="image/png"
+        href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/mobile.css">
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
+    <style>
+        .product-page {
+            background: var(--cream);
+        }
+
+        .product-details-section {
+            padding-top: 150px;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        .breadcrumb a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--gold);
+        }
+
+        .breadcrumb span {
+            color: var(--gold);
+        }
+
+        .product-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .product-images-side {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Image Section */
+        .product-thumbs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .thumb-item {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .thumb-item.active {
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(201, 168, 76, 0.2);
+        }
+
+        .product-main-visual {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            isolation: isolate;
+        }
+
+        #detailMainImg {
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 4 / 5.2;
+            object-fit: cover;
+            object-position: center 10%;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.3s ease;
+            /* Hide until src is properly set to avoid broken image icon */
+            opacity: 0;
+        }
+
+        #detailMainImg.img-loaded {
+            opacity: 1;
+        }
+
+        .product-main-visual:hover #detailMainImg {
+            transform: scale(1.15);
+        }
+
+        /* Skeleton loader shown while image is fetching */
+        .img-skeleton {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #f0e6d3 25%, #faf6ef 50%, #f0e6d3 75%);
+            background-size: 200% 100%;
+            animation: imgShimmer 1.6s ease-in-out infinite;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            transition: opacity 0.4s ease;
+        }
+
+        .img-skeleton.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .img-skeleton-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            animation: skeletonFade 1.6s ease-in-out infinite;
+        }
+
+        .img-skeleton-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .img-skeleton-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: dotBounce 1.2s ease-in-out infinite;
+        }
+
+        .img-skeleton-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .img-skeleton-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes imgShimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes skeletonFade {
+            0%, 100% { opacity: 0.4; }
+            50%       { opacity: 1; }
+        }
+
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40%            { transform: scale(1);   opacity: 1; }
+        }
+
+        /* Zoom overlay hint */
+        .product-main-visual::after {
+            content: '✦ Zoom View';
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(26, 18, 9, 0.7);
+            color: var(--gold);
+            padding: 8px 15px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--gold);
+            z-index: 12;
+        }
+
+        .product-main-visual:hover::after {
+            opacity: 1;
+        }
+
+        /* Info Section */
+        .product-info-panel {
+            padding: 0 20px;
+        }
+
+        .product-title-big {
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            font-weight: 300;
+            color: var(--dark);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .product-price-big {
+            font-size: 24px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .product-tabs-nav {
+            display: flex;
+            gap: 30px;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .tab-nav-btn {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: none;
+            padding: 8px 0;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .tab-nav-btn:hover {
+            color: var(--gold);
+        }
+
+        .tab-nav-btn.active {
+            color: var(--dark);
+        }
+
+        .tab-nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(201, 168, 76, 0.1);
+            margin-bottom: 40px;
+            min-height: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .section-mini-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-mini-title span {
+            color: var(--gold);
+        }
+
+        .desc-content,
+        .care-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .care-item,
+        .desc-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+            align-items: flex-start;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.05);
+        }
+
+        .care-item:last-child,
+        .desc-item:last-child {
+            border-bottom: none;
+        }
+
+        .care-icon,
+        .desc-icon {
+            color: var(--gold);
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: rgba(201, 168, 76, 0.1);
+            border-radius: 50%;
+        }
+
+        .care-text,
+        .desc-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .qty-selector {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            padding: 8px 25px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .qty-btn {
+            cursor: pointer;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 20px;
+        }
+
+        .action-btns .btn-primary {
+            flex: 1;
+            padding: 18px;
+            border-radius: 50px;
+        }
+
+        .action-btns .btn-outline {
+            flex: 1;
+            padding: 18px;
+            border-color: var(--dark);
+            color: var(--dark);
+            border-radius: 50px;
+        }
+
+        .related-section {
+            margin-top: 100px;
+            max-width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+                gap: 20px;
+            }
+
+            .product-images-side {
+                flex-direction: column;
+            }
+
+            .product-thumbs {
+                order: 2;
+                flex-direction: row;
+                max-height: none;
+                overflow-x: auto;
+            }
+
+            .product-thumbs .thumb-item {
+                width: 80px;
+            }
+
+            .product-main-visual {
+                order: 1;
+            }
+
+            .product-info-panel {
+                order: 3;
+                padding: 0;
+            }
+        }
+    </style>
 </head>
 
 <body class="product-page">
-  <h1 class="sr-only">Premium Product - ROKEA by RK</h1>
 
     <!-- NAV -->
     <nav>
         <a href="/" class="nav-logo">
             <img src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-                alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
+                alt="ROKEA by RK" class="logo-img">
         </a>
         <div class="menu-toggle" onclick="toggleMobileMenu()">
             <span></span>
@@ -81,9 +465,9 @@
         </div>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
-            <li><a href="/#about">About</a></li>
-            <li><a href="/collections">Collections</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href="/index.html#about">About</a></li>
+            <li><a href="/collections.html">Collections</a></li>
+            <li><a href="/index.html#contact">Contact</a></li>
         </ul>
         <div class="nav-actions" style="display: flex; gap: 20px; align-items: center;">
             <div class="wishlist-trigger" onclick="toggleWishlist()"
@@ -122,7 +506,7 @@
             <div class="breadcrumb">
                 <a href="/">Home</a>
                 <span>/</span>
-                <a href="/collections" id="breadcrumb-cat">Collections</a>
+                <a href="/collections.html" id="breadcrumb-cat">Collections</a>
                 <span>/</span>
                 <span id="breadcrumb-name">Product Name</span>
             </div>
@@ -145,7 +529,7 @@
 
                         <!-- src is intentionally not set here; JS sets it after product loads -->
                         <img id="detailMainImg" alt="Product Image"
-                            onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)'; document.getElementById('imgSkeleton').classList.add('hide');" loading="lazy" decoding="async">
+                            onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)'; document.getElementById('imgSkeleton').classList.add('hide');">
 
                         <div class="product-share-floating"
                             onclick="shareProduct(new URLSearchParams(window.location.search).get('id'))">
@@ -240,7 +624,7 @@
             <div class="footer-brand">
                 <a href="/" class="nav-logo">
                     <img src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-                        alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
+                        alt="ROKEA by RK" class="logo-img">
                 </a>
                 <p class="footer-tagline">Coimbatore's finest destination for luxury handwoven sarees and heritage
                     jewellery,
@@ -276,10 +660,10 @@
             <div>
                 <div class="footer-col-title">Quick Links</div>
                 <ul class="footer-links">
-                    <li><a href="/#home">Home</a></li>
-                    <li><a href="/#about">Our Heritage</a></li>
-                    <li><a href="/#stylist">AI Virtual Stylist</a></li>
-                    <li><a href="/#instagram-hub">Social Hub</a></li>
+                    <li><a href="/index.html#home">Home</a></li>
+                    <li><a href="/index.html#about">Our Heritage</a></li>
+                    <li><a href="/index.html#stylist">AI Virtual Stylist</a></li>
+                    <li><a href="/index.html#instagram-hub">Social Hub</a></li>
                 </ul>
             </div>
             <div>
@@ -369,15 +753,15 @@
         <div class="mobile-menu-header">
             <a href="/" class="nav-logo">
                 <img src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-                    alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
+                    alt="ROKEA by RK" class="logo-img">
             </a>
             <span class="menu-close" onclick="toggleMobileMenu()">&times;</span>
         </div>
         <ul class="mobile-nav-links">
             <li><a href="/" onclick="toggleMobileMenu()">Home</a></li>
-            <li><a href="/#about" onclick="toggleMobileMenu()">About</a></li>
-            <li><a href="/collections" onclick="toggleMobileMenu()">Collections</a></li>
-            <li><a href="/contact" onclick="toggleMobileMenu()">Contact</a></li>
+            <li><a href="/index.html#about" onclick="toggleMobileMenu()">About</a></li>
+            <li><a href="/collections.html" onclick="toggleMobileMenu()">Collections</a></li>
+            <li><a href="/index.html#contact" onclick="toggleMobileMenu()">Contact</a></li>
         </ul>
     </div>
 
