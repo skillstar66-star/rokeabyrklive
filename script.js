@@ -2345,27 +2345,41 @@ function _populateProductPage(p) {
   setMeta('twDesc', 'content', productDesc.slice(0, 200));
   setMeta('twImage', 'content', productImg);
 
-  // Product Schema JSON-LD
+  // Product Schema & Breadcrumbs JSON-LD
   const schema = document.getElementById('productSchema');
   if (schema) {
-    schema.textContent = JSON.stringify({
+    const productUrl = p.slug ? `https://rokeabyrk.com/product/${p.slug}` : `https://rokeabyrk.com/product-details?id=${p.id}`;
+    const productSchemaData = {
       "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": p.name,
-      "image": productImg ? [productImg] : [],
-      "description": productDesc,
-      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
-      "category": p.category || "",
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "INR",
-        "price": productPrice,
-        "availability": p.stock === 'Out of Stock'
-          ? "https://schema.org/OutOfStock"
-          : "https://schema.org/InStock",
-        "seller": { "@type": "Organization", "name": "ROKEA by RK" }
-      }
-    });
+      "@graph": [
+        {
+          "@type": "Product",
+          "@id": `${productUrl}#product`,
+          "name": p.name,
+          "image": productImg ? [productImg] : [],
+          "description": productDesc,
+          "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+          "category": p.category || "",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "INR",
+            "price": productPrice,
+            "url": productUrl,
+            "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+            "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://rokeabyrk.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Collections", "item": "https://rokeabyrk.com/collections" },
+            { "@type": "ListItem", "position": 3, "name": p.name, "item": productUrl }
+          ]
+        }
+      ]
+    };
+    schema.textContent = JSON.stringify(productSchemaData);
   }
   // ─────────────────────────────────────────────────────────────────────────
 

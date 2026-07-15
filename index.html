@@ -18,29 +18,68 @@
   <title>ROKEA by RK | Premium Luxury Sarees & Handpicked Jewellery</title>
   <meta name="description" content="ROKEA by RK - Premium luxury sarees, silk sarees, dubion sarees & handpicked jewellery. Shop heritage collections online.">
   <link rel="canonical" href="https://rokeabyrk.com/" />
-  <!-- OPEN GRAPH -->
+  <!-- OPEN GRAPH & TWITTER CARDS -->
   <meta property="og:title" content="ROKEA by RK | Premium Luxury Sarees & Handpicked Jewellery">
   <meta property="og:description" content="ROKEA by RK - Premium luxury sarees, silk sarees, dubion sarees & handpicked jewellery. Shop heritage collections online.">
   <meta property="og:image" content="https://rokeabyrk.com/assets/og-image.jpg">
   <meta property="og:url" content="https://rokeabyrk.com/">
   <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ROKEA by RK | Premium Luxury Sarees & Handpicked Jewellery">
+  <meta name="twitter:description" content="ROKEA by RK - Premium luxury sarees, silk sarees, dubion sarees & handpicked jewellery. Shop heritage collections online.">
+  <meta name="twitter:image" content="https://rokeabyrk.com/assets/og-image.jpg">
+
+  <!-- JSON-LD STRUCTURED DATA -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ROKEA by RK",
+    "url": "https://rokeabyrk.com",
+    "logo": "https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-1234567890",
+      "contactType": "customer service"
+    },
+    "sameAs": [
+      "https://instagram.com/rokeabyrk"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "WebSite",
+    "name": "ROKEA by RK",
+    "url": "https://rokeabyrk.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://rokeabyrk.com/collections?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
   <link rel="icon" type="image/png"
     href="https://res.cloudinary.com/drkgkgiat/image/upload/v1778566030/Crafted_to_be_chosen_20260504_165516_0000_zugixn.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap"
     rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/mobile.css">
   <link rel="stylesheet" href="/custom-blouse.css">
   <!-- Razorpay SDK -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
   <!-- SortableJS -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 </head>
 
 <body>
@@ -58,7 +97,7 @@
     <div class="splash-content">
       <img id="splashLogo"
         src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_1500,h_320,al_c,q_100,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-        alt="ROKEA by RK" class="splash-logo-img">
+        alt="ROKEA by RK" class="splash-logo-img" loading="eager" fetchpriority="high" decoding="async">
     </div>
     <div class="splash-scroll-indicator">
       <span class="splash-scroll-text">Scroll to Discover</span>
@@ -69,12 +108,12 @@
   </div>
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">
+    <a href="#" class="nav-logo" aria-label="ROKEA by RK Homepage">
       <img id="navLogoImg"
         src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-        alt="ROKEA by RK" class="logo-img">
+        alt="ROKEA by RK" class="logo-img" loading="eager" fetchpriority="high" decoding="async">
     </a>
-    <div class="menu-toggle" onclick="toggleMobileMenu()">
+    <div class="menu-toggle" aria-label="Toggle mobile menu" role="button" tabindex="0" onclick="toggleMobileMenu()">
       <span></span>
       <span></span>
       <span></span>
@@ -87,7 +126,7 @@
       <li id="userLinkCont"><a href="javascript:void(0)" onclick="openAuth()" id="navLogin">Login / Register</a></li>
     </ul>
     <div class="nav-actions" style="display: flex; gap: 20px; align-items: center;">
-      <div class="wishlist-trigger" onclick="toggleWishlist()"
+      <div class="wishlist-trigger" aria-label="View wishlist" role="button" tabindex="0" onclick="toggleWishlist()"
         style="position: relative; cursor: pointer; margin-right: 20px;">
         <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" style="width: 24px; height: 24px;">
@@ -101,7 +140,7 @@
         <span id="wish-count" class="cart-count"
           style="position: absolute; top: -5px; right: -10px; background: #e91e63; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 50%;">0</span>
       </div>
-      <div class="cart-trigger" onclick="toggleCart()" style="position: relative; cursor: pointer;">
+      <div class="cart-trigger" aria-label="View cart" role="button" tabindex="0" onclick="toggleCart()" style="position: relative; cursor: pointer;">
         <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" style="width: 24px; height: 24px;">
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
@@ -305,11 +344,11 @@
         <div class="podium-frame">
           <div class="frame-face frame-front">
             <div class="podium-badge">CUSTOM MADE</div>
-            <img src="premium_blouse_main.png" alt="Custom Blouse Display">
+            <img src="premium_blouse_main.png" alt="Custom Blouse Display" loading="lazy" decoding="async">
           </div>
           <div class="frame-face frame-back">
             <div class="podium-badge">EXCLUSIVE STYLE</div>
-            <img src="blouse_thumb_1.png" alt="Custom Blouse Back Display">
+            <img src="blouse_thumb_1.png" alt="Custom Blouse Back Display" loading="lazy" decoding="async">
           </div>
         </div>
       </div>
@@ -318,11 +357,11 @@
       <div class="cb-style-explorer">
         <h3 class="explorer-title">Style Explorer</h3>
         <div class="explorer-grid">
-          <div class="explorer-frame"><img src="blouse_thumb_1.png" alt="Silk Swatches"><span>Silk Swatches</span></div>
-          <div class="explorer-frame"><img src="blouse_thumb_2.png" alt="Silk Swatches"><span>Silk Swatches</span></div>
-          <div class="explorer-frame"><img src="blouse_thumb_3.png" alt="Pattern Sketches"><span>Pattern Sketches</span>
+          <div class="explorer-frame"><img src="blouse_thumb_1.png" alt="Silk Swatches" loading="lazy" decoding="async"><span>Silk Swatches</span></div>
+          <div class="explorer-frame"><img src="blouse_thumb_2.png" alt="Silk Swatches" loading="lazy" decoding="async"><span>Silk Swatches</span></div>
+          <div class="explorer-frame"><img src="blouse_thumb_3.png" alt="Pattern Sketches" loading="lazy" decoding="async"><span>Pattern Sketches</span>
           </div>
-          <div class="explorer-frame"><img src="blouse_thumb_4.png" alt="Pattern Sketches"><span>Pattern Sketches</span>
+          <div class="explorer-frame"><img src="blouse_thumb_4.png" alt="Pattern Sketches" loading="lazy" decoding="async"><span>Pattern Sketches</span>
           </div>
         </div>
       </div>
@@ -385,7 +424,7 @@
 
             <div class="measure-image-col">
               <img id="measure-guide-img" src="measure_blouse_length_1782969964966.png"
-                alt="Measurement Guide showing Tape">
+                alt="Measurement Guide showing Tape" loading="lazy" decoding="async">
             </div>
 
             <div class="measure-list right-list">
@@ -502,7 +541,7 @@
       <div class="about-visual ai-visual-wrapper">
         <div class="ai-scan-line"></div>
         <img src="ai_stylist_teaser.png" alt="AI Virtual Stylist"
-          style="border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+          style="border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);" loading="lazy" decoding="async">
         <div class="ai-badge-overlay">
           <span>✦ AI POWERED</span>
         </div>
@@ -605,7 +644,7 @@
             <div class="nt-featured-image">
               <img
                 src="https://res.cloudinary.com/drkgkgiat/image/upload/v1777447204/rk_saree_banner_copy.jpg_d6mphh.jpg"
-                alt="Priya S Story">
+                alt="Priya S Story" loading="lazy" decoding="async">
 
             </div>
             <div class="nt-featured-content">
@@ -623,7 +662,7 @@
           <!-- Card 2 -->
           <div class="nt-featured-card slide">
             <div class="nt-featured-image">
-              <img src="temple_jewellery_set.png" alt="Keerthana R Story">
+              <img src="temple_jewellery_set.png" alt="Keerthana R Story" loading="lazy" decoding="async">
 
             </div>
             <div class="nt-featured-content">
@@ -641,7 +680,7 @@
           <!-- Card 3 -->
           <div class="nt-featured-card slide">
             <div class="nt-featured-image">
-              <img src="https://i.postimg.cc/cC8hrNM8/DSC01843.jpg" alt="Divya M Story">
+              <img src="https://i.postimg.cc/cC8hrNM8/DSC01843.jpg" alt="Divya M Story" loading="lazy" decoding="async">
 
             </div>
             <div class="nt-featured-content">
@@ -691,7 +730,7 @@
             <div class="nt-stars">★★★★★</div>
             <p class="nt-grid-text">"Absolutely stunning quality. It felt so regal and elegant!"</p>
             <div class="nt-user-avatar">
-              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Keerthana R">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Keerthana R" loading="lazy" decoding="async">
               <div class="nt-user-details">
                 <h4>Keerthana R</h4>
                 <span>CHENNAI</span>
@@ -708,7 +747,7 @@
             <div class="nt-stars">★★★★★</div>
             <p class="nt-grid-text highlight-text">"Looked authentic and elegant. Everyone loved it!"</p>
             <div class="nt-user-avatar">
-              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Divya M">
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Divya M" loading="lazy" decoding="async">
               <div class="nt-user-details">
                 <h4 class="highlight-text">Divya M</h4>
                 <span class="highlight-text" style="opacity: 0.7;">COIMBATORE</span>
@@ -725,7 +764,7 @@
             <div class="nt-stars">★★★★★</div>
             <p class="nt-grid-text">"Received countless compliments. Worth every bit!"</p>
             <div class="nt-user-avatar">
-              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Aishwarya K">
+              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Aishwarya K" loading="lazy" decoding="async">
               <div class="nt-user-details">
                 <h4>Aishwarya K</h4>
                 <span>TRICHY</span>
@@ -742,7 +781,7 @@
             <div class="nt-stars">★★★★★</div>
             <p class="nt-grid-text">"The team helped me choose the perfect piece. Amazing service!"</p>
             <div class="nt-user-avatar">
-              <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Nandhini L">
+              <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Nandhini L" loading="lazy" decoding="async">
               <div class="nt-user-details">
                 <h4>Nandhini L</h4>
                 <span>BANGALORE</span>
@@ -775,7 +814,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674814/9.4.26_video_1_quifw7.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674814/9.4.26_video_1_quifw7.jpg"
-            alt="Instagram Post 1">
+            alt="Instagram Post 1" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -789,7 +828,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674812/21.4.26_video2_iqofqu.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674812/21.4.26_video2_iqofqu.jpg"
-            alt="Instagram Post 2">
+            alt="Instagram Post 2" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -803,7 +842,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674815/25.4.26_pink_saree_qlzha9.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674815/25.4.26_pink_saree_qlzha9.jpg"
-            alt="Instagram Post 3">
+            alt="Instagram Post 3" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -817,7 +856,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674804/today_reel_j9ysx2.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674804/today_reel_j9ysx2.jpg"
-            alt="Instagram Post 4">
+            alt="Instagram Post 4" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -831,7 +870,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674800/17.4.26_video_6_izcj1i.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674800/17.4.26_video_6_izcj1i.jpg"
-            alt="Instagram Post 5">
+            alt="Instagram Post 5" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -846,7 +885,7 @@
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img
             src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674798/25.4.26_minimal_bridal_set_video_kqushm.jpg"
-            alt="Instagram Post 6">
+            alt="Instagram Post 6" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -860,7 +899,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674791/9.4.26_video_2_fmpjmz.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674791/9.4.26_video_2_fmpjmz.jpg"
-            alt="Instagram Post 7">
+            alt="Instagram Post 7" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -876,7 +915,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674814/9.4.26_video_1_quifw7.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674814/9.4.26_video_1_quifw7.jpg"
-            alt="Instagram Post 1">
+            alt="Instagram Post 1" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -890,7 +929,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674812/21.4.26_video2_iqofqu.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674812/21.4.26_video2_iqofqu.jpg"
-            alt="Instagram Post 2">
+            alt="Instagram Post 2" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -904,7 +943,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674815/25.4.26_pink_saree_qlzha9.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674815/25.4.26_pink_saree_qlzha9.jpg"
-            alt="Instagram Post 3">
+            alt="Instagram Post 3" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -918,7 +957,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674804/today_reel_j9ysx2.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674804/today_reel_j9ysx2.jpg"
-            alt="Instagram Post 4">
+            alt="Instagram Post 4" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -932,7 +971,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674800/17.4.26_video_6_izcj1i.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674800/17.4.26_video_6_izcj1i.jpg"
-            alt="Instagram Post 5">
+            alt="Instagram Post 5" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -947,7 +986,7 @@
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img
             src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674798/25.4.26_minimal_bridal_set_video_kqushm.jpg"
-            alt="Instagram Post 6">
+            alt="Instagram Post 6" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -961,7 +1000,7 @@
         <a onclick="openIgVideo('https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674791/9.4.26_video_2_fmpjmz.mp4')"
           class="ig-marquee-item ig-item" style="cursor: pointer;">
           <img src="https://res.cloudinary.com/dgpkzmkxf/video/upload/v1781674791/9.4.26_video_2_fmpjmz.jpg"
-            alt="Instagram Post 7">
+            alt="Instagram Post 7" loading="lazy" decoding="async">
           <div class="ig-overlay"
             style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
@@ -1076,10 +1115,10 @@
   <footer id="contact">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#" class="nav-logo">
+        <a href="#" class="nav-logo" aria-label="ROKEA by RK Homepage">
           <img
             src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-            alt="ROKEA by RK" class="logo-img">
+            alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
         </a>
         <p class="footer-tagline">Sarees — Handpicked weaves. Timeless stories. From loom to you.
           Jewellery — Heritage craftsmanship. Everyday elegance.
@@ -1239,10 +1278,10 @@
       <!-- Sidebar -->
       <div class="admin-sidebar">
         <div class="admin-sidebar-top">
-          <div class="nav-logo">
+          <div class="nav-logo" aria-label="ROKEA by RK Homepage">
             <img
               src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/fill/w_44,h_44,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/RK-LOGO-final.png"
-              alt="Logo" style="height: 35px; width: auto;">
+              alt="Logo" style="height: 35px; width: auto;" loading="lazy" decoding="async">
             <span class="admin-label"
               style="font-family: 'Playfair Display', serif; font-size: 18px; color: #fff;">ROKEA ADMIN</span>
           </div>
@@ -1436,10 +1475,10 @@
   <!-- MOBILE MENU -->
   <div id="mobileMenu" class="mobile-menu">
     <div class="mobile-menu-header">
-      <a href="#" class="nav-logo">
+      <a href="#" class="nav-logo" aria-label="ROKEA by RK Homepage">
         <img
           src="https://static.wixstatic.com/media/9881b8_16e714ef67304ad7812d38944b0b0b16~mv2.png/v1/crop/x_0,y_92,w_5000,h_1065/fill/w_155,h_33,fp_0.50_0.50,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ROKEA%20horizontal%20logo%20(1).png"
-          alt="ROKEA by RK" class="logo-img">
+          alt="ROKEA by RK" class="logo-img" loading="lazy" decoding="async">
       </a>
       <span class="menu-close" onclick="toggleMobileMenu()">&times;</span>
     </div>
@@ -1509,8 +1548,8 @@
     </div>
   </div>
 
-  <script src="/config.js"></script>
-  <script src="/script.js"></script>
+  <script src="/config.js" defer></script>
+  <script src="/script.js" defer></script>
 
   <!-- AI VIRTUAL STYLIST FLOATING BUTTON -->
   <a href="/ai-stylist" class="ai-fab">
