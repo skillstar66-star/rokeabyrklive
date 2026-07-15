@@ -2304,7 +2304,7 @@ function _populateProductPage(p) {
 
   // Update URL to show slug instead of stripping it
   if (window.history && window.history.replaceState) {
-    let newUrl = isLocalhost 
+    let newUrl = isLocalhost
       ? (p.slug ? `${window.location.pathname}?slug=${p.slug}` : `${window.location.pathname}?id=${p.id}`)
       : (p.slug ? `/product/${p.slug}` : `/product-details?id=${p.id}`);
     history.replaceState(null, document.title, newUrl);
@@ -2332,7 +2332,7 @@ function _populateProductPage(p) {
   // Canonical URL
   let canonicalUrl = document.getElementById('canonicalUrl');
   if (canonicalUrl) {
-    const productUrl = p.slug 
+    const productUrl = p.slug
       ? `https://rokeabyrk.com/product/${p.slug}`
       : `https://rokeabyrk.com/product-details?id=${p.id}`;
     canonicalUrl.href = productUrl;
@@ -2340,7 +2340,7 @@ function _populateProductPage(p) {
   } else {
     setMeta('ogUrl', 'content', window.location.href);
   }
-  
+
   setMeta('twTitle', 'content', `${p.name} | ROKEA by RK`);
   setMeta('twDesc', 'content', productDesc.slice(0, 200));
   setMeta('twImage', 'content', productImg);
@@ -2843,7 +2843,7 @@ window.executeSlugMigration = async () => {
   if (btn) btn.innerText = "Generating...";
 
   console.log("Starting slug migration from Admin Dashboard...");
-  
+
   try {
     const snapshot = await db.collection("products").get();
     let updatedCount = 0;
