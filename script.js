@@ -2277,6 +2277,13 @@ if (urlId) {
 }
 
 function initProductPage(productId) {
+  // If Server-Side Rendering provided the initial data, use it immediately!
+  if (window.__INITIAL_PRODUCT_DATA__ && (window.__INITIAL_PRODUCT_DATA__.id === productId || window.__INITIAL_PRODUCT_DATA__.slug === productId)) {
+    let fetched = window.__INITIAL_PRODUCT_DATA__;
+    if (!products.find(x => x.id == fetched.id)) products.push(fetched);
+    return _populateProductPage(fetched);
+  }
+
   let p = products.find(prod => prod.id == productId || prod.slug === productId);
 
   // If not found locally, try fetching directly from Firestore
@@ -2362,103 +2369,6 @@ function _populateProductPage(p) {
   let schemaScript = document.getElementById('productSchema');
   
   // Remove ALL existing schema tags with Product to prevent duplicates
-  document.querySelectorAll('script[type="application/ld+json"]').forEach(tag => {
-    if (tag.id !== 'productSchema') {
-      try {
-        const content = JSON.parse(tag.textContent);
-        if (content['@type'] === 'Product' || (Array.isArray(content) && content.some(item => item['@type'] === 'Product'))) {
-          tag.remove();
-        }
-      } catch (e) {
-        // ignore parse errors for other tags
-      }
-    }
-  });
-
-  const productUrl = p.slug ? `https://rokeabyrk.com/product/${p.slug}` : `https://rokeabyrk.com/product-details?id=${p.id}`;
-  
-  // Strict Real values only. No Placeholders.
-  let productName = p.name;
-  if (!productName && p.slug) {
-    productName = p.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  }
-  if (!productName) productName = p.id; // fallback to ID, NEVER placeholder string
-  
-  // Clean price to ensure it is a valid number for Schema
-  const cleanPrice = parseFloat(productPrice.toString().replace(/[^0-9.]/g, '')) || 0;
-
-  const productSchemaData = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": productName,
-    "description": productDesc || productName,
-    "brand": { "@type": "Brand", "name": "ROKEA by RK" },
-    "category": p.category || "",
-    "sku": p.id || p.slug,
-    "url": window.location.href,
-    "offers": {
-      "@type": "Offer",
-      "priceCurrency": "INR",
-      "price": cleanPrice,
-      "url": window.location.href,
-      "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-      "itemCondition": "https://schema.org/NewCondition",
-      "seller": { "@type": "Organization", "name": "ROKEA by RK" }
-    }
-  };
-  
-  if (productImg) {
-    productSchemaData.image = [productImg];
-  }
-
-  // Remove ALL existing schema tags including the placeholder to force Googlebot to recognize the new insertion
-  document.querySelectorAll('script[type="application/ld+json"]').forEach(tag => {
-    try {
-      const content = tag.textContent ? JSON.parse(tag.textContent) : {};
-      if (tag.id === 'productSchema' || content['@type'] === 'Product' || (Array.isArray(content) && content.some(item => item['@type'] === 'Product'))) {
-        tag.remove();
-      }
-    } catch (e) {
-      if (tag.id === 'productSchema' || tag.textContent.trim() === '') {
-        tag.remove(); // Remove empty or malformed productSchema tags
-      }
-    }
-  });
-
-  // Always create it dynamically and append into document.head to ensure Googlebot picks it up
-  const newSchemaScript = document.createElement('script');
-  newSchemaScript.type = 'application/ld+json';
-  newSchemaScript.id = 'productSchema';
-  newSchemaScript.textContent = JSON.stringify(productSchemaData);
-  document.head.appendChild(newSchemaScript);
-
-  // Validation & Logs
-  try {
-    const parsedSchema = JSON.parse(newSchemaScript.textContent);
-    console.log("Firebase Product Loaded", p);
-    console.log("Generated Product Schema", parsedSchema);
-    console.log("Schema Inserted Successfully");
-    console.log("Current Schema", newSchemaScript.textContent);
-  } catch (error) {
-    console.error("Any Errors: Invalid JSON-LD Schema", error);
-  }
-  
-  // Verification
-  const allSchemas = document.querySelectorAll('script[type="application/ld+json"]');
-  let productSchemaExists = false;
-  allSchemas.forEach(s => {
-    try {
-      const parsed = JSON.parse(s.textContent);
-      if (parsed['@type'] === 'Product' || (Array.isArray(parsed) && parsed.some(i => i['@type'] === 'Product'))) {
-        productSchemaExists = true;
-      }
-    } catch(e){}
-  });
-  if (!productSchemaExists) {
-    console.error("Any Errors: Product Schema missing after injection!");
-  }
-  // ─────────────────────────────────────────────────────────────────────────
-
   // Populate Elements (similar to old openProductDetail logic but for static page)
   const mainImg = document.getElementById('detailMainImg');
   const name = document.getElementById('detailName');

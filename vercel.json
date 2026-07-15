@@ -44,7 +44,7 @@
   "rewrites": [
     {
       "source": "/product/(.*)",
-      "destination": "/product-details?slug=$1"
+      "destination": "/api/product?slug=$1"
     }
   ],
   "redirects": [

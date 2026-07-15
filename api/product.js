@@ -1,0 +1,169 @@
+const fs = require('fs');
+const path = require('path');
+
+const PROJECT_ID = 'rokeya-3ccaa';
+
+// Helper to unwrap Firestore REST API data types
+function unwrapFirestoreData(fields) {
+  if (!fields) return {};
+  const data = {};
+  for (const key in fields) {
+    const val = fields[key];
+    if (val.stringValue !== undefined) data[key] = val.stringValue;
+    else if (val.integerValue !== undefined) data[key] = parseInt(val.integerValue, 10);
+    else if (val.doubleValue !== undefined) data[key] = parseFloat(val.doubleValue);
+    else if (val.booleanValue !== undefined) data[key] = val.booleanValue;
+    else if (val.arrayValue !== undefined) {
+      data[key] = val.arrayValue.values ? val.arrayValue.values.map(v => v.stringValue || v.integerValue || v.doubleValue) : [];
+    } else if (val.mapValue !== undefined) {
+      data[key] = unwrapFirestoreData(val.mapValue.fields);
+    }
+  }
+  return data;
+}
+
+// Fetch from Firestore
+async function getProductBySlugOrId(slug) {
+  // First try to query by slug
+  const query = {
+    structuredQuery: {
+      from: [{ collectionId: 'products' }],
+      where: {
+        fieldFilter: {
+          field: { fieldPath: 'slug' },
+          op: 'EQUAL',
+          value: { stringValue: slug }
+        }
+      },
+      limit: 1
+    }
+  };
+
+  try {
+    const res = await fetch(`https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents:runQuery`, {
+      method: 'POST',
+      body: JSON.stringify(query),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const result = await res.json();
+    if (result && result.length > 0 && result[0].document) {
+      const doc = result[0].document;
+      const data = unwrapFirestoreData(doc.fields);
+      data.id = doc.name.split('/').pop();
+      return data;
+    }
+
+    // Fallback: try by document ID
+    const docRes = await fetch(`https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/products/${slug}`);
+    if (docRes.ok) {
+      const doc = await docRes.json();
+      const data = unwrapFirestoreData(doc.fields);
+      data.id = doc.name.split('/').pop();
+      return data;
+    }
+  } catch (error) {
+    console.error('Firestore fetch error:', error);
+  }
+  return null;
+}
+
+module.exports = async function handler(req, res) {
+  const { slug } = req.query;
+  
+  if (!slug) {
+    return res.redirect(302, '/collections');
+  }
+
+  const p = await getProductBySlugOrId(slug);
+  
+  // Load raw HTML
+  let html = '';
+  try {
+    const htmlPath = path.join(process.cwd(), 'product-details.html');
+    html = fs.readFileSync(htmlPath, 'utf8');
+  } catch (err) {
+    return res.status(500).send('HTML template not found.');
+  }
+
+  if (!p) {
+    // Product not found, fallback to serving default HTML (or redirect)
+    return res.status(404).send(html.replace('<title>Product Details', '<title>Product Not Found'));
+  }
+
+  // --- Prepare SEO Data ---
+  const productPrice = parseFloat(p.price) || 0; 
+  const productImg = p.image || p.img || '';
+  const productDesc = (p.description || '').split('\n')[0].replace(/^[✦•\-\*]\s*/, '').trim() || 'Luxury handwoven saree from ROKEA by RK, Coimbatore.';
+  const productName = p.name || p.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const productUrl = `https://rokeabyrk.com/product/${p.slug || p.id}`;
+  
+  const cleanPrice = parseFloat(productPrice.toString().replace(/[^0-9.]/g, '')) || 0;
+
+  // Create valid JSON-LD
+  const productSchemaData = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": productName,
+    "description": productDesc || productName,
+    "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+    "category": p.category || "",
+    "sku": p.id || p.slug,
+    "url": productUrl,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": cleanPrice,
+      "url": productUrl,
+      "availability": p.stock === 'Out of Stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": { "@type": "Organization", "name": "ROKEA by RK" }
+    }
+  };
+  
+  if (productImg) {
+    productSchemaData.image = [productImg];
+  }
+
+  // --- Inject into HTML string ---
+  
+  // 1. Replace Title
+  html = html.replace(/<title>.*?<\/title>/, `<title>${productName} | ${p.category || 'Luxury Saree'} — ROKEA by RK</title>`);
+  
+  // 2. Replace Meta Description
+  const newMetaDesc = `<meta name="description" content="${productDesc.slice(0, 140)} | Buy ${productName} at ROKEA by RK, Coimbatore.">`;
+  if (html.includes('<meta name="description"')) {
+    html = html.replace(/<meta name="description".*?>/, newMetaDesc);
+  } else {
+    html = html.replace('</head>', `${newMetaDesc}\n</head>`);
+  }
+
+  // 3. Replace OG Tags
+  html = html.replace(/<meta property="og:title" id="ogTitle" content=".*?"/g, `<meta property="og:title" id="ogTitle" content="${productName} | ROKEA by RK"`);
+  html = html.replace(/<meta property="og:description" id="ogDesc" content=".*?"/g, `<meta property="og:description" id="ogDesc" content="${productDesc.slice(0, 200)}"`);
+  html = html.replace(/<meta property="og:image" id="ogImage" content=".*?"/g, `<meta property="og:image" id="ogImage" content="${productImg}"`);
+  html = html.replace(/<meta property="og:url" id="ogUrl" content=".*?"/g, `<meta property="og:url" id="ogUrl" content="${productUrl}"`);
+
+  // 4. Replace Twitter Tags
+  html = html.replace(/<meta name="twitter:title" id="twTitle" content=".*?"/g, `<meta name="twitter:title" id="twTitle" content="${productName} | ROKEA by RK"`);
+  html = html.replace(/<meta name="twitter:description" id="twDesc" content=".*?"/g, `<meta name="twitter:description" id="twDesc" content="${productDesc.slice(0, 200)}"`);
+  html = html.replace(/<meta name="twitter:image" id="twImage" content=".*?"/g, `<meta name="twitter:image" id="twImage" content="${productImg}"`);
+
+  // 5. Replace Canonical
+  html = html.replace(/<link id="canonicalUrl" rel="canonical" href=".*?"/, `<link id="canonicalUrl" rel="canonical" href="${productUrl}"`);
+
+  // 6. Inject JSON-LD Schema
+  const schemaString = `<script type="application/ld+json" id="productSchema">\n${JSON.stringify(productSchemaData)}\n</script>`;
+  if (html.includes('<script type="application/ld+json" id="productSchema"></script>')) {
+    html = html.replace('<script type="application/ld+json" id="productSchema"></script>', schemaString);
+  } else {
+    html = html.replace('</head>', `${schemaString}\n</head>`);
+  }
+
+  // 7. Inject SSR global variable for client-side script to skip Firestore fetch
+  const ssrState = `<script>window.__INITIAL_PRODUCT_DATA__ = ${JSON.stringify(p)};</script>`;
+  html = html.replace('</head>', `${ssrState}\n</head>`);
+
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate'); // Cache at Edge
+  return res.status(200).send(html);
+}
