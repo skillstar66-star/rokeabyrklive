@@ -2877,3 +2877,53 @@ window.executeSlugMigration = async () => {
     if (btn) btn.innerText = "Generate Slugs";
   }
 };
+
+// Function to handle sharing products
+window.shareProduct = function(productId) {
+  let urlToShare = window.location.href;
+  let titleToShare = document.title;
+  
+  // Try to find the exact product if it exists
+  if (typeof products !== 'undefined' && products.length > 0) {
+    let p = products.find(prod => prod.id == productId || prod.slug === productId);
+    if (p) {
+      if (p.slug) {
+        urlToShare = `https://rokeabyrk.com/product/${p.slug}`;
+      } else if (p.id) {
+        urlToShare = `https://rokeabyrk.com/product-details?id=${p.id}`;
+      }
+      titleToShare = `${p.name} | ROKEA by RK`;
+    }
+  }
+
+  const shareData = {
+    title: titleToShare,
+    text: 'Check out this beautiful product from ROKEA by RK!',
+    url: urlToShare
+  };
+
+  if (navigator.share) {
+    navigator.share(shareData).catch(err => {
+      console.log('Error sharing:', err);
+    });
+  } else {
+    // Fallback: Copy to clipboard
+    navigator.clipboard.writeText(urlToShare).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = urlToShare;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert("Link copied to clipboard!");
+      } catch (err) {
+        alert("Failed to copy link. Please copy the URL manually.");
+      }
+      document.body.removeChild(textArea);
+    });
+  }
+};
