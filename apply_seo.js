@@ -104,5 +104,22 @@ allFiles.forEach(file => {
                 $(el).attr('aria-label', $(el).attr('placeholder') || 'Input field');
             }
         });
+
+        // --- FAVICON FIX ---
+        // 1. Remove any existing incorrect favicon, apple-touch-icon, and manifest tags
+        $('link[rel*="icon"]').remove();
+        $('link[rel="apple-touch-icon"]').remove();
+        $('link[rel="manifest"]').remove();
+
+        // 2. Inject Google-recommended complete favicon package based on actual files
+        const faviconTags = `
+  <link rel="icon" type="image/png" href="https://rokeabyrk.com/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="https://rokeabyrk.com/favicon.svg">
+  <link rel="shortcut icon" href="https://rokeabyrk.com/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://rokeabyrk.com/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="ROKEA">
+  <link rel="manifest" href="https://rokeabyrk.com/site.webmanifest">
+`;
+        $('head').append(faviconTags);
     });
 });
