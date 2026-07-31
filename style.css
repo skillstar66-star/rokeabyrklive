@@ -253,7 +253,6 @@ nav {
 .hero {
   min-height: 100vh;
   background-color: var(--dark);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://res.cloudinary.com/drkgkgiat/image/upload/v1777447204/rk_saree_banner_copy.jpg_d6mphh.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
