@@ -1379,6 +1379,29 @@ if (productForm) {
       slug: generateSlug(document.getElementById('prodName').value)
     };
 
+    const seoTitle = document.getElementById('seoTitle') ? document.getElementById('seoTitle').value : "";
+    if (seoTitle) {
+      newProd.seo = {
+        title: seoTitle,
+        description: document.getElementById('seoDesc').value,
+        keywords: document.getElementById('seoKeywords').value,
+        canonicalUrl: document.getElementById('seoCanonical').value,
+        ogTitle: document.getElementById('seoOgTitle').value,
+        ogDescription: document.getElementById('seoOgDesc').value,
+        twitterTitle: document.getElementById('seoTwTitle').value,
+        twitterDescription: document.getElementById('seoTwDesc').value,
+        imageAltText: document.getElementById('seoImageAlt') ? document.getElementById('seoImageAlt').value : "",
+        schema: document.getElementById('seoSchema').value
+      };
+      try {
+        if (typeof newProd.seo.schema === 'string' && newProd.seo.schema.trim().startsWith('{')) {
+          newProd.seo.schema = JSON.parse(newProd.seo.schema);
+        }
+      } catch (e) {
+        console.error("Invalid schema JSON", e);
+      }
+    }
+
     if (editProductId) {
       const existingIdx = products.findIndex(p => p.id.toString() === editProductId.toString());
       if (existingIdx > -1) {
@@ -1434,6 +1457,31 @@ window.editProduct = (idx) => {
   document.getElementById('prodStock').value = p.stock || "In Stock";
   document.getElementById('prodDesc').value = p.description || "";
   if (document.getElementById('prodCare')) document.getElementById('prodCare').value = p.productCare || "";
+  
+  if (p.seo && document.getElementById('seoTitle')) {
+    document.getElementById('seoTitle').value = p.seo.title || "";
+    document.getElementById('seoDesc').value = p.seo.description || "";
+    document.getElementById('seoKeywords').value = p.seo.keywords || "";
+    document.getElementById('seoCanonical').value = p.seo.canonicalUrl || "";
+    document.getElementById('seoOgTitle').value = p.seo.ogTitle || "";
+    document.getElementById('seoOgDesc').value = p.seo.ogDescription || "";
+    document.getElementById('seoTwTitle').value = p.seo.twitterTitle || "";
+    document.getElementById('seoTwDesc').value = p.seo.twitterDescription || "";
+    if (document.getElementById('seoImageAlt')) document.getElementById('seoImageAlt').value = p.seo.imageAltText || "";
+    document.getElementById('seoSchema').value = typeof p.seo.schema === 'string' ? p.seo.schema : (p.seo.schema ? JSON.stringify(p.seo.schema, null, 2) : "");
+  } else if (document.getElementById('seoTitle')) {
+    document.getElementById('seoTitle').value = "";
+    document.getElementById('seoDesc').value = "";
+    document.getElementById('seoKeywords').value = "";
+    document.getElementById('seoCanonical').value = "";
+    document.getElementById('seoOgTitle').value = "";
+    document.getElementById('seoOgDesc').value = "";
+    document.getElementById('seoTwTitle').value = "";
+    document.getElementById('seoTwDesc').value = "";
+    if (document.getElementById('seoImageAlt')) document.getElementById('seoImageAlt').value = "";
+    document.getElementById('seoSchema').value = "";
+  }
+
   document.getElementById('submitBtn').innerText = "Update Product";
   if (adminModal) adminModal.querySelector('.admin-main').scrollTop = 0;
 };
@@ -2926,4 +2974,228 @@ window.shareProduct = function(productId) {
       document.body.removeChild(textArea);
     });
   }
+};
+
+// ── AI SEO GENERATION ENGINE ──────────────────────────────────────────────────
+const GEMINI_API_KEY = window.process.env.GEMINI_API_KEY;
+
+const SEO_PROMPT_TEMPLATE = `
+You are an expert eCommerce SEO Specialist. 
+I have a product from my luxury saree and heritage jewellery boutique "ROKEA by RK" in Coimbatore, India.
+
+Generate comprehensive SEO metadata and structured data schema for this product based on its existing details.
+
+Product Name: {name}
+Product Category: {category}
+Product Price: INR {price}
+Basic Description: {description}
+
+Return a STRICT JSON object in the following format (NO MARKDOWN WRAPPERS):
+{
+  "title": "SEO Title (Under 60 chars)",
+  "description": "Meta description (150-160 chars)",
+  "keywords": "Focus keyword, secondary keywords, long tail keywords",
+  "imageAltText": "SEO optimized alt text for the main product image",
+  "ogTitle": "Open Graph Title",
+  "ogDescription": "Open Graph Description",
+  "ogImage": "{image}",
+  "twitterTitle": "Twitter Title",
+  "twitterDescription": "Twitter Description",
+  "twitterImage": "{image}",
+  "canonicalUrl": "https://rokeabyrk.com/product/{slug}",
+  "schema": {
+     // The complete JSON-LD Schema including Product, FAQ, Breadcrumb
+  }
+}
+`;
+
+async function callGeminiAPI(productData) {
+  const prompt = SEO_PROMPT_TEMPLATE
+    .replace('{name}', productData.name || 'Luxury Product')
+    .replace('{category}', productData.category || 'Luxury Saree')
+    .replace('{price}', productData.price || '0')
+    .replace('{description}', productData.description || 'Premium handwoven collection')
+    .replace(/{image}/g, productData.image || productData.img || 'https://rokeabyrk.com/assets/og-image.jpg')
+    .replace('{slug}', productData.slug || productData.id);
+
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.7
+      }
+    })
+  });
+
+  if (!response.ok) {
+    if (response.status === 429) {
+      throw new Error("RATE_LIMIT");
+    }
+    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  const text = data.candidates[0].content.parts[0].text;
+  return JSON.parse(text);
+}
+
+// Function for Single Product form click
+window.generateSingleProductSEO = async () => {
+  const btn = document.getElementById('generateSeoBtn');
+  const originalText = btn.innerText;
+  
+  const pName = document.getElementById('prodName').value;
+  if (!pName) {
+    alert("Please enter a Product Name first.");
+    return;
+  }
+
+  btn.innerText = "⏳ Generating...";
+  btn.disabled = true;
+
+  try {
+    const tempProduct = {
+      name: pName,
+      category: document.getElementById('prodCategory').value,
+      price: document.getElementById('prodPrice').value,
+      description: document.getElementById('prodDesc').value,
+      image: document.getElementById('prodImg').value,
+      slug: generateSlug(pName),
+      id: document.getElementById('editProductId').value || Date.now()
+    };
+
+    const seoData = await callGeminiAPI(tempProduct);
+    
+    // Populate fields
+    if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = seoData.title || "";
+    if (document.getElementById('seoDesc')) document.getElementById('seoDesc').value = seoData.description || "";
+    if (document.getElementById('seoKeywords')) document.getElementById('seoKeywords').value = seoData.keywords || "";
+    if (document.getElementById('seoCanonical')) document.getElementById('seoCanonical').value = seoData.canonicalUrl || "";
+    if (document.getElementById('seoOgTitle')) document.getElementById('seoOgTitle').value = seoData.ogTitle || "";
+    if (document.getElementById('seoOgDesc')) document.getElementById('seoOgDesc').value = seoData.ogDescription || "";
+    if (document.getElementById('seoTwTitle')) document.getElementById('seoTwTitle').value = seoData.twitterTitle || "";
+    if (document.getElementById('seoTwDesc')) document.getElementById('seoTwDesc').value = seoData.twitterDescription || "";
+    if (document.getElementById('seoImageAlt')) document.getElementById('seoImageAlt').value = seoData.imageAltText || "";
+    if (document.getElementById('seoSchema')) document.getElementById('seoSchema').value = typeof seoData.schema === 'string' ? seoData.schema : (seoData.schema ? JSON.stringify(seoData.schema, null, 2) : "");
+    
+    showToast("SEO Generated successfully! You can edit the fields before saving.", "success");
+  } catch (error) {
+    console.error("Error generating SEO:", error);
+    if (error.message === "RATE_LIMIT") {
+      alert("Google Gemini API Rate limit reached. Please wait a minute and try again.");
+    } else {
+      alert("Error generating SEO. Check console for details.");
+    }
+  } finally {
+    btn.innerText = originalText;
+    btn.disabled = false;
+  }
+};
+
+// Functions for Bulk SEO Generation Modal
+window.closeBulkSeoModal = () => {
+  document.getElementById('bulkSeoModal').style.display = 'none';
+};
+
+window.bulkGenerateSEO = async () => {
+  if (!confirm("This will find all products without SEO data and generate it automatically using AI. It may take some time. Do you want to proceed?")) {
+    return;
+  }
+
+  // Show Modal
+  const modal = document.getElementById('bulkSeoModal');
+  const bar = document.getElementById('bulkSeoProgressBar');
+  const status = document.getElementById('bulkSeoStatusText');
+  const detail = document.getElementById('bulkSeoDetailText');
+  const closeBtn = document.getElementById('bulkSeoCloseBtn');
+  
+  modal.style.display = 'flex';
+  closeBtn.style.display = 'none';
+  bar.style.width = '0%';
+  status.innerText = "Finding products...";
+  detail.innerText = "";
+
+  // Filter products that need SEO (check if seo object exists and has title)
+  const pendingProducts = products.filter(p => !p.seo || !p.seo.title);
+  
+  if (pendingProducts.length === 0) {
+    status.innerText = "All Caught Up!";
+    detail.innerText = "Every product already has SEO data generated.";
+    bar.style.width = '100%';
+    closeBtn.style.display = 'block';
+    return;
+  }
+
+  status.innerText = `Found ${pendingProducts.length} products to process.`;
+  let processedCount = 0;
+  let successCount = 0;
+  let hasStopped = false;
+
+  for (let i = 0; i < pendingProducts.length; i++) {
+    if (hasStopped) break;
+    
+    const product = pendingProducts[i];
+    processedCount++;
+    const progress = Math.round((processedCount / pendingProducts.length) * 100);
+    
+    status.innerText = `Processing ${processedCount} of ${pendingProducts.length}`;
+    detail.innerText = `Generating SEO for: ${product.name}`;
+    bar.style.width = `${progress}%`;
+
+    let retries = 3;
+    let seoData = null;
+
+    while (retries > 0) {
+      try {
+        seoData = await callGeminiAPI(product);
+        break; // Success, break retry loop
+      } catch (err) {
+        if (err.message === "RATE_LIMIT") {
+          detail.innerText = `Rate limit hit (429) for ${product.name}. Waiting 60 seconds...`;
+          await new Promise(r => setTimeout(r, 60000));
+          retries--;
+        } else {
+          console.error(`Error processing ${product.name}:`, err);
+          break; // Other error, skip product
+        }
+      }
+    }
+
+    if (seoData) {
+      // Update local array
+      const targetIdx = products.findIndex(p => p.id === product.id);
+      if (targetIdx > -1) {
+        products[targetIdx].seo = seoData;
+        
+        // Save to Firestore immediately
+        if (db) {
+          try {
+            await db.collection("products").doc(product.id.toString()).update({
+              seo: seoData
+            });
+            successCount++;
+          } catch (e) {
+            console.error("Firestore update error:", e);
+          }
+        }
+      }
+    }
+
+    // Wait a few seconds between products to prevent hitting API limits
+    if (i < pendingProducts.length - 1) {
+      detail.innerText = `Waiting 4 seconds to prevent rate limits...`;
+      await new Promise(r => setTimeout(r, 4000));
+    }
+  }
+
+  status.innerText = "Bulk Generation Complete!";
+  detail.innerText = `Successfully generated SEO for ${successCount} products.`;
+  bar.style.width = '100%';
+  closeBtn.style.display = 'block';
+  
+  // Re-save local cache just in case
+  saveProducts();
 };

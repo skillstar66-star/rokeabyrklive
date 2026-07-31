@@ -1227,6 +1227,7 @@
           <div style="display:flex; gap: 10px;">
             <button class="btn-primary" id="addBtnTop" onclick="document.getElementById('productForm').scrollIntoView()">Add New Product</button>
             <button class="btn-primary" id="generateSlugsBtn" onclick="executeSlugMigration()" style="background: #e67e22; border-color: #e67e22;">Generate Slugs</button>
+            <button class="btn-primary" id="bulkSeoBtn" onclick="bulkGenerateSEO()" style="background: #9b59b6; border-color: #9b59b6;">Generate SEO (AI)</button>
             <button class="btn-outline" style="border-color: #ff4d4d; color: #ff4d4d; padding: 12px 24px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; border: 1px solid #ff4d4d; background: transparent;" id="deleteAllBtnTop" onclick="deleteAllProducts()">Delete All</button>
           </div>
         </div>
@@ -1261,7 +1262,34 @@
             <div class="form-group" style="grid-column: span 2;"><label>Product Care Instructions</label>
               <textarea id="prodCare" style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); height: 100px; font-family: inherit; outline: none;" placeholder="How to care for this product? (e.g. Dry clean only, avoid water...)"></textarea>
             </div>
-            <button type="submit" class="btn-primary" id="submitBtn" style="grid-column: span 2;">Save Product</button>
+            
+            <!-- AI SEO Fields -->
+            <div style="grid-column: span 2; margin-top: 20px; padding: 20px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px;">
+              <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
+                <h3 style="margin: 0; font-family: 'Playfair Display', serif; color: var(--dark);">AI SEO Optimization</h3>
+                <button type="button" id="generateSeoBtn" class="btn-primary" onclick="generateSingleProductSEO()" style="background: #27ae60; border-color: #27ae60; font-size: 12px; padding: 10px 20px;">✦ Generate SEO with AI</button>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group"><label>Meta Title</label><input type="text" id="seoTitle"></div>
+                <div class="form-group"><label>Meta Description</label><input type="text" id="seoDesc"></div>
+                <div class="form-group"><label>Keywords (Comma separated)</label><input type="text" id="seoKeywords"></div>
+                <div class="form-group"><label>Canonical URL</label><input type="text" id="seoCanonical"></div>
+                <div class="form-group"><label>Open Graph Title</label><input type="text" id="seoOgTitle"></div>
+                <div class="form-group"><label>Open Graph Description</label><input type="text" id="seoOgDesc"></div>
+                <div class="form-group"><label>Twitter Title</label><input type="text" id="seoTwTitle"></div>
+                <div class="form-group"><label>Twitter Description</label><input type="text" id="seoTwDesc"></div>
+                <div class="form-group" style="grid-column: span 2;">
+                  <label>Image ALT Text</label>
+                  <input type="text" id="seoImageAlt">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                  <label>JSON-LD Schema</label>
+                  <textarea id="seoSchema" style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); height: 150px; font-family: monospace; outline: none; background: #fff;"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submitBtn" style="grid-column: span 2; margin-top: 10px;">Save Product</button>
           </form>
           <div class="admin-filter-bar" style="display: flex; gap: 10px; margin-top: 30px; margin-bottom: 20px;">
             <button class="admin-tab-btn active" onclick="switchAdminProductFilter('all')" id="adminFilterAll">All
@@ -1444,13 +1472,6 @@
   </div>
 
   <script src="/config.js" defer=""></script>
-  <script src="/script.js" defer=""></script>
-
-  <!-- AI VIRTUAL STYLIST FLOATING BUTTON -->
-  <a href="/ai-stylist" class="ai-fab">
-    <div class="ai-fab-icon">
-      ✦
-      <span class="ai-fab-badge">New</span>
     </div>
     <span class="ai-fab-text">AI Virtual Stylist is Here</span>
   </a>
@@ -1533,6 +1554,20 @@
     </script>
 
 
-
-
+  <!-- BULK SEO PROGRESS MODAL -->
+  <div id="bulkSeoModal" class="modal">
+    <div class="modal-content" style="max-width: 500px; text-align: center;">
+      <h2 class="section-title">Generating <em>SEO</em></h2>
+      <p style="color: var(--muted); margin-bottom: 20px;">Please wait while Gemini AI generates SEO for all your products.</p>
+      
+      <div style="width: 100%; background: #eee; border-radius: 10px; height: 10px; margin-bottom: 20px; overflow: hidden;">
+        <div id="bulkSeoProgressBar" style="height: 100%; width: 0%; background: var(--gold); transition: width 0.3s;"></div>
+      </div>
+      
+      <h3 id="bulkSeoStatusText" style="font-size: 18px; margin-bottom: 10px;">Initializing...</h3>
+      <p id="bulkSeoDetailText" style="font-size: 14px; color: var(--muted); min-height: 20px;"></p>
+      
+      <button class="btn-outline" id="bulkSeoCloseBtn" onclick="closeBulkSeoModal()" style="display: none; margin-top: 20px; width: 100%;">Close</button>
+    </div>
+  </div>
 </a></body></html>
