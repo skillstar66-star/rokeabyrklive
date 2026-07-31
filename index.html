@@ -1261,6 +1261,27 @@
             <div class="form-group" style="grid-column: span 2;"><label>Product Care Instructions</label>
               <textarea id="prodCare" style="width: 100%; padding: 12px; border: 1px solid rgba(201,168,76,0.3); height: 100px; font-family: inherit; outline: none;" placeholder="How to care for this product? (e.g. Dry clean only, avoid water...)"></textarea>
             </div>
+
+            <!-- SEO SECTION -->
+            <div style="grid-column: span 2; margin-top: 20px; padding: 20px; border: 1px dashed var(--gold); border-radius: 8px; background: rgba(201,168,76,0.05);">
+              <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
+                <h3 style="margin:0; font-family: 'Playfair Display', serif; color: var(--gold);">SEO & Meta Data</h3>
+                <button type="button" class="btn-primary" onclick="generateSeoFromDescription()" style="padding: 8px 16px; font-size: 12px;">Auto-Generate SEO</button>
+              </div>
+              <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div class="form-group"><label>Meta Title</label><input type="text" id="seoTitle" placeholder="e.g. Luxury Kanjivaram Saree | Rokea by RK"></div>
+                <div class="form-group"><label>Focus Keyword</label><input type="text" id="seoKeyword" placeholder="e.g. kanjivaram silk saree"></div>
+                <div class="form-group" style="grid-column: span 2;"><label>Meta Description</label><textarea id="seoDesc" style="width:100%; padding:12px; border:1px solid rgba(201,168,76,0.3); outline:none; font-family:inherit;" rows="2" placeholder="e.g. Buy authentic luxury sarees..."></textarea></div>
+                <div class="form-group"><label>SEO Keywords (Comma separated)</label><input type="text" id="seoKeywords" placeholder="e.g. pure silk, wedding saree, south indian"></div>
+                <div class="form-group"><label>Canonical URL</label><input type="text" id="seoCanonical" placeholder="e.g. https://rokeabyrk.com/product/slug"></div>
+                <div class="form-group" style="grid-column: span 2;"><label>Image ALT Text</label><input type="text" id="seoImgAlt" placeholder="e.g. Woman wearing red Kanjivaram silk saree"></div>
+                <div class="form-group"><label>Open Graph Tags (HTML snippets)</label><textarea id="seoOgTags" style="width:100%; padding:12px; border:1px solid rgba(201,168,76,0.3); outline:none; font-family:monospace; font-size:12px;" rows="3" placeholder='<meta property="og:title" content="...">...'></textarea></div>
+                <div class="form-group"><label>Twitter Card Tags (HTML snippets)</label><textarea id="seoTwitterTags" style="width:100%; padding:12px; border:1px solid rgba(201,168,76,0.3); outline:none; font-family:monospace; font-size:12px;" rows="3" placeholder='<meta name="twitter:title" content="...">...'></textarea></div>
+                <div class="form-group"><label>Product Schema (JSON-LD object)</label><textarea id="seoProductSchema" style="width:100%; padding:12px; border:1px solid rgba(201,168,76,0.3); outline:none; font-family:monospace; font-size:12px;" rows="5" placeholder='{ "@context": "https://schema.org/", "@type": "Product", ... }'></textarea></div>
+                <div class="form-group"><label>Breadcrumb Schema (JSON-LD object)</label><textarea id="seoBreadcrumbSchema" style="width:100%; padding:12px; border:1px solid rgba(201,168,76,0.3); outline:none; font-family:monospace; font-size:12px;" rows="5" placeholder='{ "@context": "https://schema.org/", "@type": "BreadcrumbList", ... }'></textarea></div>
+              </div>
+            </div>
+
             <button type="submit" class="btn-primary" id="submitBtn" style="grid-column: span 2;">Save Product</button>
           </form>
           <div class="admin-filter-bar" style="display: flex; gap: 10px; margin-top: 30px; margin-bottom: 20px;">

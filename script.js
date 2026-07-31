@@ -1376,7 +1376,17 @@ if (productForm) {
       stock: document.getElementById('prodStock').value,
       description: document.getElementById('prodDesc').value,
       productCare: document.getElementById('prodCare').value,
-      slug: generateSlug(document.getElementById('prodName').value)
+      slug: generateSlug(document.getElementById('prodName').value),
+      seoTitle: document.getElementById('seoTitle') ? document.getElementById('seoTitle').value : '',
+      seoKeyword: document.getElementById('seoKeyword') ? document.getElementById('seoKeyword').value : '',
+      seoDesc: document.getElementById('seoDesc') ? document.getElementById('seoDesc').value : '',
+      seoKeywords: document.getElementById('seoKeywords') ? document.getElementById('seoKeywords').value : '',
+      seoCanonical: document.getElementById('seoCanonical') ? document.getElementById('seoCanonical').value : '',
+      seoImgAlt: document.getElementById('seoImgAlt') ? document.getElementById('seoImgAlt').value : '',
+      seoOgTags: document.getElementById('seoOgTags') ? document.getElementById('seoOgTags').value : '',
+      seoTwitterTags: document.getElementById('seoTwitterTags') ? document.getElementById('seoTwitterTags').value : '',
+      seoProductSchema: document.getElementById('seoProductSchema') ? document.getElementById('seoProductSchema').value : '',
+      seoBreadcrumbSchema: document.getElementById('seoBreadcrumbSchema') ? document.getElementById('seoBreadcrumbSchema').value : ''
     };
 
     if (editProductId) {
@@ -1434,8 +1444,90 @@ window.editProduct = (idx) => {
   document.getElementById('prodStock').value = p.stock || "In Stock";
   document.getElementById('prodDesc').value = p.description || "";
   if (document.getElementById('prodCare')) document.getElementById('prodCare').value = p.productCare || "";
+  
+  if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = p.seoTitle || "";
+  if (document.getElementById('seoKeyword')) document.getElementById('seoKeyword').value = p.seoKeyword || "";
+  if (document.getElementById('seoDesc')) document.getElementById('seoDesc').value = p.seoDesc || "";
+  if (document.getElementById('seoKeywords')) document.getElementById('seoKeywords').value = p.seoKeywords || "";
+  if (document.getElementById('seoCanonical')) document.getElementById('seoCanonical').value = p.seoCanonical || "";
+  if (document.getElementById('seoImgAlt')) document.getElementById('seoImgAlt').value = p.seoImgAlt || "";
+  if (document.getElementById('seoOgTags')) document.getElementById('seoOgTags').value = p.seoOgTags || "";
+  if (document.getElementById('seoTwitterTags')) document.getElementById('seoTwitterTags').value = p.seoTwitterTags || "";
+  if (document.getElementById('seoProductSchema')) document.getElementById('seoProductSchema').value = p.seoProductSchema || "";
+  if (document.getElementById('seoBreadcrumbSchema')) document.getElementById('seoBreadcrumbSchema').value = p.seoBreadcrumbSchema || "";
+
   document.getElementById('submitBtn').innerText = "Update Product";
   if (adminModal) adminModal.querySelector('.admin-main').scrollTop = 0;
+};
+
+window.generateSeoFromDescription = () => {
+  const name = document.getElementById('prodName').value || 'Luxury Product';
+  const descRaw = document.getElementById('prodDesc').value || '';
+  const price = document.getElementById('prodPrice').value || '0';
+  const category = document.getElementById('prodCategory').value || 'Saree';
+  const slug = generateSlug(name) || 'product';
+  const url = `https://rokeabyrk.com/product/${slug}`;
+  const imgUrl = document.getElementById('prodImg').value || '';
+  
+  const cleanDesc = descRaw.split('\n')[0].replace(/^[✦•\-\*]\s*/, '').trim() || name;
+  const shortDesc = cleanDesc.slice(0, 150);
+  
+  const keywords = name.toLowerCase().split(' ').filter(w => w.length > 3).join(', ') + `, buy ${category.toLowerCase()}, rokea by rk`;
+  
+  if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = `${name} | Rokea by RK`;
+  if (document.getElementById('seoKeyword')) document.getElementById('seoKeyword').value = name.toLowerCase();
+  if (document.getElementById('seoDesc')) document.getElementById('seoDesc').value = `Buy ${name} online. ${shortDesc} Shop authentic luxury at ROKEA by RK.`;
+  if (document.getElementById('seoKeywords')) document.getElementById('seoKeywords').value = keywords;
+  if (document.getElementById('seoCanonical')) document.getElementById('seoCanonical').value = url;
+  if (document.getElementById('seoImgAlt')) document.getElementById('seoImgAlt').value = `${name} by ROKEA by RK`;
+  
+  if (document.getElementById('seoOgTags')) document.getElementById('seoOgTags').value = 
+`<meta property="og:title" content="${name} | ROKEA by RK">
+<meta property="og:description" content="${shortDesc}">
+<meta property="og:image" content="${imgUrl}">
+<meta property="og:url" content="${url}">`;
+
+  if (document.getElementById('seoTwitterTags')) document.getElementById('seoTwitterTags').value = 
+`<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${name} | ROKEA by RK">
+<meta name="twitter:description" content="${shortDesc}">
+<meta name="twitter:image" content="${imgUrl}">`;
+
+  if (document.getElementById('seoProductSchema')) document.getElementById('seoProductSchema').value = 
+`{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "${name}",
+  "description": "${shortDesc}",
+  "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+  "image": "${imgUrl}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": "${price}",
+    "availability": "https://schema.org/InStock",
+    "url": "${url}"
+  }
+}`;
+
+  if (document.getElementById('seoBreadcrumbSchema')) document.getElementById('seoBreadcrumbSchema').value = 
+`{
+  "@context": "https://schema.org/",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://rokeabyrk.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "${name}",
+    "item": "${url}"
+  }]
+}`;
+  
+  alert('SEO Details Generated! Please review them before saving.');
 };
 
 window.deleteProduct = (idx) => {

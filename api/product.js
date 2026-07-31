@@ -126,11 +126,17 @@ module.exports = async function handler(req, res) {
 
   // --- Inject into HTML string ---
   
+  // --- Inject into HTML string ---
+  
+  const finalTitle = p.seoTitle || `${productName} | ${p.category || 'Luxury Saree'} — ROKEA by RK`;
+  const finalDesc = p.seoDesc || `${productDesc.slice(0, 140)} | Buy ${productName} at ROKEA by RK, Coimbatore.`;
+  const finalCanonical = p.seoCanonical || productUrl;
+  
   // 1. Replace Title
-  html = html.replace(/<title>.*?<\/title>/, `<title>${productName} | ${p.category || 'Luxury Saree'} — ROKEA by RK</title>`);
+  html = html.replace(/<title>.*?<\/title>/, `<title>${finalTitle}</title>`);
   
   // 2. Replace Meta Description
-  const newMetaDesc = `<meta name="description" content="${productDesc.slice(0, 140)} | Buy ${productName} at ROKEA by RK, Coimbatore.">`;
+  const newMetaDesc = `<meta name="description" content="${finalDesc}">`;
   if (html.includes('<meta name="description"')) {
     html = html.replace(/<meta name="description".*?>/, newMetaDesc);
   } else {
@@ -138,21 +144,41 @@ module.exports = async function handler(req, res) {
   }
 
   // 3. Replace OG Tags
-  html = html.replace(/<meta property="og:title" id="ogTitle" content=".*?"/g, `<meta property="og:title" id="ogTitle" content="${productName} | ROKEA by RK"`);
-  html = html.replace(/<meta property="og:description" id="ogDesc" content=".*?"/g, `<meta property="og:description" id="ogDesc" content="${productDesc.slice(0, 200)}"`);
-  html = html.replace(/<meta property="og:image" id="ogImage" content=".*?"/g, `<meta property="og:image" id="ogImage" content="${productImg}"`);
-  html = html.replace(/<meta property="og:url" id="ogUrl" content=".*?"/g, `<meta property="og:url" id="ogUrl" content="${productUrl}"`);
+  if(p.seoOgTags) {
+     html = html.replace(/<meta property="og:.*?".*?>/g, ''); 
+     html = html.replace('</head>', `${p.seoOgTags}\n</head>`);
+  } else {
+    html = html.replace(/<meta property="og:title" id="ogTitle" content=".*?"/g, `<meta property="og:title" id="ogTitle" content="${finalTitle}"`);
+    html = html.replace(/<meta property="og:description" id="ogDesc" content=".*?"/g, `<meta property="og:description" id="ogDesc" content="${finalDesc}"`);
+    html = html.replace(/<meta property="og:image" id="ogImage" content=".*?"/g, `<meta property="og:image" id="ogImage" content="${productImg}"`);
+    html = html.replace(/<meta property="og:url" id="ogUrl" content=".*?"/g, `<meta property="og:url" id="ogUrl" content="${finalCanonical}"`);
+  }
 
   // 4. Replace Twitter Tags
-  html = html.replace(/<meta name="twitter:title" id="twTitle" content=".*?"/g, `<meta name="twitter:title" id="twTitle" content="${productName} | ROKEA by RK"`);
-  html = html.replace(/<meta name="twitter:description" id="twDesc" content=".*?"/g, `<meta name="twitter:description" id="twDesc" content="${productDesc.slice(0, 200)}"`);
-  html = html.replace(/<meta name="twitter:image" id="twImage" content=".*?"/g, `<meta name="twitter:image" id="twImage" content="${productImg}"`);
+  if(p.seoTwitterTags) {
+     html = html.replace(/<meta name="twitter:.*?".*?>/g, '');
+     html = html.replace('</head>', `${p.seoTwitterTags}\n</head>`);
+  } else {
+    html = html.replace(/<meta name="twitter:title" id="twTitle" content=".*?"/g, `<meta name="twitter:title" id="twTitle" content="${finalTitle}"`);
+    html = html.replace(/<meta name="twitter:description" id="twDesc" content=".*?"/g, `<meta name="twitter:description" id="twDesc" content="${finalDesc}"`);
+    html = html.replace(/<meta name="twitter:image" id="twImage" content=".*?"/g, `<meta name="twitter:image" id="twImage" content="${productImg}"`);
+  }
 
   // 5. Replace Canonical
-  html = html.replace(/<link id="canonicalUrl" rel="canonical" href=".*?"/, `<link id="canonicalUrl" rel="canonical" href="${productUrl}"`);
+  html = html.replace(/<link id="canonicalUrl" rel="canonical" href=".*?"/, `<link id="canonicalUrl" rel="canonical" href="${finalCanonical}"`);
 
   // 6. Inject JSON-LD Schema
-  const schemaString = `<script type="application/ld+json" id="productSchema">\n${JSON.stringify(productSchemaData)}\n</script>`;
+  let schemaString = '';
+  if (p.seoProductSchema) {
+    schemaString = `<script type="application/ld+json" id="productSchema">\n${p.seoProductSchema}\n</script>`;
+  } else {
+    schemaString = `<script type="application/ld+json" id="productSchema">\n${JSON.stringify(productSchemaData)}\n</script>`;
+  }
+  
+  if (p.seoBreadcrumbSchema) {
+    schemaString += `\n<script type="application/ld+json" id="breadcrumbSchema">\n${p.seoBreadcrumbSchema}\n</script>`;
+  }
+
   if (html.includes('<script type="application/ld+json" id="productSchema"></script>')) {
     html = html.replace('<script type="application/ld+json" id="productSchema"></script>', schemaString);
   } else {
