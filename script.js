@@ -1380,13 +1380,22 @@ if (productForm) {
       seoTitle: document.getElementById('seoTitle') ? document.getElementById('seoTitle').value : '',
       seoKeyword: document.getElementById('seoKeyword') ? document.getElementById('seoKeyword').value : '',
       seoDesc: document.getElementById('seoDesc') ? document.getElementById('seoDesc').value : '',
+      seoSecondaryKeywords: document.getElementById('seoSecondaryKeywords') ? document.getElementById('seoSecondaryKeywords').value : '',
+      seoLongTailKeywords: document.getElementById('seoLongTailKeywords') ? document.getElementById('seoLongTailKeywords').value : '',
+      seoTransactionalKeywords: document.getElementById('seoTransactionalKeywords') ? document.getElementById('seoTransactionalKeywords').value : '',
+      seoCommercialKeywords: document.getElementById('seoCommercialKeywords') ? document.getElementById('seoCommercialKeywords').value : '',
       seoKeywords: document.getElementById('seoKeywords') ? document.getElementById('seoKeywords').value : '',
+      seoSearchIntent: document.getElementById('seoSearchIntent') ? document.getElementById('seoSearchIntent').value : '',
       seoCanonical: document.getElementById('seoCanonical') ? document.getElementById('seoCanonical').value : '',
+      seoRobots: document.getElementById('seoRobots') ? document.getElementById('seoRobots').value : 'index, follow',
       seoImgAlt: document.getElementById('seoImgAlt') ? document.getElementById('seoImgAlt').value : '',
       seoOgTags: document.getElementById('seoOgTags') ? document.getElementById('seoOgTags').value : '',
       seoTwitterTags: document.getElementById('seoTwitterTags') ? document.getElementById('seoTwitterTags').value : '',
       seoProductSchema: document.getElementById('seoProductSchema') ? document.getElementById('seoProductSchema').value : '',
-      seoBreadcrumbSchema: document.getElementById('seoBreadcrumbSchema') ? document.getElementById('seoBreadcrumbSchema').value : ''
+      seoBreadcrumbSchema: document.getElementById('seoBreadcrumbSchema') ? document.getElementById('seoBreadcrumbSchema').value : '',
+      seoWebPageSchema: document.getElementById('seoWebPageSchema') ? document.getElementById('seoWebPageSchema').value : '',
+      seoOrganizationSchema: document.getElementById('seoOrganizationSchema') ? document.getElementById('seoOrganizationSchema').value : '',
+      seoFaq: document.getElementById('seoFaq') ? document.getElementById('seoFaq').value : ''
     };
 
     if (editProductId) {
@@ -1448,86 +1457,256 @@ window.editProduct = (idx) => {
   if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = p.seoTitle || "";
   if (document.getElementById('seoKeyword')) document.getElementById('seoKeyword').value = p.seoKeyword || "";
   if (document.getElementById('seoDesc')) document.getElementById('seoDesc').value = p.seoDesc || "";
+  if (document.getElementById('seoSecondaryKeywords')) document.getElementById('seoSecondaryKeywords').value = p.seoSecondaryKeywords || "";
+  if (document.getElementById('seoLongTailKeywords')) document.getElementById('seoLongTailKeywords').value = p.seoLongTailKeywords || "";
+  if (document.getElementById('seoTransactionalKeywords')) document.getElementById('seoTransactionalKeywords').value = p.seoTransactionalKeywords || "";
+  if (document.getElementById('seoCommercialKeywords')) document.getElementById('seoCommercialKeywords').value = p.seoCommercialKeywords || "";
   if (document.getElementById('seoKeywords')) document.getElementById('seoKeywords').value = p.seoKeywords || "";
+  if (document.getElementById('seoSearchIntent')) document.getElementById('seoSearchIntent').value = p.seoSearchIntent || "";
   if (document.getElementById('seoCanonical')) document.getElementById('seoCanonical').value = p.seoCanonical || "";
+  if (document.getElementById('seoRobots')) document.getElementById('seoRobots').value = p.seoRobots || "index, follow";
   if (document.getElementById('seoImgAlt')) document.getElementById('seoImgAlt').value = p.seoImgAlt || "";
   if (document.getElementById('seoOgTags')) document.getElementById('seoOgTags').value = p.seoOgTags || "";
   if (document.getElementById('seoTwitterTags')) document.getElementById('seoTwitterTags').value = p.seoTwitterTags || "";
   if (document.getElementById('seoProductSchema')) document.getElementById('seoProductSchema').value = p.seoProductSchema || "";
   if (document.getElementById('seoBreadcrumbSchema')) document.getElementById('seoBreadcrumbSchema').value = p.seoBreadcrumbSchema || "";
+  if (document.getElementById('seoWebPageSchema')) document.getElementById('seoWebPageSchema').value = p.seoWebPageSchema || "";
+  if (document.getElementById('seoOrganizationSchema')) document.getElementById('seoOrganizationSchema').value = p.seoOrganizationSchema || "";
+  if (document.getElementById('seoFaq')) document.getElementById('seoFaq').value = p.seoFaq || "";
 
   document.getElementById('submitBtn').innerText = "Update Product";
   if (adminModal) adminModal.querySelector('.admin-main').scrollTop = 0;
 };
 
 window.generateSeoFromDescription = () => {
-  const name = document.getElementById('prodName').value || 'Luxury Product';
-  const descRaw = document.getElementById('prodDesc').value || '';
+  const name = document.getElementById('prodName').value || 'Product';
+  const category = document.getElementById('prodCategory').value || 'Category';
   const price = document.getElementById('prodPrice').value || '0';
-  const category = document.getElementById('prodCategory').value || 'Saree';
+  const descRaw = document.getElementById('prodDesc').value || '';
+  const care = document.getElementById('prodCare').value || '';
+  const imgUrl = document.getElementById('prodImg').value || '';
+  const stock = document.getElementById('prodStock').value || 'In Stock';
   const slug = generateSlug(name) || 'product';
   const url = `https://rokeabyrk.com/product/${slug}`;
-  const imgUrl = document.getElementById('prodImg').value || '';
-  
+
+  if (!descRaw) {
+    alert("Please enter a product description first.");
+    return;
+  }
+
+  // --- Advanced Local Rule-Based Generation ---
   const cleanDesc = descRaw.split('\n')[0].replace(/^[✦•\-\*]\s*/, '').trim() || name;
-  const shortDesc = cleanDesc.slice(0, 150);
+  const shortDesc = cleanDesc.slice(0, 150) + (cleanDesc.length > 150 ? '...' : '');
+  const lowerName = name.toLowerCase();
+  const lowerCat = category.toLowerCase();
   
-  const keywords = name.toLowerCase().split(' ').filter(w => w.length > 3).join(', ') + `, buy ${category.toLowerCase()}, rokea by rk`;
+  // Keyword Generation
+  const words = lowerName.split(' ').filter(w => w.length > 3);
+  const primaryKws = words.join(', ');
   
-  if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = `${name} | Rokea by RK`;
-  if (document.getElementById('seoKeyword')) document.getElementById('seoKeyword').value = name.toLowerCase();
+  const focusKeyword = lowerName;
+  const secondaryKeywords = `${lowerName} online, authentic ${lowerCat}, ${lowerCat} india`;
+  const longTailKeywords = `buy ${lowerName} online best price, authentic ${lowerName} ${lowerCat}, ${lowerName} rokea by rk`;
+  const transactionalKeywords = `buy ${lowerName}, order ${lowerCat} online, best price ${lowerName}, shop ${lowerCat}`;
+  const commercialKeywords = `${lowerName} reviews, top ${lowerCat} brands, premium ${lowerCat}`;
+  const seoKeywords = `${focusKeyword}, ${secondaryKeywords}, luxury ${lowerCat}`;
+
+  // Schemas
+  const faqArray = [
+    {
+      "question": `What is the price of ${name}?`,
+      "answer": `The current best price for ${name} is ₹${price} at ROKEA by RK.`
+    },
+    {
+      "question": `Is ${name} available in stock?`,
+      "answer": `Yes, ${name} is currently ${stock}. You can order it directly online.`
+    },
+    {
+      "question": `How should I care for my ${category}?`,
+      "answer": care || `We recommend professional dry cleaning for premium ${lowerCat} to maintain their quality and longevity.`
+    }
+  ];
+
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": name,
+    "description": shortDesc,
+    "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+    "image": imgUrl,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": price,
+      "availability": stock.toLowerCase().includes('out') ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      "url": url
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org/",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://rokeabyrk.com/" },
+      { "@type": "ListItem", "position": 2, "name": category, "item": `https://rokeabyrk.com/category/${category.toLowerCase()}` },
+      { "@type": "ListItem", "position": 3, "name": name, "item": url }
+    ]
+  };
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `${name} | ROKEA by RK`,
+    "description": shortDesc,
+    "url": url,
+    "publisher": { "@type": "Organization", "name": "ROKEA by RK" }
+  };
+
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ROKEA by RK",
+    "url": "https://rokeabyrk.com/",
+    "logo": "https://rokeabyrk.com/images/logo.png"
+  };
+
+  // Populate Form Fields
+  if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = `${name} | ROKEA by RK`;
+  if (document.getElementById('seoKeyword')) document.getElementById('seoKeyword').value = focusKeyword;
   if (document.getElementById('seoDesc')) document.getElementById('seoDesc').value = `Buy ${name} online. ${shortDesc} Shop authentic luxury at ROKEA by RK.`;
-  if (document.getElementById('seoKeywords')) document.getElementById('seoKeywords').value = keywords;
+  if (document.getElementById('seoSecondaryKeywords')) document.getElementById('seoSecondaryKeywords').value = secondaryKeywords;
+  if (document.getElementById('seoLongTailKeywords')) document.getElementById('seoLongTailKeywords').value = longTailKeywords;
+  if (document.getElementById('seoTransactionalKeywords')) document.getElementById('seoTransactionalKeywords').value = transactionalKeywords;
+  if (document.getElementById('seoCommercialKeywords')) document.getElementById('seoCommercialKeywords').value = commercialKeywords;
+  if (document.getElementById('seoKeywords')) document.getElementById('seoKeywords').value = seoKeywords;
+  if (document.getElementById('seoSearchIntent')) document.getElementById('seoSearchIntent').value = "Transactional, Commercial Investigation";
   if (document.getElementById('seoCanonical')) document.getElementById('seoCanonical').value = url;
-  if (document.getElementById('seoImgAlt')) document.getElementById('seoImgAlt').value = `${name} by ROKEA by RK`;
+  if (document.getElementById('seoRobots')) document.getElementById('seoRobots').value = "index, follow, max-image-preview:large";
+  if (document.getElementById('seoImgAlt')) document.getElementById('seoImgAlt').value = `Premium ${name} - ROKEA by RK`;
   
   if (document.getElementById('seoOgTags')) document.getElementById('seoOgTags').value = 
 `<meta property="og:title" content="${name} | ROKEA by RK">
 <meta property="og:description" content="${shortDesc}">
 <meta property="og:image" content="${imgUrl}">
-<meta property="og:url" content="${url}">`;
+<meta property="og:url" content="${url}">
+<meta property="og:type" content="product">`;
 
   if (document.getElementById('seoTwitterTags')) document.getElementById('seoTwitterTags').value = 
 `<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${name} | ROKEA by RK">
 <meta name="twitter:description" content="${shortDesc}">
 <meta name="twitter:image" content="${imgUrl}">`;
-
-  if (document.getElementById('seoProductSchema')) document.getElementById('seoProductSchema').value = 
-`{
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "${name}",
-  "description": "${shortDesc}",
-  "brand": { "@type": "Brand", "name": "ROKEA by RK" },
-  "image": "${imgUrl}",
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "INR",
-    "price": "${price}",
-    "availability": "https://schema.org/InStock",
-    "url": "${url}"
-  }
-}`;
-
-  if (document.getElementById('seoBreadcrumbSchema')) document.getElementById('seoBreadcrumbSchema').value = 
-`{
-  "@context": "https://schema.org/",
-  "@type": "BreadcrumbList",
-  "itemListElement": [{
-    "@type": "ListItem",
-    "position": 1,
-    "name": "Home",
-    "item": "https://rokeabyrk.com/"
-  },{
-    "@type": "ListItem",
-    "position": 2,
-    "name": "${name}",
-    "item": "${url}"
-  }]
-}`;
   
-  alert('SEO Details Generated! Please review them before saving.');
+  if (document.getElementById('seoProductSchema')) document.getElementById('seoProductSchema').value = JSON.stringify(productSchema, null, 2);
+  if (document.getElementById('seoBreadcrumbSchema')) document.getElementById('seoBreadcrumbSchema').value = JSON.stringify(breadcrumbSchema, null, 2);
+  if (document.getElementById('seoWebPageSchema')) document.getElementById('seoWebPageSchema').value = JSON.stringify(webPageSchema, null, 2);
+  if (document.getElementById('seoOrganizationSchema')) document.getElementById('seoOrganizationSchema').value = JSON.stringify(orgSchema, null, 2);
+  if (document.getElementById('seoFaq')) document.getElementById('seoFaq').value = JSON.stringify(faqArray, null, 2);
+
+  alert('Advanced SEO Generated Locally! Please review before saving.');
+};
+
+window.bulkGenerateAllSeo = async () => {
+  if (!confirm("This will loop through ALL products and generate advanced SEO locally. Are you sure?")) return;
+  
+  const btn = document.getElementById('bulkGenerateSeoBtn');
+  const originalText = btn.innerText;
+  btn.disabled = true;
+
+  let generatedCount = 0;
+
+  for (let i = 0; i < products.length; i++) {
+    const p = products[i];
+    btn.innerText = `Processing ${i+1} / ${products.length} (${p.name})`;
+    
+    const name = p.name || 'Product';
+    const category = p.category || 'Category';
+    const price = p.price || '0';
+    const descRaw = p.description || '';
+    const care = p.productCare || '';
+    const imgUrl = p.image || '';
+    const stock = p.stock || 'In Stock';
+    const slug = generateSlug(name) || 'product';
+    const url = `https://rokeabyrk.com/product/${slug}`;
+
+    const cleanDesc = descRaw.split('\n')[0].replace(/^[✦•\-\*]\s*/, '').trim() || name;
+    const shortDesc = cleanDesc.slice(0, 150) + (cleanDesc.length > 150 ? '...' : '');
+    const lowerName = name.toLowerCase();
+    const lowerCat = category.toLowerCase();
+
+    p.seoTitle = `${name} | ROKEA by RK`;
+    p.seoKeyword = lowerName;
+    p.seoDesc = `Buy ${name} online. ${shortDesc} Shop authentic luxury at ROKEA by RK.`;
+    p.seoSecondaryKeywords = `${lowerName} online, authentic ${lowerCat}, ${lowerCat} india`;
+    p.seoLongTailKeywords = `buy ${lowerName} online best price, authentic ${lowerName} ${lowerCat}, ${lowerName} rokea by rk`;
+    p.seoTransactionalKeywords = `buy ${lowerName}, order ${lowerCat} online, best price ${lowerName}, shop ${lowerCat}`;
+    p.seoCommercialKeywords = `${lowerName} reviews, top ${lowerCat} brands, premium ${lowerCat}`;
+    p.seoKeywords = `${p.seoKeyword}, ${p.seoSecondaryKeywords}, luxury ${lowerCat}`;
+    p.seoSearchIntent = "Transactional, Commercial Investigation";
+    p.seoCanonical = url;
+    p.seoRobots = "index, follow, max-image-preview:large";
+    p.seoImgAlt = `Premium ${name} - ROKEA by RK`;
+    
+    p.seoOgTags = `<meta property="og:title" content="${name} | ROKEA by RK">\n<meta property="og:description" content="${shortDesc}">\n<meta property="og:image" content="${imgUrl}">\n<meta property="og:url" content="${url}">\n<meta property="og:type" content="product">`;
+    p.seoTwitterTags = `<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${name} | ROKEA by RK">\n<meta name="twitter:description" content="${shortDesc}">\n<meta name="twitter:image" content="${imgUrl}">`;
+    
+    p.seoProductSchema = JSON.stringify({
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": name,
+      "description": shortDesc,
+      "brand": { "@type": "Brand", "name": "ROKEA by RK" },
+      "image": imgUrl,
+      "offers": { "@type": "Offer", "priceCurrency": "INR", "price": price, "availability": stock.toLowerCase().includes('out') ? "https://schema.org/OutOfStock" : "https://schema.org/InStock", "url": url }
+    });
+    
+    p.seoBreadcrumbSchema = JSON.stringify({
+      "@context": "https://schema.org/",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://rokeabyrk.com/" },
+        { "@type": "ListItem", "position": 2, "name": category, "item": `https://rokeabyrk.com/category/${category.toLowerCase()}` },
+        { "@type": "ListItem", "position": 3, "name": name, "item": url }
+      ]
+    });
+    
+    p.seoWebPageSchema = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": p.seoTitle,
+      "description": shortDesc,
+      "url": url,
+      "publisher": { "@type": "Organization", "name": "ROKEA by RK" }
+    });
+    
+    p.seoOrganizationSchema = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ROKEA by RK",
+      "url": "https://rokeabyrk.com/",
+      "logo": "https://rokeabyrk.com/images/logo.png"
+    });
+    
+    p.seoFaq = JSON.stringify([
+      { "question": `What is the price of ${name}?`, "answer": `The current best price for ${name} is ₹${price} at ROKEA by RK.` },
+      { "question": `Is ${name} available in stock?`, "answer": `Yes, ${name} is currently ${stock}. You can order it directly online.` },
+      { "question": `How should I care for my ${category}?`, "answer": care || `We recommend professional dry cleaning for premium ${lowerCat} to maintain their quality and longevity.` }
+    ]);
+
+    if (db) {
+      try {
+        await db.collection("products").doc(p.id.toString()).set(p);
+        generatedCount++;
+      } catch(e) {
+        console.error("Bulk save failed for " + name, e);
+      }
+    }
+  }
+
+  saveProducts();
+  btn.innerText = originalText;
+  btn.disabled = false;
+  alert(`Bulk SEO Generation Completed! Successfully generated and saved SEO for ${generatedCount} products.`);
 };
 
 window.deleteProduct = (idx) => {

@@ -135,15 +135,18 @@ module.exports = async function handler(req, res) {
   // 1. Replace Title
   html = html.replace(/<title>.*?<\/title>/, `<title>${finalTitle}</title>`);
   
-  // 2. Replace Meta Description
-  const newMetaDesc = `<meta name="description" content="${finalDesc}">`;
+  // 3. Replace/Inject Meta Description, Keywords, Robots
+  let metaTags = `<meta name="description" content="${finalDesc}">`;
+  if (p.seoKeywords) metaTags += `\n<meta name="keywords" content="${p.seoKeywords}">`;
+  if (p.seoRobots) metaTags += `\n<meta name="robots" content="${p.seoRobots}">`;
+  
   if (html.includes('<meta name="description"')) {
-    html = html.replace(/<meta name="description".*?>/, newMetaDesc);
+    html = html.replace(/<meta name="description".*?>/, metaTags);
   } else {
-    html = html.replace('</head>', `${newMetaDesc}\n</head>`);
+    html = html.replace('</head>', `${metaTags}\n</head>`);
   }
 
-  // 3. Replace OG Tags
+  // 4. Replace OG Tags
   if(p.seoOgTags) {
      html = html.replace(/<meta property="og:.*?".*?>/g, ''); 
      html = html.replace('</head>', `${p.seoOgTags}\n</head>`);
@@ -154,7 +157,7 @@ module.exports = async function handler(req, res) {
     html = html.replace(/<meta property="og:url" id="ogUrl" content=".*?"/g, `<meta property="og:url" id="ogUrl" content="${finalCanonical}"`);
   }
 
-  // 4. Replace Twitter Tags
+  // 5. Replace Twitter Tags
   if(p.seoTwitterTags) {
      html = html.replace(/<meta name="twitter:.*?".*?>/g, '');
      html = html.replace('</head>', `${p.seoTwitterTags}\n</head>`);
@@ -164,19 +167,46 @@ module.exports = async function handler(req, res) {
     html = html.replace(/<meta name="twitter:image" id="twImage" content=".*?"/g, `<meta name="twitter:image" id="twImage" content="${productImg}"`);
   }
 
-  // 5. Replace Canonical
+  // 6. Replace Canonical
   html = html.replace(/<link id="canonicalUrl" rel="canonical" href=".*?"/, `<link id="canonicalUrl" rel="canonical" href="${finalCanonical}"`);
 
-  // 6. Inject JSON-LD Schema
+  // 7. Inject JSON-LD Schemas
   let schemaString = '';
   if (p.seoProductSchema) {
-    schemaString = `<script type="application/ld+json" id="productSchema">\n${p.seoProductSchema}\n</script>`;
+    schemaString += `<script type="application/ld+json" id="productSchema">\n${p.seoProductSchema}\n</script>`;
   } else {
-    schemaString = `<script type="application/ld+json" id="productSchema">\n${JSON.stringify(productSchemaData)}\n</script>`;
+    schemaString += `<script type="application/ld+json" id="productSchema">\n${JSON.stringify(productSchemaData)}\n</script>`;
   }
   
   if (p.seoBreadcrumbSchema) {
     schemaString += `\n<script type="application/ld+json" id="breadcrumbSchema">\n${p.seoBreadcrumbSchema}\n</script>`;
+  }
+  if (p.seoWebPageSchema) {
+    schemaString += `\n<script type="application/ld+json" id="webPageSchema">\n${p.seoWebPageSchema}\n</script>`;
+  }
+  if (p.seoOrganizationSchema) {
+    schemaString += `\n<script type="application/ld+json" id="organizationSchema">\n${p.seoOrganizationSchema}\n</script>`;
+  }
+  if (p.seoFaq) {
+    // Convert parsed FAQ array into FAQPage schema
+    try {
+      const faqs = typeof p.seoFaq === 'string' ? JSON.parse(p.seoFaq) : p.seoFaq;
+      if (Array.isArray(faqs) && faqs.length > 0) {
+        const faqSchema = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": faqs.map(f => ({
+            "@type": "Question",
+            "name": f.question,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": f.answer
+            }
+          }))
+        };
+        schemaString += `\n<script type="application/ld+json" id="faqSchema">\n${JSON.stringify(faqSchema)}\n</script>`;
+      }
+    } catch(e) {}
   }
 
   if (html.includes('<script type="application/ld+json" id="productSchema"></script>')) {
