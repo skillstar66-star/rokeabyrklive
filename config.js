@@ -10,8 +10,7 @@
     "k7": "Ry1IMUdCSzgxRDFa",                                   // Measurement ID
     "k8": "cnpwX2xpdmVfU0VNU204aVBiVUtBdTk=",                   // Razorpay ID
     "k9": "YWRtaW4=",                                           // Admin Email
-    "k10": "cm9rZWFAMjAyNQ==",                                  // Admin Password
-    "k11": "QVEuQWI4Uk42SmhWdmdFdm9RaWQ4a3JINS1jdHdLQTJheXlPbEhtNS1rUU1GcDVlZ0IwZlE=" // Gemini API Key
+    "k10": "cm9rZWFAMjAyNQ=="                                   // Admin Password
   };
 
   const decode = (s) => atob(s);
@@ -27,8 +26,7 @@
       FIREBASE_MEASUREMENT_ID: decode(_data.k7),
       RAZORPAY_KEY_ID: decode(_data.k8),
       ADMIN_EMAIL: decode(_data.k9),
-      ADMIN_PASSWORD: decode(_data.k10),
-      GEMINI_API_KEY: decode(_data.k11)
+      ADMIN_PASSWORD: decode(_data.k10)
     }
   };
 })();
