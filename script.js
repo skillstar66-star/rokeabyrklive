@@ -2931,11 +2931,11 @@ function _populateProductPage(p) {
     const catLabel = isJewellery ? 'Jewellery' : 'Sarees';
     const catParam = isJewellery ? 'imitation' : 'sarees';
     breadCat.innerText = catLabel;
-    breadCat.href = 'collections.html';
+    breadCat.href = '/collections.html';
     breadCat.onclick = (e) => {
       e.preventDefault();
       localStorage.setItem('rokea_selected_category', catParam);
-      window.location.href = 'collections.html';
+      window.location.href = '/collections.html';
     };
   }
   if (price) price.innerText = `₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}`;
@@ -3335,7 +3335,7 @@ function injectMobileAppBottomBar() {
   bar.id = 'mobileAppBottomBar';
   bar.setAttribute('aria-label', 'Mobile App Bottom Navigation');
   bar.innerHTML = `
-    <a href="index.html" class="app-nav-item ${isHome ? 'active' : ''}" id="appNavHome" aria-label="Home">
+    <a href="/" class="app-nav-item ${isHome ? 'active' : ''}" id="appNavHome" aria-label="Home">
       <div class="app-nav-icon-box">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -3345,7 +3345,7 @@ function injectMobileAppBottomBar() {
       <span class="app-nav-label">Home</span>
     </a>
 
-    <a href="collections.html" class="app-nav-item ${isShop ? 'active' : ''}" id="appNavCollections" aria-label="Collections">
+    <a href="/collections.html" class="app-nav-item ${isShop ? 'active' : ''}" id="appNavCollections" aria-label="Collections">
       <div class="app-nav-icon-box">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7"></rect>
