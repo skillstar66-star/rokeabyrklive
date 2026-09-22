@@ -2770,6 +2770,7 @@ footer {
   background: var(--dark);
   padding: 70px 60px 30px;
   border-top: 1px solid rgba(201, 168, 76, 0.15);
+  margin-bottom: 0 !important;
 }
 
 .footer-grid {

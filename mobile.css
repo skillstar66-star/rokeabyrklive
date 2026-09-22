@@ -1064,7 +1064,9 @@
 
     /* ── FOOTER ── */
     footer {
-        padding: 50px 20px 30px !important;
+        padding: 50px 20px calc(80px + env(safe-area-inset-bottom, 15px)) !important;
+        margin-bottom: 0 !important;
+        background: var(--dark) !important;
     }
 
     .footer-grid {
@@ -2107,7 +2109,8 @@
        MOBILE APP NATIVE EXPERIENCE & BOTTOM BAR
        ══════════════════════════════════════════════════════════════ */
     body {
-        padding-bottom: calc(68px + env(safe-area-inset-bottom, 12px)) !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
         -webkit-tap-highlight-color: transparent !important;
     }
 
