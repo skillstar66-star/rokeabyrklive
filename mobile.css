@@ -146,17 +146,30 @@
 
     /* ── 2. HERO ── */
     .hero {
-        min-height: auto;
-        padding-top: 90px;
-        padding-bottom: 60px;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        padding-top: 65px;
+        padding-bottom: 20px;
         background-attachment: scroll;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .hero-container {
         grid-template-columns: 1fr;
         padding: 0 20px;
-        gap: 30px;
+        gap: 0;
         text-align: center;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .hero-visual {
@@ -180,26 +193,43 @@
 
     .hero-content {
         text-align: center;
+        width: 100%;
+    }
+
+    .hero-eyebrow {
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        margin-bottom: clamp(8px, 1.5vh, 12px);
+        justify-content: center;
+    }
+
+    .hero-eyebrow .eyebrow-line {
+        width: 20px;
     }
 
     .hero-tag {
-        font-size: 9px;
-        letter-spacing: 3px;
-        margin-bottom: 12px;
+        font-size: 10px;
+        letter-spacing: 3.5px;
+        margin-bottom: 10px;
     }
 
     .hero-title {
-        font-size: clamp(32px, 9vw, 48px);
-        margin-bottom: 12px;
-        line-height: 1.2;
+        font-size: clamp(30px, 8.5vw, 46px);
+        margin-bottom: clamp(10px, 1.6vh, 14px);
+        line-height: 1.12;
+    }
+
+    .hero-title .hero-swoosh {
+        bottom: -3px;
+        height: 11px;
     }
 
     .hero-subtitle {
-        font-size: 13px;
-        letter-spacing: 0.5px;
-        margin-bottom: 24px;
+        font-size: clamp(12.5px, 3.5vw, 14.5px);
+        letter-spacing: 0.25px;
+        margin-bottom: clamp(14px, 2.4vh, 20px);
         max-width: 100%;
-        line-height: 1.6;
+        line-height: 1.55;
     }
 
     .hero-subtitle br {
@@ -207,19 +237,24 @@
     }
 
     .hero-btns {
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: center;
         align-items: center;
         gap: 12px;
+        width: 100%;
     }
 
     .hero-btns .btn-primary,
     .hero-btns .btn-outline {
-        width: 100%;
-        max-width: 100%;
-        min-height: 50px;
-        padding: 14px 20px;
+        width: auto;
+        flex: 1 1 0;
+        max-width: 190px;
+        min-height: 45px;
+        padding: 12px 16px;
         text-align: center;
-        font-size: 10px;
+        justify-content: center;
+        font-size: 10.5px;
+        letter-spacing: 1.2px;
     }
 
     .hero-scroll {
@@ -338,9 +373,163 @@
         border-radius: 4px;
     }
 
-    /* ── 4. PRODUCT GRID ── */
+    /* ── 4. PRODUCT GRID & CURATED SHOWCASE ── */
     .products-section {
         padding: 50px 15px;
+    }
+
+    .curated-showcase-section {
+        min-height: auto !important;
+        height: auto !important;
+        max-height: none !important;
+        box-sizing: border-box !important;
+        padding: 50px 18px 45px !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+
+    .curated-wrapper {
+        height: auto !important;
+        max-height: none !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 24px !important;
+    }
+
+    .curated-center-header {
+        margin-bottom: 20px !important;
+        text-align: center !important;
+    }
+
+    .curated-eyebrow {
+        gap: 8px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .curated-eyebrow .c-line {
+        width: 22px !important;
+        height: 1px !important;
+    }
+
+    .curated-eyebrow .c-diamond {
+        font-size: 8px !important;
+    }
+
+    .curated-eyebrow .c-text {
+        font-size: 10px !important;
+        letter-spacing: 2.5px !important;
+    }
+
+    .curated-title {
+        font-size: clamp(22px, 5.5vw, 28px) !important;
+        line-height: 1.25 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .curated-subtitle {
+        font-size: 13px !important;
+        margin: 0 !important;
+        line-height: 1.45 !important;
+        color: #706354 !important;
+    }
+
+    .curated-cards-dual {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 22px !important;
+        width: 100% !important;
+        height: auto !important;
+        flex-grow: unset !important;
+        align-items: stretch !important;
+    }
+
+    .curated-showcase-card {
+        min-height: 380px !important;
+        height: auto !important;
+        padding: 22px 18px 20px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+    }
+
+    .curated-card-inner-frame {
+        inset: 8px !important;
+        border-radius: 10px !important;
+    }
+
+    .curated-top-badge {
+        padding: 6px 14px !important;
+        font-size: 9.5px !important;
+        letter-spacing: 1.5px !important;
+        gap: 6px !important;
+        border-radius: 20px !important;
+    }
+
+    .curated-top-badge .pill-dot {
+        width: 5px !important;
+        height: 5px !important;
+    }
+
+    .curated-card-footer-box {
+        padding: 18px 16px !important;
+        border-radius: 14px !important;
+        margin-top: auto !important;
+    }
+
+    .curated-card-heading-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 6px !important;
+    }
+
+    .curated-card-title {
+        font-size: 24px !important;
+        line-height: 1.2 !important;
+        color: #FFFFFF !important;
+    }
+
+    .curated-card-count {
+        font-size: 9px !important;
+        padding: 3px 8px !important;
+        letter-spacing: 1.5px !important;
+        border-radius: 20px !important;
+    }
+
+    .curated-card-desc {
+        font-size: 12.5px !important;
+        line-height: 1.45 !important;
+        margin: 0 0 14px !important;
+        color: rgba(255, 255, 255, 0.88) !important;
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+        overflow: visible !important;
+    }
+
+    .curated-cta-btn {
+        font-size: 10px !important;
+        letter-spacing: 2px !important;
+        gap: 8px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    .curated-cta-btn .cta-arrow {
+        width: 26px !important;
+        height: 26px !important;
+        border-radius: 50% !important;
+    }
+
+    .curated-cta-btn .cta-arrow svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .vertical-elegance-badge,
+    .botanical-ornament {
+        display: none !important;
     }
 
     .featured-inner {
@@ -1353,46 +1542,721 @@
     }
 }
 
-/* -- PREMIUM FEATURES (WHY CHOOSE US) MOBILE OVERRIDES -- */
+/* -- WHY CHOOSE ROKEA MOBILE OVERRIDES -- */
 @media (max-width: 768px) {
-    .premium-features-section {
-        padding: 40px 10px !important;
+    .why-choose-rokea-section {
+        padding: 50px 16px !important;
     }
-    
-    .features-grid {
+
+    .why-decor-saree-corner,
+    .why-decor-jewel-corner,
+    .why-decor-botanical-corner {
+        display: none !important;
+    }
+
+    .why-header {
+        margin-bottom: 30px !important;
+    }
+
+    .why-title {
+        font-size: 28px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .why-subtitle {
+        font-size: 12.5px !important;
+    }
+
+    .why-cards-grid {
         display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 5px !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
     }
-    
-    .feature-card {
-        padding: 12px 6px !important;
-        border-radius: 8px !important;
+
+    .why-arch-card {
+        padding: 20px 12px 16px !important;
+        border-radius: 40px 40px 16px 16px !important;
+    }
+
+    .why-icon-badge {
+        width: 52px !important;
+        height: 52px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .why-icon-badge svg {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .why-card-number {
+        font-size: 11px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .why-card-title {
+        font-size: 13.5px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 6px !important;
+        min-height: 36px !important;
+    }
+
+    .why-card-desc {
+        font-size: 11px !important;
+        line-height: 1.45 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .why-card-divider .w-line {
+        width: 20px !important;
+    }
+
+    /* ── GOOGLE REVIEWS SECTION (MOBILE) ── */
+    .google-reviews-section {
+        padding: 50px 16px !important;
+    }
+
+    .gr-header {
+        margin-bottom: 28px !important;
+    }
+
+    .gr-google-badge {
+        padding: 6px 14px !important;
+        gap: 10px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .gr-google-icon {
+        width: 22px !important;
+        height: 22px !important;
+    }
+
+    .gr-star-score {
+        font-size: 13.5px !important;
+    }
+
+    .gr-stars {
+        font-size: 13px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .gr-badge-sub {
+        font-size: 9.5px !important;
+        letter-spacing: 0.4px !important;
+    }
+
+    .gr-title {
+        font-size: 23px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 8px !important;
+    }
+
+    .gr-subtitle {
+        font-size: 12.5px !important;
+        line-height: 1.5 !important;
+        padding: 0 10px !important;
+    }
+
+    /* ── GOOGLE REVIEWS (MOBILE HORIZONTAL MARQUEE) ── */
+    .google-reviews-section {
+        padding: 50px 0 45px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+    }
+
+    .google-reviews-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .google-reviews-header {
+        padding: 0 18px !important;
+        margin-bottom: 24px !important;
+        text-align: center !important;
+    }
+
+    .gr-cards-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        width: max-content !important;
+        gap: 16px !important;
+        padding: 10px 0 15px !important;
+        animation: grMarqueeMobile 30s linear infinite !important;
+        will-change: transform;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .gr-cards-grid:hover,
+    .gr-cards-grid:active {
+        animation-play-state: paused !important;
+    }
+
+    .gr-card {
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+        flex-shrink: 0 !important;
+        height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        padding: 20px 18px 18px !important;
+        border-radius: 16px !important;
+        background: #FFFFFF !important;
+        border: 1px solid #EBE5D8 !important;
+        box-shadow: 0 6px 20px rgba(40, 25, 10, 0.06) !important;
+        box-sizing: border-box !important;
+    }
+
+    .gr-card-clone {
+        display: flex !important;
+    }
+
+    @keyframes grMarqueeMobile {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 8px));
+        }
+    }
+
+    .gr-card-header {
+        gap: 10px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .gr-avatar {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 14px !important;
+    }
+
+    .gr-user-name h4 {
+        font-size: 13.5px !important;
+    }
+
+    .gr-user-meta {
+        font-size: 10px !important;
+    }
+
+    .gr-stars-row {
+        font-size: 12.5px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .gr-review-time {
+        font-size: 10.5px !important;
+    }
+
+    .gr-review-text {
+        font-size: 12.5px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 12px !important;
+        display: block !important;
+    }
+
+    .gr-card-footer {
+        padding-top: 10px !important;
+    }
+
+    .gr-posted-on {
+        font-size: 10px !important;
+    }
+
+    .gr-tag {
+        font-size: 10px !important;
+        padding: 2px 8px !important;
+    }
+
+    /* ── CONTACT SECTION (MOBILE) ── */
+    .contact-section {
+        padding: 45px 16px !important;
+        background-position: center !important;
+        background-size: cover !important;
+        position: relative !important;
+    }
+
+    .contact-section::before {
+        background: rgba(250, 245, 238, 0.92) !important;
+    }
+
+    .contact-container {
+        position: relative !important;
+        z-index: 2 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .contact-header {
+        text-align: center !important;
+        margin-bottom: 26px !important;
+        padding: 0 8px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        text-align: center !important;
     }
-    
-    .feature-number {
-        font-size: 18px !important;
+
+    .contact-header .section-label {
+        display: inline-block !important;
+        font-size: 11px !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        font-weight: 700 !important;
+        color: #4A0E17 !important;
         margin-bottom: 8px !important;
-        opacity: 0.5 !important;
     }
-    
-    .feature-title {
+
+    .contact-header .section-title {
+        font-size: clamp(22px, 5.5vw, 28px) !important;
+        line-height: 1.3 !important;
+        color: #1E1A16 !important;
+        font-weight: 700 !important;
+        margin: 0 auto 10px auto !important;
+        display: block !important;
+    }
+
+    .contact-header .section-title em {
+        font-style: italic !important;
+        color: #9E7422 !important;
+    }
+
+    .contact-subtitle {
+        font-size: 13.5px !important;
+        line-height: 1.6 !important;
+        color: #3C332A !important;
+        font-weight: 400 !important;
+        max-width: 100% !important;
+        margin: 0 auto 8px auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .contact-header .decorative-ornament {
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: 6px !important;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .contact-info-card {
+        padding: 24px 18px !important;
+        border-radius: 16px !important;
+    }
+
+    .contact-info-title {
+        font-size: 24px !important;
+    }
+
+    .contact-info-desc {
+        font-size: 12px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .contact-details-list {
+        gap: 16px !important;
+        margin-bottom: 22px !important;
+    }
+
+    .contact-icon {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .contact-item-text strong {
+        font-size: 13px !important;
+    }
+
+    .contact-item-text span,
+    .contact-item-text a {
+        font-size: 12px !important;
+    }
+
+    .contact-whatsapp-btn {
+        padding: 12px 18px !important;
+        font-size: 12.5px !important;
+    }
+
+    .contact-form-card {
+        padding: 24px 18px !important;
+        border-radius: 16px !important;
+    }
+
+    .contact-form-title {
+        font-size: 22px !important;
+    }
+
+    .contact-form-sub {
+        font-size: 12px !important;
+    }
+
+    .contact-form-row {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .contact-input-group input,
+    .contact-input-group select,
+    .contact-input-group textarea {
+        padding: 10px 14px !important;
+        font-size: 12.5px !important;
+    }
+
+    .contact-submit-btn {
+        padding: 12px 20px !important;
+        font-size: 11.5px !important;
+    }
+
+    /* ── AUTH MODAL (MOBILE) ── */
+    .auth-modal-card {
+        max-width: 94% !important;
+        max-height: 92vh !important;
+        overflow-y: auto !important;
+        border-radius: 16px !important;
+    }
+
+    .auth-card-grid {
+        grid-template-columns: 1fr !important;
+        min-height: auto !important;
+    }
+
+    .auth-card-left {
+        padding: 24px 18px 0 !important;
+    }
+
+    .auth-brand-name {
+        font-size: 26px !important;
+    }
+
+    .auth-brand-tagline {
+        font-size: 11px !important;
+        letter-spacing: 2.5px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .auth-brand-quote {
+        font-size: 11.5px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .auth-saree-img {
+        max-height: 120px !important;
+        object-fit: cover !important;
+    }
+
+    .auth-card-right {
+        padding: 24px 18px !important;
+    }
+
+    .auth-main-title {
+        font-size: 24px !important;
+    }
+
+    .auth-main-subtitle {
+        font-size: 11.5px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .auth-input-pill {
+        padding: 10px 12px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .auth-submit-maroon-btn {
+        padding: 11px !important;
+        font-size: 12.5px !important;
+    }
+
+    .auth-social-buttons {
+        gap: 8px !important;
+    }
+
+    .auth-social-btn {
+        padding: 8px 6px !important;
+        font-size: 10.5px !important;
+    }
+
+    /* ── BEST SELLERS LUXURY SHOWCASE (MOBILE) ── */
+    .bestsellers-page-hero {
+        padding: 100px 12px 60px !important;
+        min-height: auto !important;
+    }
+
+    .decor-jasmine-top {
+        max-width: 130px !important;
+        opacity: 0.85 !important;
+    }
+
+    .decor-tradition-top {
+        top: 20px !important;
+        right: 12px !important;
+        transform: scale(0.72) !important;
+        transform-origin: top right !important;
+    }
+
+    .bestseller-header {
+        margin-bottom: 24px !important;
+    }
+
+    .bestseller-main-title {
+        font-size: 28px !important;
+        margin: 4px 0 8px !important;
+    }
+
+    .bestseller-subtitle {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 18px !important;
+    }
+
+    .bestseller-filter-bar {
+        gap: 8px !important;
+        overflow-x: auto !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        padding-bottom: 8px !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .filter-pill {
+        font-size: 12px !important;
+        padding: 6px 14px !important;
+        white-space: nowrap !important;
+    }
+
+    .filter-sep {
+        display: none !important;
+    }
+
+    .bestseller-showcase-container {
+        padding: 0 !important;
+    }
+
+    .bestseller-nav-arrow,
+    .bestseller-vertical-dots {
+        display: none !important;
+    }
+
+    .bestseller-slider-track {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .bestseller-card {
+        border-radius: 14px !important;
+    }
+
+    .bestseller-card-img-wrap {
+        height: 170px !important;
+    }
+
+    .bestseller-card-body {
+        padding: 10px 10px 14px !important;
+    }
+
+    .bestseller-card-price {
+        font-size: 17px !important;
+    }
+
+    .bestseller-card-title {
+        font-size: 12px !important;
+    }
+
+    .bestseller-add-btn {
         font-size: 10px !important;
-        line-height: 1.3 !important;
-        margin-bottom: 6px !important;
-        min-height: 26px !important;
+        padding: 8px 0 !important;
     }
-    
-    .feature-desc {
-        font-size: 8px !important;
-        line-height: 1.3 !important;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+
+    /* ══════════════════════════════════════════════════════════════
+       MOBILE APP NATIVE EXPERIENCE & BOTTOM BAR
+       ══════════════════════════════════════════════════════════════ */
+    body {
+        padding-bottom: calc(68px + env(safe-area-inset-bottom, 12px)) !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .mobile-app-bottom-bar {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        align-items: center !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+        padding-bottom: env(safe-area-inset-bottom, 4px) !important;
+        background: rgba(22, 14, 8, 0.96) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        border-top: 1px solid rgba(201, 168, 76, 0.28) !important;
+        box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.45) !important;
+        z-index: 9998 !important;
+    }
+
+    .app-nav-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+        text-decoration: none !important;
+        color: #B8A99A !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 4px 0 !important;
+        cursor: pointer !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: relative !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .app-nav-item:active {
+        transform: scale(0.9) !important;
+        color: var(--gold, #C9A84C) !important;
+    }
+
+    .app-nav-item.active {
+        color: var(--gold, #C9A84C) !important;
+    }
+
+    .app-nav-icon-box {
+        position: relative !important;
+        width: 24px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 2px !important;
+    }
+
+    .app-nav-icon-box svg {
+        width: 20px !important;
+        height: 20px !important;
+        stroke: currentColor !important;
+        transition: stroke 0.2s ease !important;
+    }
+
+    .app-nav-item.active .app-nav-icon-box svg {
+        stroke: var(--gold, #C9A84C) !important;
+        filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.5)) !important;
+    }
+
+    .app-nav-label {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 10px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.3px !important;
+        line-height: 1 !important;
+    }
+
+    .app-nav-item.active .app-nav-label {
+        font-weight: 700 !important;
+        color: var(--gold, #C9A84C) !important;
+    }
+
+    /* Center Elevated Action Button (Book Appt) */
+    .app-nav-center-btn {
+        margin-top: -14px !important;
+    }
+
+    .app-nav-center-circle {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        background: linear-gradient(135deg, #C9A84C 0%, #8B6914 100%) !important;
+        box-shadow: 0 4px 14px rgba(201, 168, 76, 0.45), 0 0 0 3px rgba(22, 14, 8, 0.95) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 2px !important;
+        transition: transform 0.2s ease !important;
+    }
+
+    .app-nav-center-circle svg {
+        width: 20px !important;
+        height: 20px !important;
+        stroke: #fff !important;
+    }
+
+    .app-nav-center-btn:active .app-nav-center-circle {
+        transform: scale(0.92) !important;
+    }
+
+    .app-center-label {
+        color: #E8D8B0 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Badges */
+    .app-nav-badge {
+        position: absolute !important;
+        top: -4px !important;
+        right: -9px !important;
+        background: #E91E63 !important;
+        color: #fff !important;
+        font-size: 9px !important;
+        font-weight: 700 !important;
+        min-width: 16px !important;
+        height: 16px !important;
+        line-height: 16px !important;
+        text-align: center !important;
+        border-radius: 10px !important;
+        padding: 0 4px !important;
+        border: 1.5px solid #160E08 !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Floating WhatsApp Button Adjustment */
+    .whatsapp-fab {
+        bottom: calc(72px + env(safe-area-inset-bottom, 10px)) !important;
+        right: 14px !important;
+        z-index: 9990 !important;
+    }
+
+    .ai-fab {
+        bottom: calc(130px + env(safe-area-inset-bottom, 10px)) !important;
+        right: 14px !important;
+        z-index: 9990 !important;
+    }
+
+    /* ── APP-LIKE BOTTOM SHEETS & CARDS ── */
+    .cart-drawer,
+    .wishlist-drawer {
+        border-radius: 22px 22px 0 0 !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .product-card {
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .product-card:active {
+        transform: scale(0.97) !important;
+    }
+
+    .btn-primary,
+    .btn-outline,
+    .nav-cta,
+    .contact-submit-btn,
+    .cb-btn {
+        touch-action: manipulation !important;
+    }
+
+    .btn-primary:active,
+    .btn-outline:active,
+    .contact-submit-btn:active {
+        transform: scale(0.96) !important;
     }
 }

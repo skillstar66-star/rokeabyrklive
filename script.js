@@ -57,9 +57,9 @@ function getSEOAttributes(product) {
     name = product.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   }
   if (!name) name = "Rokea Premium Product";
-  
+
   name = name.replace(/"/g, '&quot;');
-  
+
   return `alt="${name}" title="${name}" aria-label="${name}" loading="lazy" decoding="async" width="800" height="1000"`;
 }
 
@@ -100,7 +100,7 @@ const isLocalhost = window.location.hostname === 'localhost' || window.location.
 
 function getProductLink(p) {
   if (isLocalhost) {
-    return p.slug ? `/product-details?slug=${p.slug}` : `/product-details?id=${p.id}`;
+    return p.slug ? `product-details.html?slug=${p.slug}` : `product-details.html?id=${p.id}`;
   } else {
     return p.slug ? `/product/${p.slug}` : `/product-details?id=${p.id}`;
   }
@@ -305,7 +305,6 @@ function showSideNotification(product) {
 
 
 function addToCart(productId) {
-  if (!currentUser) { openAuth(); return; }
   const p = products.find(prod => prod.id == productId);
   if (!p || p.stock === "Out of Stock") return;
   cart.push(p);
@@ -335,8 +334,10 @@ function removeFromCart(index) {
 }
 
 function updateCartIcon() {
-  const countEl = document.getElementById('cart-count');
-  if (countEl) countEl.innerText = cart.length;
+  const countEls = document.querySelectorAll('#cart-count, #mobile-cart-count, .cart-count-badge');
+  countEls.forEach(el => {
+    if (el) el.innerText = cart.length;
+  });
 }
 
 // --- WISHLIST LOGIC ---
@@ -349,7 +350,6 @@ function toggleWishlist() {
 }
 
 function addToWishlist(productId) {
-  if (!currentUser) { openAuth(); return; }
   const index = wishlist.findIndex(p => p.id == productId);
   const p = products.find(prod => prod.id == productId);
 
@@ -427,12 +427,14 @@ function removeFromWishlist(index) {
 }
 
 function updateWishlistIcon() {
-  const countEl = document.getElementById('wish-count');
-  if (countEl) {
-    countEl.innerText = wishlist.length;
-    countEl.classList.add('wish-animate');
-    setTimeout(() => countEl.classList.remove('wish-animate'), 400);
-  }
+  const countEls = document.querySelectorAll('#wish-count, #mobile-wish-count, .wish-count-badge');
+  countEls.forEach(el => {
+    if (el) {
+      el.innerText = wishlist.length;
+      el.classList.add('wish-animate');
+      setTimeout(() => el.classList.remove('wish-animate'), 400);
+    }
+  });
 }
 
 
@@ -571,20 +573,53 @@ function handleOrder(e) {
 }
 
 // AUTH LOGIC
-const authModal = document.getElementById('authModal');
-const loginView = document.getElementById('loginView');
-const regView = document.getElementById('registerView');
+window.openAuth = (showLogin = true) => {
+  const authModal = document.getElementById('authModal');
+  if (authModal) {
+    authModal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+    window.toggleAuth(showLogin);
+  }
+};
 
-window.openAuth = () => {
-  if (authModal) { authModal.style.display = 'flex'; document.body.classList.add('modal-open'); }
-}
 window.closeAuth = () => {
-  if (authModal) { authModal.style.display = 'none'; document.body.classList.remove('modal-open'); }
-}
+  const authModal = document.getElementById('authModal');
+  if (authModal) {
+    authModal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+  }
+};
+
 window.toggleAuth = (showLogin) => {
+  const loginView = document.getElementById('loginView');
+  const regView = document.getElementById('registerView');
+  const quote = document.getElementById('authBrandQuote');
+
   if (loginView) loginView.style.display = showLogin ? 'block' : 'none';
   if (regView) regView.style.display = showLogin ? 'none' : 'block';
-}
+
+  if (quote) {
+    quote.innerHTML = showLogin 
+      ? '<em>Sign in to continue your elegant journey with us.</em>' 
+      : '<em>Sign up to begin your elegant journey with us.</em>';
+  }
+};
+
+window.togglePasswordVisibility = (inputId, btn) => {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPass = input.type === 'password';
+  input.type = isPass ? 'text' : 'password';
+
+  if (btn) {
+    const eyeOpen = btn.querySelector('.eye-open');
+    const eyeClosed = btn.querySelector('.eye-closed');
+    if (eyeOpen && eyeClosed) {
+      eyeOpen.style.display = isPass ? 'none' : 'block';
+      eyeClosed.style.display = isPass ? 'block' : 'none';
+    }
+  }
+};
 
 // REEL MODAL LOGIC
 const reelVideos = {
@@ -658,7 +693,7 @@ window.handleAuth = () => {
       renderAll();
     } else {
       sessionStorage.setItem('openAdmin', 'true');
-      window.location.href = '/';
+      window.location.href = 'index.html';
     }
     return;
   }
@@ -1229,12 +1264,12 @@ window.switchCategory = (cat) => {
 window.selectCategory = (cat) => {
   // Navigate to collections page
   localStorage.setItem('rokea_selected_category', cat);
-  window.location.href = `/collections`;
+  window.location.href = 'collections.html';
 }
 
 window.backToCategories = () => {
   // Navigate back to home page category section
-  window.location.href = '/#products';
+  window.location.href = 'index.html#products';
 }
 
 window.applySort = (sortType) => {
@@ -1357,6 +1392,9 @@ function renderAll() {
   renderGrid();
   renderAdminList();
   renderMarquee();
+  if (typeof renderBestsellerShowcase === 'function') {
+    renderBestsellerShowcase();
+  }
   // Load product page: prefer URL ?id=, fallback to sessionStorage (after refresh)
   const activeId = (typeof urlId !== 'undefined' && urlId)
     ? urlId
@@ -1460,7 +1498,7 @@ window.editProduct = (idx) => {
   document.getElementById('prodStock').value = p.stock || "In Stock";
   document.getElementById('prodDesc').value = p.description || "";
   if (document.getElementById('prodCare')) document.getElementById('prodCare').value = p.productCare || "";
-  
+
   if (document.getElementById('seoTitle')) document.getElementById('seoTitle').value = p.seoTitle || "";
   if (document.getElementById('seoKeyword')) document.getElementById('seoKeyword').value = p.seoKeyword || "";
   if (document.getElementById('seoDesc')) document.getElementById('seoDesc').value = p.seoDesc || "";
@@ -1506,11 +1544,11 @@ window.generateSeoFromDescription = () => {
   const shortDesc = cleanDesc.slice(0, 150) + (cleanDesc.length > 150 ? '...' : '');
   const lowerName = name.toLowerCase();
   const lowerCat = category.toLowerCase();
-  
+
   // Keyword Generation
   const words = lowerName.split(' ').filter(w => w.length > 3);
   const primaryKws = words.join(', ');
-  
+
   const focusKeyword = lowerName;
   const secondaryKeywords = `${lowerName} online, authentic ${lowerCat}, ${lowerCat} india`;
   const longTailKeywords = `buy ${lowerName} online best price, authentic ${lowerName} ${lowerCat}, ${lowerName} rokea by rk`;
@@ -1590,20 +1628,20 @@ window.generateSeoFromDescription = () => {
   if (document.getElementById('seoCanonical')) document.getElementById('seoCanonical').value = url;
   if (document.getElementById('seoRobots')) document.getElementById('seoRobots').value = "index, follow, max-image-preview:large";
   if (document.getElementById('seoImgAlt')) document.getElementById('seoImgAlt').value = `Premium ${name} - ROKEA by RK`;
-  
-  if (document.getElementById('seoOgTags')) document.getElementById('seoOgTags').value = 
-`<meta property="og:title" content="${name} | ROKEA by RK">
+
+  if (document.getElementById('seoOgTags')) document.getElementById('seoOgTags').value =
+    `<meta property="og:title" content="${name} | ROKEA by RK">
 <meta property="og:description" content="${shortDesc}">
 <meta property="og:image" content="${imgUrl}">
 <meta property="og:url" content="${url}">
 <meta property="og:type" content="product">`;
 
-  if (document.getElementById('seoTwitterTags')) document.getElementById('seoTwitterTags').value = 
-`<meta name="twitter:card" content="summary_large_image">
+  if (document.getElementById('seoTwitterTags')) document.getElementById('seoTwitterTags').value =
+    `<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${name} | ROKEA by RK">
 <meta name="twitter:description" content="${shortDesc}">
 <meta name="twitter:image" content="${imgUrl}">`;
-  
+
   if (document.getElementById('seoProductSchema')) document.getElementById('seoProductSchema').value = JSON.stringify(productSchema, null, 2);
   if (document.getElementById('seoBreadcrumbSchema')) document.getElementById('seoBreadcrumbSchema').value = JSON.stringify(breadcrumbSchema, null, 2);
   if (document.getElementById('seoWebPageSchema')) document.getElementById('seoWebPageSchema').value = JSON.stringify(webPageSchema, null, 2);
@@ -1615,7 +1653,7 @@ window.generateSeoFromDescription = () => {
 
 window.bulkGenerateAllSeo = async () => {
   if (!confirm("This will loop through ALL products and generate advanced SEO locally. Are you sure?")) return;
-  
+
   const btn = document.getElementById('bulkGenerateSeoBtn');
   const originalText = btn.innerText;
   btn.disabled = true;
@@ -1624,8 +1662,8 @@ window.bulkGenerateAllSeo = async () => {
 
   for (let i = 0; i < products.length; i++) {
     const p = products[i];
-    btn.innerText = `Processing ${i+1} / ${products.length} (${p.name})`;
-    
+    btn.innerText = `Processing ${i + 1} / ${products.length} (${p.name})`;
+
     const name = p.name || 'Product';
     const category = p.category || 'Category';
     const price = p.price || '0';
@@ -1653,10 +1691,10 @@ window.bulkGenerateAllSeo = async () => {
     p.seoCanonical = url;
     p.seoRobots = "index, follow, max-image-preview:large";
     p.seoImgAlt = `Premium ${name} - ROKEA by RK`;
-    
+
     p.seoOgTags = `<meta property="og:title" content="${name} | ROKEA by RK">\n<meta property="og:description" content="${shortDesc}">\n<meta property="og:image" content="${imgUrl}">\n<meta property="og:url" content="${url}">\n<meta property="og:type" content="product">`;
     p.seoTwitterTags = `<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${name} | ROKEA by RK">\n<meta name="twitter:description" content="${shortDesc}">\n<meta name="twitter:image" content="${imgUrl}">`;
-    
+
     p.seoProductSchema = JSON.stringify({
       "@context": "https://schema.org/",
       "@type": "Product",
@@ -1666,7 +1704,7 @@ window.bulkGenerateAllSeo = async () => {
       "image": imgUrl,
       "offers": { "@type": "Offer", "priceCurrency": "INR", "price": price, "availability": stock.toLowerCase().includes('out') ? "https://schema.org/OutOfStock" : "https://schema.org/InStock", "url": url }
     });
-    
+
     p.seoBreadcrumbSchema = JSON.stringify({
       "@context": "https://schema.org/",
       "@type": "BreadcrumbList",
@@ -1676,7 +1714,7 @@ window.bulkGenerateAllSeo = async () => {
         { "@type": "ListItem", "position": 3, "name": name, "item": url }
       ]
     });
-    
+
     p.seoWebPageSchema = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -1685,7 +1723,7 @@ window.bulkGenerateAllSeo = async () => {
       "url": url,
       "publisher": { "@type": "Organization", "name": "ROKEA by RK" }
     });
-    
+
     p.seoOrganizationSchema = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -1693,7 +1731,7 @@ window.bulkGenerateAllSeo = async () => {
       "url": "https://rokeabyrk.com/",
       "logo": "https://rokeabyrk.com/images/logo.png"
     });
-    
+
     p.seoFaq = JSON.stringify([
       { "question": `What is the price of ${name}?`, "answer": `The current best price for ${name} is ₹${price} at ROKEA by RK.` },
       { "question": `Is ${name} available in stock?`, "answer": `Yes, ${name} is currently ${stock}. You can order it directly online.` },
@@ -1704,7 +1742,7 @@ window.bulkGenerateAllSeo = async () => {
       try {
         await db.collection("products").doc(p.id.toString()).set(p);
         generatedCount++;
-      } catch(e) {
+      } catch (e) {
         console.error("Bulk save failed for " + name, e);
       }
     }
@@ -1771,6 +1809,7 @@ window.onclick = (e) => {
   if (e.target === authModal) closeAuth();
   if (e.target === storyModal) closeFullStory();
   if (e.target === document.getElementById('leadModal')) closeLeadModal();
+  if (e.target === document.getElementById('appointmentModal')) closeAppointmentModal();
   if (e.target === document.getElementById('productDetailModal')) closeProductDetail();
   if (e.target === document.getElementById('shareModal')) closeShareModal();
 }
@@ -1787,7 +1826,7 @@ window.openProductDetail = (productId) => {
   if (p) {
     window.location.href = getProductLink(p);
   } else {
-    window.location.href = `/product-details?id=${productId}`;
+    window.location.href = `product-details.html?id=${productId}`;
   }
 }
 
@@ -1897,43 +1936,217 @@ function handleMainImgSwipe() {
   }
 }
 
-// LEAD POPUP LOGIC
+// AUTOMATIC SIGN UP / VIP POPUP LOGIC (Trigger exactly 5 seconds after page entry)
 setTimeout(() => {
-  const leadModal = document.getElementById('leadModal');
-  if (leadModal && !sessionStorage.getItem('leadShown')) {
-    leadModal.style.display = 'flex';
-    sessionStorage.setItem('leadShown', 'true');
+  const authModal = document.getElementById('authModal') || document.getElementById('leadModal');
+  if (authModal && !currentUser && !sessionStorage.getItem('signUpShown')) {
+    window.openAuth(false); // Opens Sign Up view
+    sessionStorage.setItem('signUpShown', 'true');
   }
-}, 8000);
+}, 5000);
 
 window.closeLeadModal = () => {
-  const modal = document.getElementById('leadModal');
-  if (modal) modal.style.display = 'none';
-}
+  window.closeAuth();
+};
 
 window.handleLead = (e) => {
-  e.preventDefault();
-  const name = document.getElementById('leadName').value;
-  const phone = document.getElementById('leadPhone').value;
-  const interest = document.getElementById('leadInterest').value;
+  window.handleContactForm(e);
+};
 
-  const leadData = { name, phone, interest, date: new Date().toISOString() };
+// CONTACT FORM SUBMISSION LOGIC
+window.handleContactForm = (e) => {
+  if (e && e.preventDefault) e.preventDefault();
+  const nameInput = document.getElementById('contactFullName') || document.getElementById('leadName');
+  const phoneInput = document.getElementById('contactPhoneNumber') || document.getElementById('leadPhone');
+  const emailInput = document.getElementById('contactEmailAddress');
+  const interestSelect = document.getElementById('contactInterestSelect') || document.getElementById('leadInterest');
+  const messageText = document.getElementById('contactMessageText');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const phone = phoneInput ? phoneInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim() : '';
+  const interest = interestSelect ? interestSelect.value : 'Bridal Saree Consultation';
+  const message = messageText ? messageText.value.trim() : '';
+
+  if (!name || !phone) {
+    alert('Please enter your full name and phone number.');
+    return;
+  }
+
+  const btn = document.getElementById('contactSubmitBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>SUBMITTING...</span>';
+  }
+
+  const contactData = { name, phone, email, interest, message, date: new Date().toISOString() };
 
   // Save to localStorage
   const leads = JSON.parse(localStorage.getItem('saforio_leads')) || [];
-  leads.push({ name, phone, interest, date: new Date().toLocaleDateString() });
+  leads.push({ name, phone, email, interest, message, date: new Date().toLocaleDateString() });
   localStorage.setItem('saforio_leads', JSON.stringify(leads));
 
-  // Save to Firestore
-  if (db) {
-    db.collection("leads").add(leadData)
-      .then(() => console.log("Lead saved to Firestore!"))
-      .catch(err => console.error("Firestore lead error:", err));
+  // Save to Firestore if available
+  if (typeof db !== 'undefined' && db) {
+    db.collection("leads").add(contactData)
+      .then(() => console.log("Contact enquiry saved to Firestore!"))
+      .catch(err => console.error("Firestore error:", err));
   }
 
-  alert("Thank you, " + name + "! Our master stylist will contact you shortly.");
-  closeLeadModal();
-}
+  setTimeout(() => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>✓ ENQUIRY SENT</span>';
+      btn.style.background = '#2E7D32';
+    }
+    alert("Thank you, " + name + "! Your consultation request has been received. Our master stylist will contact you on WhatsApp/Phone within 2 hours.");
+    const form = document.getElementById('contactForm');
+    if (form) form.reset();
+    setTimeout(() => {
+      if (btn) {
+        btn.innerHTML = '<span>REQUEST CONSULTATION</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.style.background = '';
+      }
+    }, 4000);
+  }, 600);
+};
+
+// ── APPOINTMENT / CONSULTATION POPUP MODAL LOGIC ──
+window.openAppointmentModal = () => {
+  let modal = document.getElementById('appointmentModal');
+  if (!modal) {
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'modal';
+    modalDiv.id = 'appointmentModal';
+    modalDiv.innerHTML = `
+      <div class="modal-content appointment-popup-content">
+        <span class="modal-close" onclick="closeAppointmentModal()">×</span>
+        <div class="appointment-popup-inner">
+          <div class="appointment-popup-header">
+            <span class="contact-form-pill">✨ Priority Consultation</span>
+            <h3 class="appointment-popup-title">Book an <em>Appointment</em></h3>
+            <p class="appointment-popup-sub">
+              Connect with our master stylists for bespoke bridal sarees, jewellery &amp; custom blouse consultations.
+            </p>
+          </div>
+          <form id="appointmentForm" class="contact-form" onsubmit="handleAppointmentModal(event)">
+            <div class="contact-form-row">
+              <div class="contact-input-group">
+                <label for="apptFullName">Full Name *</label>
+                <input type="text" id="apptFullName" required placeholder="Ex: Priya Sundaram">
+              </div>
+              <div class="contact-input-group">
+                <label for="apptPhoneNumber">Phone / WhatsApp *</label>
+                <input type="tel" id="apptPhoneNumber" required placeholder="+91 98765 43210">
+              </div>
+            </div>
+            <div class="contact-form-row">
+              <div class="contact-input-group">
+                <label for="apptEmailAddress">Email Address</label>
+                <input type="email" id="apptEmailAddress" placeholder="priya@example.com">
+              </div>
+              <div class="contact-input-group">
+                <label for="apptInterestSelect">Interested Service / Product *</label>
+                <select id="apptInterestSelect" required>
+                  <option value="Bridal Saree Consultation">Bridal Saree Consultation</option>
+                  <option value="Handcrafted Temple Jewellery">Handcrafted Temple Jewellery</option>
+                  <option value="Custom Blouse Stitching Studio">Custom Blouse Stitching Studio</option>
+                  <option value="International Shipping & Bulk Orders">International Shipping &amp; Bulk Orders</option>
+                  <option value="Studio Boutique Visit">Studio Boutique Visit</option>
+                </select>
+              </div>
+            </div>
+            <div class="contact-input-group">
+              <label for="apptMessageText">Your Requirements / Preferred Date &amp; Time</label>
+              <textarea id="apptMessageText" rows="3" placeholder="Tell us about your wedding date, design preferences, or appointment timing..."></textarea>
+            </div>
+            <button type="submit" class="contact-submit-btn" id="apptSubmitBtn" style="width: 100%; justify-content: center;">
+              <span>CONFIRM APPOINTMENT REQUEST</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <p class="contact-form-footer-note" style="text-align: center; margin-top: 8px;">
+              ✦ 100% Confidential. Our stylist will reach out within 2 hours.
+            </p>
+          </form>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalDiv);
+    modal = modalDiv;
+  }
+  modal.style.display = 'flex';
+  document.body.classList.add('modal-open');
+  const firstInp = modal.querySelector('#apptFullName');
+  if (firstInp) setTimeout(() => firstInp.focus(), 100);
+};
+
+window.closeAppointmentModal = () => {
+  const modal = document.getElementById('appointmentModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+  }
+};
+
+window.handleAppointmentModal = (e) => {
+  if (e && e.preventDefault) e.preventDefault();
+  const nameInp = document.getElementById('apptFullName');
+  const phoneInp = document.getElementById('apptPhoneNumber');
+  const emailInp = document.getElementById('apptEmailAddress');
+  const interestSelect = document.getElementById('apptInterestSelect');
+  const messageText = document.getElementById('apptMessageText');
+
+  const name = nameInp ? nameInp.value.trim() : '';
+  const phone = phoneInp ? phoneInp.value.trim() : '';
+  const email = emailInp ? emailInp.value.trim() : '';
+  const interest = interestSelect ? interestSelect.value : 'Bridal Saree Consultation';
+  const message = messageText ? messageText.value.trim() : '';
+
+  if (!name || !phone) {
+    alert('Please enter your full name and phone number.');
+    return;
+  }
+
+  const btn = document.getElementById('apptSubmitBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>SUBMITTING...</span>';
+  }
+
+  const contactData = { name, phone, email, interest, message, date: new Date().toISOString() };
+
+  // Save to localStorage
+  const leads = JSON.parse(localStorage.getItem('saforio_leads')) || [];
+  leads.push({ name, phone, email, interest, message, date: new Date().toLocaleDateString() });
+  localStorage.setItem('saforio_leads', JSON.stringify(leads));
+
+  // Save to Firestore if available
+  if (typeof db !== 'undefined' && db) {
+    db.collection("leads").add(contactData)
+      .then(() => console.log("Appointment enquiry saved to Firestore!"))
+      .catch(err => console.error("Firestore error:", err));
+  }
+
+  setTimeout(() => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>✓ APPOINTMENT REQUESTED</span>';
+      btn.style.background = '#2E7D32';
+    }
+    alert("Thank you, " + name + "! Your appointment request has been received. Our master stylist will contact you on WhatsApp/Phone within 2 hours.");
+    const form = document.getElementById('appointmentForm');
+    if (form) form.reset();
+    setTimeout(() => {
+      window.closeAppointmentModal();
+      if (btn) {
+        btn.innerHTML = '<span>CONFIRM APPOINTMENT REQUEST</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.style.background = '';
+      }
+    }, 1200);
+  }, 600);
+};
 
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
@@ -2496,7 +2709,6 @@ function renderRecommendations(selected) {
 
 // Global helper to add to cart straight from AI results
 window.addToCartFromStylist = (id) => {
-  if (!currentUser) { openAuth(); return; }
   const p = products.find(prod => prod.id == id);
   if (!p) return;
   cart.push(p);
@@ -2564,7 +2776,15 @@ function initProductPage(productId) {
     return _populateProductPage(fetched);
   }
 
-  let p = products.find(prod => prod.id == productId || prod.slug === productId);
+  const toSlug = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  const searchKey = String(productId).trim().toLowerCase();
+
+  let p = products.find(prod => 
+    String(prod.id) === String(productId) || 
+    (prod.slug && prod.slug.toLowerCase() === searchKey) ||
+    (prod.name && toSlug(prod.name) === searchKey) ||
+    (prod.name && prod.name.toLowerCase() === searchKey)
+  );
 
   // If not found locally, try fetching directly from Firestore
   if (!p) {
@@ -2647,7 +2867,7 @@ function _populateProductPage(p) {
 
   // Product Schema & Breadcrumbs JSON-LD
   let schemaScript = document.getElementById('productSchema');
-  
+
   // Remove ALL existing schema tags with Product to prevent duplicates
   // Populate Elements (similar to old openProductDetail logic but for static page)
   const mainImg = document.getElementById('detailMainImg');
@@ -2664,6 +2884,10 @@ function _populateProductPage(p) {
   const qtyPlus = document.getElementById('detailQtyPlus');
   const breadCat = document.getElementById('breadcrumb-cat');
   const breadName = document.getElementById('breadcrumb-name');
+  const shopBannerText = document.getElementById('shopBannerText');
+  if (shopBannerText) {
+      shopBannerText.innerHTML = `Shop this elegant <strong>${p.name || 'product'}</strong> from ROKEA BY RK in Coimbatore and discover timeless sarees curated for every special occasion.`;
+  }
 
   if (!name) return; // Not on product page
 
@@ -2700,22 +2924,81 @@ function _populateProductPage(p) {
     }
   }
   if (name) name.innerText = p.name;
-  if (breadName) breadName.innerText = p.name;
+  if (breadName) breadName.innerText = (p.name || '').toUpperCase();
   if (breadCat) {
-    breadCat.innerText = p.category;
-    breadCat.href = `/collections`;
-    breadCat.onclick = () => { localStorage.setItem('rokea_selected_category', p.category); };
+    const rawCat = (p.category || '').toLowerCase();
+    const isJewellery = rawCat.includes('jewel') || rawCat.includes('imitation');
+    const catLabel = isJewellery ? 'Jewellery' : 'Sarees';
+    const catParam = isJewellery ? 'imitation' : 'sarees';
+    breadCat.innerText = catLabel;
+    breadCat.href = 'collections.html';
+    breadCat.onclick = (e) => {
+      e.preventDefault();
+      localStorage.setItem('rokea_selected_category', catParam);
+      window.location.href = 'collections.html';
+    };
   }
   if (price) price.innerText = `₹${(extractPriceFromDesc(p.description) || p.price || 0).toLocaleString('en-IN')}`;
 
   if (desc) {
     const descText = p.description || "Exquisite premium collection from ROKEA by RK.";
-    const descLines = descText.split('\n').filter(line => line.trim().length > 0);
-    desc.innerHTML = `<div style="display: flex; flex-direction: column; gap: 15px;">` + descLines.map(line => `
-      <div style="background: rgba(255,255,255,0.7); border-left: 3px solid var(--gold); padding: 15px 20px; border-radius: 0 8px 8px 0; font-size: 14px; line-height: 1.7; color: var(--text); box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: transform 0.3s; cursor: default;" onmouseover="this.style.transform='translateX(3px)';" onmouseout="this.style.transform='translateX(0)';">
-        ${line.replace(/^[✦•\-\*]\s*/, '').trim()}
+    const descLines = descText.split('\n').filter(line => line.trim().length > 0).map(l => l.replace(/^[✦•\-\*]\s*/, '').trim());
+    
+    // Filter out "Why You'll Love It" and styling tips if present in description text
+    const filteredLines = descLines.filter(line => {
+      const lower = line.toLowerCase();
+      return !lower.includes('why you') && 
+             !lower.includes('pair with gold jewellery') && 
+             !lower.includes('style as bridal wear');
+    });
+    
+    let prodDesc = filteredLines.length > 0 ? filteredLines.join('<br><br>') : descText;
+    
+    let color = p.color || "As shown";
+    let occasion = p.occasion || "Wedding, Festival & Traditional Wear";
+    let type = p.category || "Soft Silk Saree";
+
+    desc.innerHTML = `
+      <div class="info-box">
+          <div class="info-box-title">Product Description</div>
+          <div class="info-box-text">${prodDesc}</div>
       </div>
-    `).join('') + `</div>`;
+      <div class="info-box">
+          <div class="info-box-title">Product Details</div>
+          <div class="details-grid">
+              <div class="detail-item">
+                  <div class="detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path></svg></div>
+                  <div class="detail-label">Type</div>
+                  <div class="detail-value">: ${type}</div>
+              </div>
+              <div class="detail-item">
+                  <div class="detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path></svg></div>
+                  <div class="detail-label">Style</div>
+                  <div class="detail-value">: Traditional Indian</div>
+              </div>
+              <div class="detail-item">
+                  <div class="detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path></svg></div>
+                  <div class="detail-label">Colour</div>
+                  <div class="detail-value">: ${color}</div>
+              </div>
+              <div class="detail-item">
+                  <div class="detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                  <div class="detail-label">Ideal For</div>
+                  <div class="detail-value">: Women</div>
+              </div>
+              <div class="detail-item">
+                  <div class="detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
+                  <div class="detail-label">Occasion</div>
+                  <div class="detail-value">: ${occasion}</div>
+              </div>
+              <div class="detail-item">
+                  <div class="detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+                  <div class="detail-label">Care</div>
+                  <div class="detail-value">: Dry Wash Only</div>
+              </div>
+          </div>
+      </div>
+    `;
   }
 
   if (care) {
@@ -2775,7 +3058,6 @@ function _populateProductPage(p) {
       btn.disabled = false;
       btn.innerText = 'Add to Cart';
       btn.onclick = () => {
-        if (!currentUser) { openAuth(); return; }
         for (let i = 0; i < currentQty; i++) cart.push(p);
         localStorage.setItem('saforio_cart', JSON.stringify(cart));
         updateCartIcon();
@@ -2796,7 +3078,6 @@ function _populateProductPage(p) {
     if (buyBtn) {
       buyBtn.disabled = false;
       buyBtn.onclick = () => {
-        if (!currentUser) { openAuth(); return; }
         for (let i = 0; i < currentQty; i++) cart.push(p);
         localStorage.setItem('saforio_cart', JSON.stringify(cart));
         updateCartIcon();
@@ -2820,7 +3101,7 @@ function _populateProductPage(p) {
       const thumbAlt = i === 0
         ? `${p.name} - Front View | ROKEA by RK`
         : `${p.name} - View ${i + 1} | ROKEA by RK`;
-      return `<img src="${img}" class="thumb-item ${i === 0 ? 'active' : ''}" loading="lazy" decoding="async" ${getSEOAttributes({name: thumbAlt})} onclick="switchDetailImage(${i})" onerror="this.style.display='none'">`;
+      return `<img src="${img}" class="thumb-item ${i === 0 ? 'active' : ''}" loading="lazy" decoding="async" ${getSEOAttributes({ name: thumbAlt })} onclick="switchDetailImage(${i})" onerror="this.style.display='none'">`;
     }).join('');
   }
 
@@ -2976,6 +3257,11 @@ document.addEventListener('DOMContentLoaded', () => {
           navLogoImg.style.opacity = '1';
           splashScreen.classList.add('scrolled');
 
+          const heroEl = document.querySelector('.hero');
+          if (heroEl) {
+            setTimeout(() => heroEl.classList.add('hero-revealed'), 150);
+          }
+
           // Restore scrolling only after the splash background is gone
           setTimeout(() => {
             document.documentElement.style.overflow = '';
@@ -2996,6 +3282,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       splashScreen.style.display = 'none';
       navLogoImg.style.opacity = '1';
+      const heroEl = document.querySelector('.hero');
+      if (heroEl) {
+        setTimeout(() => heroEl.classList.add('hero-revealed'), 100);
+      }
+    }
+  } else {
+    const heroEl = document.querySelector('.hero');
+    if (heroEl) {
+      setTimeout(() => heroEl.classList.add('hero-revealed'), 100);
     }
   }
 });
@@ -3027,10 +3322,90 @@ function injectFABs() {
     document.body.appendChild(aiFAB);
   }
 }
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectFABs);
-} else {
+
+// --- NATIVE MOBILE APP BOTTOM NAVIGATION BAR ---
+function injectMobileAppBottomBar() {
+  if (document.querySelector('.mobile-app-bottom-bar')) return;
+  const path = (window.location.pathname || '').toLowerCase();
+  const isHome = path === '/' || path.endsWith('index.html') || path === '' || !path.includes('.html');
+  const isShop = path.includes('collections');
+
+  const bar = document.createElement('nav');
+  bar.className = 'mobile-app-bottom-bar';
+  bar.id = 'mobileAppBottomBar';
+  bar.setAttribute('aria-label', 'Mobile App Bottom Navigation');
+  bar.innerHTML = `
+    <a href="index.html" class="app-nav-item ${isHome ? 'active' : ''}" id="appNavHome" aria-label="Home">
+      <div class="app-nav-icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </div>
+      <span class="app-nav-label">Home</span>
+    </a>
+
+    <a href="collections.html" class="app-nav-item ${isShop ? 'active' : ''}" id="appNavCollections" aria-label="Collections">
+      <div class="app-nav-icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </div>
+      <span class="app-nav-label">Shop</span>
+    </a>
+
+    <button type="button" class="app-nav-item app-nav-center-btn" onclick="openAppointmentModal()" aria-label="Book Boutique Appointment">
+      <div class="app-nav-center-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+          <path d="M12 14l1.5 2.5L16 14"></path>
+        </svg>
+      </div>
+      <span class="app-nav-label app-center-label">Book Visit</span>
+    </button>
+
+    <button type="button" class="app-nav-item" onclick="toggleWishlist()" aria-label="Wishlist">
+      <div class="app-nav-icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span class="app-nav-badge" id="mobile-wish-count">0</span>
+      </div>
+      <span class="app-nav-label">Wishlist</span>
+    </button>
+
+    <button type="button" class="app-nav-item" onclick="toggleCart()" aria-label="Shopping Bag">
+      <div class="app-nav-icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+          <path d="M3 6h18"></path>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="app-nav-badge" id="mobile-cart-count">0</span>
+      </div>
+      <span class="app-nav-label">Bag</span>
+    </button>
+  `;
+  document.body.appendChild(bar);
+  if (typeof updateCartIcon === 'function') updateCartIcon();
+  if (typeof updateWishlistIcon === 'function') updateWishlistIcon();
+}
+
+function initAppElements() {
   injectFABs();
+  injectMobileAppBottomBar();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAppElements);
+} else {
+  initAppElements();
 }
 
 // Disable right-click & drag on all images to prevent opening them in a new tab (which triggers free-hosting ads)
@@ -3092,9 +3467,25 @@ function initTestimonialCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', initTestimonialCarousel);
-// Custom Blouse Booking Logic
+// Custom Blouse Booking Logic - Direct Google Form Open
 window.openBlouseBooking = () => {
-  window.location.href = '/custom-blouse-order';
+  window.open('https://forms.gle/xHJ6hSpyreHVNsNc8', '_blank');
+}
+
+// FAQ Accordion Toggle
+window.toggleFaq = (element) => {
+  const faqItem = element.closest('.faq-item');
+  if (!faqItem) return;
+  const wasActive = faqItem.classList.contains('active');
+  
+  // Close other open FAQ items for neat accordion behavior
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.classList.remove('active');
+  });
+
+  if (!wasActive) {
+    faqItem.classList.add('active');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -3104,7 +3495,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       alert('Thank you! Your custom blouse order details have been received. We will contact you shortly on WhatsApp to confirm the order.');
       // Here you would typically send the data to your backend or Firebase
-      window.location.href = '/';
+      window.location.href = 'index.html';
     });
   }
 });
@@ -3159,10 +3550,10 @@ window.executeSlugMigration = async () => {
 };
 
 // Function to handle sharing products
-window.shareProduct = function(productId) {
+window.shareProduct = function (productId) {
   let urlToShare = window.location.href;
   let titleToShare = document.title;
-  
+
   // Try to find the exact product if it exists
   if (typeof products !== 'undefined' && products.length > 0) {
     let p = products.find(prod => prod.id == productId || prod.slug === productId);
@@ -3207,3 +3598,135 @@ window.shareProduct = function(productId) {
     });
   }
 };
+
+// ================================================================
+// OUR BEST SELLERS - COLLECTIONS SHOWCASE (ADMIN PRODUCTS ONLY)
+// ================================================================
+let currentBestsellerSlide = 0;
+let currentBestsellerFilter = 'sarees'; // Default to Sarees tab
+
+window.filterBestsellers = (cat, btn) => {
+  currentBestsellerFilter = cat;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    const activeBtn = document.querySelector(`.filter-pill[data-cat="${cat}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+  window.renderBestsellerShowcase();
+};
+
+window.renderBestsellerShowcase = () => {
+  const track = document.getElementById('bestsellerTrack');
+  if (!track) return;
+
+  // STRICTLY USE ADMIN PRODUCTS ONLY
+  let filtered = products.filter(p => {
+    if (currentBestsellerFilter === 'sarees') return p.category === 'sarees';
+    if (currentBestsellerFilter === 'imitation') return p.category === 'imitation';
+    return true;
+  });
+
+  // Apply Sorting if configured
+  if (window.currentSort === 'low') {
+    filtered.sort((a, b) => a.price - b.price);
+  } else if (window.currentSort === 'high') {
+    filtered.sort((a, b) => b.price - a.price);
+  } else {
+    filtered.sort((a, b) => (a.position || 0) - (b.position || 0));
+  }
+
+  if (!filtered || filtered.length === 0) {
+    track.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #8C7D6E;">
+        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#C9A84C" stroke-width="1.5" style="margin-bottom: 12px; display: inline-block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h3 style="font-family: 'Cinzel', serif; font-size: 20px; color: #4A0E17; margin-bottom: 6px;">No Products Found</h3>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 13px; color: #7A6A50;">No products have been added to this category in the Admin Dashboard yet.</p>
+      </div>
+    `;
+    return;
+  }
+
+  track.innerHTML = filtered.map((p, idx) => {
+    const inWishlist = wishlist && wishlist.find(w => w.id == p.id);
+    const isOOS = p.stock === 'Out of Stock';
+    const mainImg = optimizeImageUrl(p.image || p.img);
+    const displayPrice = (extractPriceFromDesc(p.description) || p.price || 0);
+
+    // Badges
+    let badgeText = isOOS ? 'Sold Out' : (p.badge || (idx === 0 ? 'Bestseller' : (idx === 1 ? 'New' : 'Trending')));
+    let badgeClass = isOOS ? 'badge-blush' : (idx === 0 ? 'badge-green' : (idx === 1 ? 'badge-sage' : (idx === 2 ? 'badge-blush' : 'badge-gold')));
+
+    return `
+      <div class="bestseller-card" onclick="openProductDetail('${p.id}')">
+        <div class="bestseller-card-img-wrap ${isOOS ? 'out-of-stock' : ''}">
+          <span class="bestseller-badge ${badgeClass}">${badgeText}</span>
+          <button type="button" class="bestseller-wish-btn ${inWishlist ? 'active' : ''}" onclick="event.stopPropagation(); addToWishlist('${p.id}'); this.classList.toggle('active');" aria-label="Wishlist">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="${inWishlist ? '#e91e63' : 'none'}" stroke="${inWishlist ? '#e91e63' : '#4A3B32'}" stroke-width="2">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          <img src="${mainImg}" alt="${p.name}" class="bestseller-card-img" loading="lazy" decoding="async" ${getSEOAttributes(p)} onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; this.style.background='linear-gradient(135deg,#f0e6d3,#faf6ef)';">
+        </div>
+        <div class="bestseller-card-body">
+          <div class="bestseller-card-price">₹${displayPrice.toLocaleString('en-IN')}</div>
+          <div class="bestseller-card-category">${p.category === 'sarees' ? 'SAREES' : 'JEWELLERY'}</div>
+          <h3 class="bestseller-card-title">${p.name}</h3>
+          <div class="bestseller-rating-row">
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-score">(4.8)</span>
+          </div>
+          ${isOOS
+            ? `<button type="button" class="bestseller-add-btn" style="background: #EFE8E1; color: #8C7D6E; border-color: #D4C7BA; cursor: not-allowed;" disabled onclick="event.stopPropagation();">
+                <span>SOLD OUT</span>
+              </button>`
+            : `<button type="button" class="bestseller-add-btn" onclick="event.stopPropagation(); addToCart('${p.id}')">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                  <path d="M3 6h18"></path>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <span>ADD TO CART</span>
+              </button>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.slideBestsellers = (dir) => {
+  const dots = document.querySelectorAll('.v-dot');
+  if (dots.length === 0) return;
+  currentBestsellerSlide = (currentBestsellerSlide + dir + dots.length) % dots.length;
+  window.goToBestsellerSlide(currentBestsellerSlide);
+};
+
+window.goToBestsellerSlide = (idx) => {
+  currentBestsellerSlide = idx;
+  const dots = document.querySelectorAll('.v-dot');
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+};
+
+// Initial trigger for collections page
+document.addEventListener('DOMContentLoaded', () => {
+  const selectedCat = localStorage.getItem('rokea_selected_category');
+  if (selectedCat && (selectedCat === 'sarees' || selectedCat === 'imitation')) {
+    currentBestsellerFilter = selectedCat;
+    const tabBtn = document.querySelector(`.filter-pill[data-cat="${selectedCat}"]`);
+    if (tabBtn) {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      tabBtn.classList.add('active');
+    }
+    localStorage.removeItem('rokea_selected_category');
+  }
+
+  if (document.getElementById('bestsellerTrack')) {
+    window.renderBestsellerShowcase();
+  }
+});
