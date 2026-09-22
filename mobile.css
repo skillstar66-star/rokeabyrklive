@@ -2259,4 +2259,67 @@
     .contact-submit-btn:active {
         transform: scale(0.96) !important;
     }
+
+    /* ── PRODUCT DETAILS INFO BOX & GRID (MOBILE) ── */
+    .info-box {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .info-box-title {
+        font-size: 12px !important;
+        margin-bottom: 10px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .info-box-text {
+        font-size: 13px !important;
+        line-height: 1.65 !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .detail-item {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+        width: 100% !important;
+    }
+
+    .detail-icon {
+        flex-shrink: 0 !important;
+        width: 18px !important;
+        height: 18px !important;
+        margin-top: 2px !important;
+    }
+
+    .detail-label {
+        width: 72px !important;
+        min-width: 72px !important;
+        flex-shrink: 0 !important;
+        font-weight: 600 !important;
+        color: #2B231D !important;
+    }
+
+    .detail-value {
+        flex: 1 !important;
+        min-width: 0 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        color: #4A4036 !important;
+        font-weight: 400 !important;
+    }
 }
