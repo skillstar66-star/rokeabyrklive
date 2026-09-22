@@ -57,12 +57,12 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  background: var(--dark);
+  background: var(--dark) !important;
 }
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: var(--cream);
+  background: var(--dark) !important;
   color: var(--text);
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
