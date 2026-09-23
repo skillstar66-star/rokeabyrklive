@@ -70,6 +70,15 @@ body {
   padding: 0;
 }
 
+body.product-page,
+.product-page,
+.product-details-section,
+.product-container,
+.product-info-panel,
+.related-section {
+  background: #ffffff !important;
+}
+
 /* ── SPLASH SCREEN ── */
 .splash-screen {
   position: fixed;

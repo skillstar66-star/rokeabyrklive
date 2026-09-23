@@ -761,7 +761,12 @@
         z-index: 100;
     }
 
+    body.product-page {
+        background: #ffffff !important;
+    }
+
     .product-details-section {
+        background: #ffffff !important;
         padding: 100px 0 40px !important;
         overflow-x: hidden !important;
     }
