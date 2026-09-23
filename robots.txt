@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /api/
 Disallow: /firebase-config/
+Disallow: /scratch/
+Disallow: /node_modules/
 
 Sitemap: https://rokeabyrk.com/sitemap.xml
+
